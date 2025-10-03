@@ -42,7 +42,7 @@ const Header = () => {
           {/* Logo */}
           <a href="#home" className="flex items-center gap-2 group">
             <Camera className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
-            <span className="text-2xl font-bold gradient-text">Premium Studio</span>
+            <span className="text-2xl font-bold gradient-text">Nivin Studio</span>
           </a>
 
           {/* Desktop Navigation */}
