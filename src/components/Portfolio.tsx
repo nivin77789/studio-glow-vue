@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const categories = [
   "All",
@@ -25,6 +26,7 @@ const portfolioItems = [
 
 const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { ref, isVisible } = useScrollReveal();
 
   const filteredItems =
     activeCategory === "All"
@@ -32,9 +34,9 @@ const Portfolio = () => {
       : portfolioItems.filter((item) => item.category === activeCategory);
 
   return (
-    <section id="portfolio" className="py-24">
+    <section id="portfolio" className="py-24" ref={ref}>
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-fade-in">
+        <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Portfolio</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Explore our collection of beautifully captured moments across various events and celebrations.
@@ -60,8 +62,13 @@ const Portfolio = () => {
           {filteredItems.map((item, index) => (
             <div
               key={item.id}
-              className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer hover-lift card-elegant"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className={`group relative aspect-square rounded-xl overflow-hidden cursor-pointer hover-lift card-elegant transition-all duration-500 ${
+                isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+              }`}
+              style={{ 
+                animationDelay: `${index * 0.1}s`,
+                transitionDelay: `${index * 0.05}s`
+              }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-accent/60 flex items-center justify-center">
                 <div className="text-center text-white p-6">
