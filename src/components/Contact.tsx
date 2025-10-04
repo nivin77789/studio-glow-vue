@@ -35,14 +35,14 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email",
-      value: "hello@premiumstudio.com",
-      link: "mailto:hello@premiumstudio.com",
+      value: "hello@saycheezz.com",
+      link: "mailto:hello@saycheezz.com",
     },
     {
       icon: MapPin,
       title: "Location",
-      value: "123 Studio Street, Creative City",
-      link: "#",
+      value: "Saycheezz - Photography & Videography, Bengaluru",
+      link: "https://www.google.com/maps/place/Saycheezz+-+Photography+%26+Videography/@13.0045539,77.7572737,17z",
     },
   ];
 
@@ -114,6 +114,8 @@ const Contact = () => {
                 <CardContent className="p-6">
                   <a
                     href={info.link}
+                    target={info.link.startsWith('http') ? '_blank' : undefined}
+                    rel={info.link.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="flex items-start gap-4"
                   >
                     <div className="p-3 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
@@ -128,9 +130,18 @@ const Contact = () => {
               </Card>
             ))}
 
-            {/* Map Placeholder */}
-            <div className="rounded-xl overflow-hidden h-64 bg-muted flex items-center justify-center card-elegant">
-              <MapPin className="w-12 h-12 text-muted-foreground" />
+            {/* Google Maps Embed */}
+            <div className="rounded-xl overflow-hidden h-64 card-elegant shadow-lg">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.2617447839787!2d77.75727371482186!3d13.004553990819894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae0fafe1c1e5e9%3A0x697f3a7d629a588a!2sSaycheezz%20-%20Photography%20%26%20Videography!5e0!3m2!1sen!2sin!4v1696420000000!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Saycheezz Location"
+              />
             </div>
           </div>
         </div>
