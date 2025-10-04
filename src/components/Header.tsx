@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X, Moon, Sun, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -24,11 +25,11 @@ const Header = () => {
   }, [isDarkMode]);
 
   const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "Courses", href: "#courses" },
-    { name: "Portfolio", href: "#portfolio" },
-    { name: "Services", href: "#services" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
+    { name: "Portfolio", href: "/portfolio" },
+    { name: "Services", href: "/services" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -40,22 +41,22 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-2 group">
             <Camera className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
             <span className="text-2xl font-bold gradient-text">Nivin Studio</span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
-              </a>
+              </Link>
             ))}
             <Button
               variant="ghost"
@@ -102,14 +103,14 @@ const Header = () => {
         {isMobileMenuOpen && (
           <nav className="md:hidden py-4 animate-fade-in">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="block py-3 text-foreground/80 hover:text-primary transition-colors font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
         )}
