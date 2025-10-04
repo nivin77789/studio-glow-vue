@@ -56,11 +56,7 @@ const services = [
     title: "House Warming",
     description: "Memorable beginnings in your dream home.",
   },
-  {
-    icon: Users,
-    title: "Get Together",
-    description: "Celebrating friendships and reunions in style.",
-  },
+  
   {
     icon: Music,
     title: "Sangeeth",

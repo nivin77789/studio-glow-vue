@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import Founder from "@/components/Founder";
@@ -9,25 +10,60 @@ import Prints from "@/components/Prints";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import AnimatedCursor from "@/components/AnimatedCursor";
 
 const Index = () => {
+  const [shutter, setShutter] = useState(false);
+
+  const triggerShutter = () => {
+    setShutter(true);
+    setTimeout(() => setShutter(false), 800); // reset after animation
+  };
+
   return (
-    <div className="min-h-screen relative">
-      {/* Animated moving background */}
+    <div
+      className="min-h-screen relative"
+      onClick={triggerShutter} // trigger camera shutter on click
+    >
+      {/* Photography-inspired background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-accent/5" />
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-float" style={{ animationDuration: '20s' }} />
-        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-bl from-accent/15 to-transparent rounded-full blur-3xl animate-float" style={{ animationDuration: '25s', animationDelay: '2s' }} />
-        <div className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] bg-gradient-to-tr from-primary/15 to-transparent rounded-full blur-3xl animate-float" style={{ animationDuration: '30s', animationDelay: '4s' }} />
-        <div className="absolute bottom-1/3 right-1/3 w-[350px] h-[350px] bg-gradient-to-tl from-accent/20 to-transparent rounded-full blur-3xl animate-float" style={{ animationDuration: '22s', animationDelay: '6s' }} />
-        
-        {/* Moving particles */}
-        <div className="absolute top-20 left-20 w-2 h-2 bg-primary/40 rounded-full animate-float" style={{ animationDuration: '15s' }} />
-        <div className="absolute top-40 right-40 w-3 h-3 bg-accent/40 rounded-full animate-float" style={{ animationDuration: '18s', animationDelay: '3s' }} />
-        <div className="absolute bottom-40 left-1/2 w-2 h-2 bg-primary/30 rounded-full animate-float" style={{ animationDuration: '20s', animationDelay: '5s' }} />
-        <div className="absolute top-1/2 right-20 w-2 h-2 bg-accent/30 rounded-full animate-float" style={{ animationDuration: '17s', animationDelay: '2s' }} />
+        {/* Light leaks */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-purple-500/10 mix-blend-screen animate-pulse" />
+        <div
+          className="absolute inset-0 bg-gradient-to-tl from-yellow-400/10 via-transparent to-red-400/10 mix-blend-screen animate-pulse"
+          style={{ animationDuration: "10s" }}
+        />
+
+        {/* Moving lens flare */}
+        <div className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-12 animate-lensflare" />
+
+        {/* Focus rings (autofocus animation) */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[200px] h-[200px] border border-white/20 rounded-full animate-focus" />
+          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus delay-200" />
+        </div>
+
+        {/* Viewfinder grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]" />
+
+        {/* Film grain */}
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/noise.png')] opacity-20 mix-blend-overlay animate-grain" />
       </div>
 
+      {/* Camera Shutter Animation */}
+      {shutter && (
+        <>
+          {/* Shutter closing effect */}
+          <div className="fixed inset-0 bg-black animate-shutter z-40"></div>
+          {/* Flash effect */}
+          <div className="fixed inset-0 bg-white animate-flash z-40"></div>
+        </>
+      )}
+
+      {/* Camera Lens Cursor */}
+      <AnimatedCursor />
+
+      {/* Sections */}
       <Header />
       <HeroCarousel />
       <Founder />

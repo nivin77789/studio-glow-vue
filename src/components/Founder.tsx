@@ -1,5 +1,5 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { Instagram, Facebook, Linkedin, Twitter, Award, Camera, Heart } from "lucide-react";
+import { Instagram, Facebook, Linkedin, Twitter, Award, Heart, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Founder = () => {
@@ -14,18 +14,29 @@ const Founder = () => {
 
   const achievements = [
     { icon: Award, label: "15+ Years Experience" },
-    { icon: Camera, label: "5000+ Projects" },
+    { icon: Award, label: "5000+ Projects" },
     { icon: Heart, label: "1000+ Happy Clients" }
   ];
 
   return (
     <section ref={ref} className="py-20 relative overflow-hidden">
-      {/* Animated floating elements */}
+      {/* Photography-themed background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-1/4 w-3 h-3 bg-primary rounded-full animate-float opacity-40" style={{ animationDuration: '6s' }} />
-        <div className="absolute top-40 right-1/3 w-2 h-2 bg-accent rounded-full animate-float opacity-30" style={{ animationDuration: '7s', animationDelay: '1s' }} />
-        <div className="absolute bottom-32 left-1/2 w-4 h-4 bg-primary rounded-full animate-float opacity-20" style={{ animationDuration: '8s', animationDelay: '2s' }} />
-        <div className="absolute top-60 right-1/4 w-2 h-2 bg-accent rounded-full animate-float opacity-40" style={{ animationDuration: '5s', animationDelay: '0.5s' }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
+
+        {/* Rotating camera icons */}
+        {[...Array(6)].map((_, i) => (
+          <Camera
+            key={i}
+            className="absolute text-white/10 w-32 h-32 animate-spin-slow"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+              animationDelay: `${i * 1.5}s`
+            }}
+          />
+        ))}
       </div>
 
       <div className="container mx-auto px-4">
@@ -35,18 +46,15 @@ const Founder = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-          {/* Image Section with animations */}
+          {/* Image Section */}
           <div className={`relative transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="relative group">
-              {/* Animated gradient border */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 animate-[gradient_3s_ease_infinite]" 
-                   style={{ animation: 'gradient 3s ease infinite' }} />
-              
-              {/* Main image container */}
+            <div className="relative">
               <div className="relative rounded-3xl overflow-hidden">
-                <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                  <Camera className="w-32 h-32 text-primary/30" />
-                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1755104572227-904d7a0758fb?w=600&q=80" 
+                  alt="Founder" 
+                  className="aspect-[3/4] w-full object-cover rounded-3xl"
+                />
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
               </div>
@@ -121,7 +129,6 @@ const Founder = () => {
                       <div className="w-12 h-12 rounded-full glass flex items-center justify-center hover-lift transition-all duration-300 group-hover:scale-110">
                         <Icon className={`w-5 h-5 transition-colors duration-300 ${social.color}`} />
                       </div>
-                      {/* Tooltip */}
                       <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-foreground text-background text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         {social.name}
                       </span>
@@ -142,15 +149,17 @@ const Founder = () => {
         </div>
       </div>
 
-      <style>{`
-        @keyframes gradient {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
+      <style jsx>{`
+        @keyframes float {
+          0%,100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
         }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 60s linear infinite; }
       `}</style>
     </section>
   );
