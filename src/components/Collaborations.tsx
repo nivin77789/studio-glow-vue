@@ -93,7 +93,7 @@ const Collaborations = () => {
               >
                 <CardContent className="p-0">
                   {/* Icon Header */}
-                  <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden">
+                  <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden rounded-t-xl">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
                     <div className="relative">
                       <div className="mb-4 inline-flex p-4 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110">
@@ -159,9 +159,10 @@ const Collaborations = () => {
       {/* Details Modal */}
       {selectedCollab && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <Card className="max-w-lg w-full animate-scale-in">
+          <Card className="max-w-lg w-full animate-scale-in overflow-hidden rounded-xl">
             <CardContent className="p-0">
-              <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden">
+              {/* Header with matching border radius */}
+              <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="relative">
                   <div className="inline-flex p-4 rounded-xl bg-white/20 backdrop-blur-sm mb-4">
@@ -172,6 +173,7 @@ const Collaborations = () => {
                 </div>
               </div>
 
+              {/* Content */}
               <div className="p-8">
                 <h4 className="font-semibold mb-4 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-primary" />
