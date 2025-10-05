@@ -71,15 +71,7 @@ const Index = () => {
         ))}
       </div>
 
-      {/* Camera Shutter Animation */}
-      {shutter && (
-        <>
-          {/* Shutter closing effect */}
-          <div className="fixed inset-0 bg-black animate-shutter z-40"></div>
-          {/* Flash effect */}
-          <div className="fixed inset-0 bg-white animate-flash z-40"></div>
-        </>
-      )}
+    
 
       {/* Sections */}
       <Header />
