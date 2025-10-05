@@ -149,18 +149,6 @@ const Founder = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-15px); }
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-spin-slow { animation: spin-slow 60s linear infinite; }
-      `}</style>
     </section>
   );
 };

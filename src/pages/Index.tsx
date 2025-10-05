@@ -25,22 +25,27 @@ const Index = () => {
       className="min-h-screen relative"
       onClick={triggerShutter} // trigger camera shutter on click
     >
-      {/* Photography-inspired background */}
+      {/* 3D Photography-inspired background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        {/* Light leaks */}
+        {/* Light leaks with 3D effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-purple-500/10 mix-blend-screen animate-pulse" />
         <div
           className="absolute inset-0 bg-gradient-to-tl from-yellow-400/10 via-transparent to-red-400/10 mix-blend-screen animate-pulse"
           style={{ animationDuration: "10s" }}
         />
 
+        {/* 3D Floating spheres */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float-rotate" />
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
+        <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-cube" />
+
         {/* Moving lens flare */}
         <div className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-12 animate-lensflare" />
 
-        {/* Focus rings (autofocus animation) */}
+        {/* 3D Focus rings (autofocus animation) */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[200px] h-[200px] border border-white/20 rounded-full animate-focus" />
-          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus delay-200" />
+          <div className="w-[200px] h-[200px] border border-white/20 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d' }} />
+          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus delay-200" style={{ transformStyle: 'preserve-3d' }} />
         </div>
 
         {/* Viewfinder grid */}

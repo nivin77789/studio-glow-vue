@@ -2,15 +2,21 @@ import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Frame, BookOpen, Calendar, Image, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import frameClassic from "@/assets/prints-frame-classic.jpg";
+import frameModern from "@/assets/prints-frame-modern.jpg";
+import albumPortrait from "@/assets/prints-album-portrait.jpg";
+import albumLandscape from "@/assets/prints-album-landscape.jpg";
+import calendarImg from "@/assets/prints-calendar.jpg";
+import magazineImg from "@/assets/prints-magazine.jpg";
 
 interface PrintType {
   id: string;
   name: string;
   icon: any;
   description: string;
-  variants?: string[];
+  variants?: { name: string; image: string }[];
 }
 
 const printTypes: PrintType[] = [
@@ -19,42 +25,74 @@ const printTypes: PrintType[] = [
     name: "Premium Frames",
     icon: Frame,
     description: "Beautiful custom frames in various styles",
-    variants: ["Classic Wooden Frame", "Modern Metal Frame", "Vintage Gold Frame", "Minimalist Black Frame", "Rustic Oak Frame", "Contemporary White Frame"]
+    variants: [
+      { name: "Classic Wooden Frame", image: frameClassic },
+      { name: "Modern Metal Frame", image: frameModern },
+      { name: "Vintage Gold Frame", image: frameClassic },
+      { name: "Minimalist Black Frame", image: frameModern },
+      { name: "Rustic Oak Frame", image: frameClassic },
+      { name: "Contemporary White Frame", image: frameModern }
+    ]
   },
   {
     id: "portrait-album",
     name: "Portrait Albums",
     icon: BookOpen,
     description: "Elegant portrait orientation photo albums",
-    variants: ["Leather Bound Portrait", "Classic Portrait Album", "Premium Portrait Collection", "Modern Portrait Book"]
+    variants: [
+      { name: "Leather Bound Portrait", image: albumPortrait },
+      { name: "Classic Portrait Album", image: albumPortrait },
+      { name: "Premium Portrait Collection", image: albumPortrait },
+      { name: "Modern Portrait Book", image: albumPortrait }
+    ]
   },
   {
     id: "landscape-album",
     name: "Landscape Albums",
     icon: BookOpen,
     description: "Stunning landscape orientation albums",
-    variants: ["Panoramic Landscape Album", "Wide Format Collection", "Premium Landscape Book", "Modern Landscape Edition"]
+    variants: [
+      { name: "Panoramic Landscape Album", image: albumLandscape },
+      { name: "Wide Format Collection", image: albumLandscape },
+      { name: "Premium Landscape Book", image: albumLandscape },
+      { name: "Modern Landscape Edition", image: albumLandscape }
+    ]
   },
   {
     id: "calendar",
     name: "Custom Calendars",
     icon: Calendar,
     description: "Personalized calendars with your memories",
-    variants: ["Wall Calendar 2024", "Desk Calendar", "Premium Wall Calendar", "Photo Calendar Collection"]
+    variants: [
+      { name: "Wall Calendar 2024", image: calendarImg },
+      { name: "Desk Calendar", image: calendarImg },
+      { name: "Premium Wall Calendar", image: calendarImg },
+      { name: "Photo Calendar Collection", image: calendarImg }
+    ]
   },
   {
     id: "magazine",
     name: "Photo Magazines",
     icon: Image,
     description: "Professional magazine-style photo books",
-    variants: ["Glossy Magazine Format", "Matte Finish Magazine", "Premium Photo Journal", "Modern Photo Magazine"]
+    variants: [
+      { name: "Glossy Magazine Format", image: magazineImg },
+      { name: "Matte Finish Magazine", image: magazineImg },
+      { name: "Premium Photo Journal", image: magazineImg },
+      { name: "Modern Photo Magazine", image: magazineImg }
+    ]
   },
   {
     id: "canvas",
     name: "Canvas Prints",
     icon: Sparkles,
     description: "Museum-quality canvas prints",
-    variants: ["Stretched Canvas", "Framed Canvas Print", "Gallery Wrap Canvas", "Premium Canvas Collection"]
+    variants: [
+      { name: "Stretched Canvas", image: frameModern },
+      { name: "Framed Canvas Print", image: frameClassic },
+      { name: "Gallery Wrap Canvas", image: frameModern },
+      { name: "Premium Canvas Collection", image: frameClassic }
+    ]
   }
 ];
 
@@ -72,10 +110,11 @@ const Prints = () => {
 
   return (
     <section ref={ref} className="py-20 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float" />
+      {/* 3D Animated background elements */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float-rotate" />
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/3 rounded-full blur-3xl animate-float" style={{ animationDuration: '8s' }} />
       </div>
 
       <div className="container mx-auto px-4">
@@ -95,15 +134,19 @@ const Prints = () => {
                 className={`group relative transition-all duration-700 ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+                style={{ 
+                  transitionDelay: `${index * 150}ms`,
+                  transform: isVisible ? 'perspective(1000px) rotateY(0deg)' : 'perspective(1000px) rotateY(-15deg)'
+                }}
               >
-                <div className="glass rounded-2xl p-8 hover-lift card-elegant h-full">
+                <div className="glass rounded-2xl p-8 hover-lift card-elegant h-full transition-transform duration-500 hover:scale-105" 
+                     style={{ transformStyle: 'preserve-3d' }}>
                   {/* Animated gradient border */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl" />
                   
-                  {/* Icon with animation */}
+                  {/* Icon with 3D animation */}
                   <div className="relative mb-6">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-float-rotate">
                       <Icon className="w-8 h-8 text-primary-foreground" />
                     </div>
                     <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl group-hover:blur-2xl transition-all duration-300" />
@@ -127,7 +170,7 @@ const Prints = () => {
 
         {/* CTA Section */}
         <div className={`mt-20 text-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="glass rounded-3xl p-12 card-elegant max-w-4xl mx-auto">
+          <div className="glass rounded-3xl p-12 card-elegant max-w-4xl mx-auto hover:scale-105 transition-transform duration-500">
             <h3 className="text-3xl font-bold mb-4 gradient-text">Custom Print Solutions</h3>
             <p className="text-muted-foreground mb-8 text-lg">
               Can't find what you're looking for? We offer custom printing solutions tailored to your needs.
@@ -147,33 +190,44 @@ const Prints = () => {
               {selectedPrint && <selectedPrint.icon className="w-8 h-8" />}
               {selectedPrint?.name}
             </DialogTitle>
+            <DialogDescription>
+              Browse through our {selectedPrint?.name.toLowerCase()} options and select your favorite
+            </DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             {selectedPrint?.variants?.map((variant, index) => (
               <div
-                key={variant}
-                className="group relative animate-scale-in"
-                style={{ animationDelay: `${index * 100}ms` }}
+                key={variant.name}
+                className="group relative animate-scale-in hover:scale-105 transition-transform duration-300"
+                style={{ 
+                  animationDelay: `${index * 100}ms`,
+                  transformStyle: 'preserve-3d'
+                }}
               >
                 {/* 3D-style card effect */}
                 <div className="relative overflow-hidden rounded-xl bg-card border border-border p-6 hover-lift transition-all duration-300 hover:shadow-2xl">
                   {/* Animated background gradient */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
-                  {/* 3D Frame preview simulation */}
-                  <div className="relative mb-4 h-48 bg-gradient-to-br from-muted to-muted/50 rounded-lg flex items-center justify-center overflow-hidden">
-                    <div className="w-32 h-32 bg-background/50 rounded border-4 border-primary/30 group-hover:scale-110 transition-transform duration-500 shadow-lg" />
+                  {/* 3D Image preview */}
+                  <div className="relative mb-4 h-48 rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                    <img 
+                      src={variant.image} 
+                      alt={variant.name}
+                      className="w-full h-full object-cover"
+                      style={{ transformStyle: 'preserve-3d' }}
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent" />
                   </div>
                   
-                  <h4 className="font-semibold text-lg mb-2 relative z-10">{variant}</h4>
+                  <h4 className="font-semibold text-lg mb-2 relative z-10">{variant.name}</h4>
                   <p className="text-sm text-muted-foreground mb-4 relative z-10">
-                    Premium quality {variant.toLowerCase()} with professional finishing
+                    Premium quality {variant.name.toLowerCase()} with professional finishing
                   </p>
                   
                   <Button
-                    onClick={() => handleOrder(selectedPrint.name, variant)}
+                    onClick={() => handleOrder(selectedPrint.name, variant.name)}
                     className="w-full relative z-10"
                     variant="outline"
                   >

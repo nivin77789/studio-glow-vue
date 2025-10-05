@@ -63,6 +63,30 @@ const Footer = () => {
           ))}
         </div>
 
+        {/* Newsletter Section */}
+        <div className="pt-8 border-t border-border">
+          <div className="max-w-md mx-auto text-center mb-8">
+            <h3 className="text-xl font-semibold mb-2">Stay Updated</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Subscribe to our newsletter for the latest updates and exclusive offers
+            </p>
+            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                required
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+
         <div className="pt-8 border-t border-border text-center text-muted-foreground">
           <p>&copy; {currentYear} Premium Studio. All rights reserved.</p>
         </div>
