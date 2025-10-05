@@ -10,7 +10,6 @@ import Prints from "@/components/Prints";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import AnimatedCursor from "@/components/AnimatedCursor";
 
 const Index = () => {
   const [shutter, setShutter] = useState(false);
@@ -34,10 +33,11 @@ const Index = () => {
           style={{ animationDuration: "10s" }}
         />
 
-        {/* 3D Floating spheres */}
+        {/* 3D Floating spheres with enhanced animations */}
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float-rotate" />
         <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
         <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-cube" />
+        <div className="absolute top-1/3 left-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-spin-slow" />
 
         {/* Moving lens flare */}
         <div className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-12 animate-lensflare" />
@@ -45,7 +45,8 @@ const Index = () => {
         {/* 3D Focus rings (autofocus animation) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-[200px] h-[200px] border border-white/20 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d' }} />
-          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus delay-200" style={{ transformStyle: 'preserve-3d' }} />
+          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d', animationDelay: '0.5s' }} />
+          <div className="w-[400px] h-[400px] border border-white/5 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d', animationDelay: '1s' }} />
         </div>
 
         {/* Viewfinder grid */}
@@ -53,6 +54,21 @@ const Index = () => {
 
         {/* Film grain */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/noise.png')] opacity-20 mix-blend-overlay animate-grain" />
+        
+        {/* Floating particles with 3D effect */}
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-primary/20 rounded-full animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${5 + Math.random() * 10}s`,
+              transform: `translateZ(${Math.random() * 100}px)`,
+            }}
+          />
+        ))}
       </div>
 
       {/* Camera Shutter Animation */}
@@ -64,9 +80,6 @@ const Index = () => {
           <div className="fixed inset-0 bg-white animate-flash z-40"></div>
         </>
       )}
-
-      {/* Camera Lens Cursor */}
-      <AnimatedCursor />
 
       {/* Sections */}
       <Header />

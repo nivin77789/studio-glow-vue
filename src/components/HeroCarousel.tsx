@@ -83,17 +83,7 @@ const HeroCarousel = () => {
               className="w-full h-full object-cover"
             />
 
-            {/* 🔹 Adaptive Top Gradient Overlay */}
-            <div
-              className="
-                absolute top-0 left-0 right-0 h-32 
-                bg-gradient-to-b from-white/70 to-transparent 
-                dark:from-black/80 dark:to-transparent
-                pointer-events-none
-              "
-            />
-
-            {/* Existing Dark overlay for text readability */}
+            {/* Dark overlay for text readability */}
             <div className="absolute inset-0 bg-black/40" />
           </div>
         ))}

@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/button";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem("darkMode");
+    const isDark = saved === "true";
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    }
+    return isDark;
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +24,7 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    localStorage.setItem("darkMode", isDarkMode.toString());
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
     } else {
@@ -55,6 +63,9 @@ const Header = () => {
                 key={link.name}
                 to={link.href}
                 className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
+                style={{
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.5)',
+                }}
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
