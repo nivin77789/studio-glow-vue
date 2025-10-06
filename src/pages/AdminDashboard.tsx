@@ -6,12 +6,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, LogOut, Image, BookOpen, Calendar, Users, MessageSquare, Settings } from "lucide-react";
+import { Camera, LogOut, Image, BookOpen, Users, MessageSquare, Mail, Inbox, Trash2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { Badge } from "@/components/ui/badge";
+
+interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  timestamp: any;
+  status: string;
+}
+
+interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  timestamp: any;
+  status: string;
+}
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
+  const [newsletterSubscribers, setNewsletterSubscribers] = useState<NewsletterSubscriber[]>([]);
 
   useEffect(() => {
     const auth = localStorage.getItem("isAdminAuthenticated");
@@ -22,6 +43,38 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
+  // Fetch contact submissions
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "contactSubmissions"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const submissions: ContactSubmission[] = [];
+      snapshot.forEach((doc) => {
+        submissions.push({ id: doc.id, ...doc.data() } as ContactSubmission);
+      });
+      setContactSubmissions(submissions);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
+  // Fetch newsletter subscribers
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "newsletterSubscribers"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const subscribers: NewsletterSubscriber[] = [];
+      snapshot.forEach((doc) => {
+        subscribers.push({ id: doc.id, ...doc.data() } as NewsletterSubscriber);
+      });
+      setNewsletterSubscribers(subscribers);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
   const handleLogout = () => {
     localStorage.removeItem("isAdminAuthenticated");
     toast.success("Logged out successfully");
@@ -30,6 +83,41 @@ const AdminDashboard = () => {
 
   const handleSave = (section: string) => {
     toast.success(`${section} updated successfully!`);
+  };
+
+  const handleDeleteContact = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "contactSubmissions", id));
+      toast.success("Contact submission deleted");
+    } catch (error) {
+      toast.error("Failed to delete submission");
+    }
+  };
+
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await updateDoc(doc(db, "contactSubmissions", id), {
+        status: "read"
+      });
+      toast.success("Marked as read");
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const handleDeleteSubscriber = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "newsletterSubscribers", id));
+      toast.success("Subscriber deleted");
+    } catch (error) {
+      toast.error("Failed to delete subscriber");
+    }
+  };
+
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return "N/A";
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleString();
   };
 
   if (!isAuthenticated) {
@@ -60,7 +148,20 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="hero" className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+            <TabsTrigger value="contacts" className="relative">
+              <Inbox className="w-4 h-4 mr-2" />
+              Contacts
+              {contactSubmissions.filter(c => c.status === "unread").length > 0 && (
+                <Badge variant="destructive" className="ml-2 h-5 min-w-5 p-1 text-xs">
+                  {contactSubmissions.filter(c => c.status === "unread").length}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="newsletter">
+              <Mail className="w-4 h-4 mr-2" />
+              Newsletter
+            </TabsTrigger>
             <TabsTrigger value="hero">Hero</TabsTrigger>
             <TabsTrigger value="founder">Founder</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
@@ -68,6 +169,106 @@ const AdminDashboard = () => {
             <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
             <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
           </TabsList>
+
+          {/* Contacts Section */}
+          <TabsContent value="contacts">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Inbox className="w-5 h-5" />
+                  Contact Submissions
+                  <Badge variant="secondary">{contactSubmissions.length} total</Badge>
+                </CardTitle>
+                <CardDescription>View and manage contact form submissions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {contactSubmissions.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No contact submissions yet</p>
+                  ) : (
+                    contactSubmissions.map((submission) => (
+                      <Card key={submission.id} className={`p-4 ${submission.status === "unread" ? "border-primary" : ""}`}>
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h4 className="font-semibold">{submission.name}</h4>
+                                {submission.status === "unread" && (
+                                  <Badge variant="default" className="text-xs">New</Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-muted-foreground">{submission.email}</p>
+                              <p className="text-xs text-muted-foreground mt-1">{formatDate(submission.timestamp)}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              {submission.status === "unread" && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleMarkAsRead(submission.id)}
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </Button>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteContact(submission.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="mt-3 p-3 bg-muted rounded-lg">
+                            <p className="text-sm">{submission.message}</p>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Newsletter Section */}
+          <TabsContent value="newsletter">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="w-5 h-5" />
+                  Newsletter Subscribers
+                  <Badge variant="secondary">{newsletterSubscribers.length} subscribers</Badge>
+                </CardTitle>
+                <CardDescription>Manage newsletter email list</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {newsletterSubscribers.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No subscribers yet</p>
+                  ) : (
+                    newsletterSubscribers.map((subscriber) => (
+                      <Card key={subscriber.id} className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <p className="font-medium">{subscriber.email}</p>
+                            <p className="text-xs text-muted-foreground">{formatDate(subscriber.timestamp)}</p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDeleteSubscriber(subscriber.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Hero Section */}
           <TabsContent value="hero">

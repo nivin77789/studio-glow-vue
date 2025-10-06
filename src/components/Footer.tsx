@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { Camera, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from "sonner";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
 
   const footerLinks = {
     Services: ["Wedding", "Engagement", "Maternity", "Birthday", "Concerts"],
@@ -70,10 +75,26 @@ const Footer = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Subscribe to our newsletter for the latest updates and exclusive offers
             </p>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex gap-2" onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                await addDoc(collection(db, "newsletterSubscribers"), {
+                  email: email,
+                  timestamp: serverTimestamp(),
+                  status: "active"
+                });
+                toast.success("Successfully subscribed to newsletter!");
+                setEmail("");
+              } catch (error) {
+                toast.error("Failed to subscribe. Please try again.");
+                console.error("Error subscribing:", error);
+              }
+            }}>
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
