@@ -167,7 +167,7 @@ const Portfolio = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="border-white text-white dark:text-black hover:bg-white hover:text-black dark:hover:bg-gray-200 dark:hover:text-black"
+                className="border-white text-black dark:text-white hover:bg-white hover:text-black dark:hover:bg-gray-200 dark:hover:text-black"
               >
                 <Eye className="w-4 h-4 mr-2" /> View
               </Button>
