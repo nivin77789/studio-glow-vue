@@ -1,10 +1,32 @@
 import { useState } from "react";
-import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin } from "lucide-react";
+import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useToast } from "@/hooks/use-toast";
+
+// Firebase imports
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAZCNRSPlDFTzK_HNBKxRYQkX7XJIzSSW4",
+  authDomain: "mark-studio-4b30a.firebaseapp.com",
+  projectId: "mark-studio-4b30a",
+  storageBucket: "mark-studio-4b30a.firebasestorage.app",
+  messagingSenderId: "717134874279",
+  appId: "1:717134874279:web:e2d5ac9923c79ae21e3d82",
+  measurementId: "G-NNNZWPJ6X1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const collaborations = [
   {
@@ -51,10 +73,35 @@ const collaborations = [
   },
 ];
 
+const serviceTypes = [
+  "Wedding Halls",
+  "Party Halls",
+  "Interior Designers",
+  "Makeup Artists",
+  "Orchestra",
+  "DJ Services",
+  "Photography",
+  "Videography",
+  "Catering",
+  "Decoration",
+  "Other"
+];
+
 const Collaborations = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedCollab, setSelectedCollab] = useState<typeof collaborations[0] | null>(null);
+  const [showPartnerForm, setShowPartnerForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const [partnerForm, setPartnerForm] = useState({
+    serviceName: "",
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    message: ""
+  });
 
   const handleBookNow = (collab: typeof collaborations[0]) => {
     const message = `Hi! I'm interested in booking your ${collab.title} service. Please provide more details.`;
@@ -65,6 +112,53 @@ const Collaborations = () => {
       title: "Redirecting to WhatsApp",
       description: `Connecting you with ${collab.title}...`,
     });
+  };
+
+  const handlePartnerFormChange = (field: string, value: string) => {
+    setPartnerForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handlePartnerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Add document to Firestore
+      await addDoc(collection(db, "partnerSubmissions"), {
+        ...partnerForm,
+        timestamp: new Date(),
+        status: "pending"
+      });
+
+      toast({
+        title: "Application Submitted!",
+        description: "We'll get back to you soon. Thank you for your interest!",
+      });
+
+      // Reset form and close modal
+      setPartnerForm({
+        serviceName: "",
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
+        message: ""
+      });
+      setShowPartnerForm(false);
+
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -146,7 +240,11 @@ const Collaborations = () => {
                 <p className="text-muted-foreground mb-6 max-w-md">
                   Join our network of premium service providers and grow your business
                 </p>
-                <Button size="lg" className="group">
+                <Button 
+                  size="lg" 
+                  className="group"
+                  onClick={() => setShowPartnerForm(true)}
+                >
                   Become a Partner
                   <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
                 </Button>
@@ -156,7 +254,7 @@ const Collaborations = () => {
         </div>
       </section>
 
-      {/* Details Modal */}
+      {/* Collaboration Details Modal */}
       {selectedCollab && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <Card className="max-w-lg w-full animate-scale-in overflow-hidden rounded-xl">
@@ -219,6 +317,159 @@ const Collaborations = () => {
                   </Button>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Partner Form Modal */}
+      {showPartnerForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <Card className="max-w-md w-full animate-scale-in overflow-hidden rounded-xl max-h-[90vh] overflow-y-auto">
+            <CardContent className="p-0">
+              {/* Header */}
+              <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl">
+                
+                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <button
+                  onClick={() => setShowPartnerForm(false)}
+                  className="absolute top-4 right-4 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <div className="relative">
+                  <div className="inline-flex p-4 rounded-xl bg-white/20 backdrop-blur-sm mb-4">
+                    <Sparkles className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-2">Become a Partner</h3>
+                  <p className="text-white/90">Join our network of premium service providers</p>
+                </div>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handlePartnerSubmit} className="p-8 space-y-6">
+                <div className="space-y-4">
+                  {/* Service Type */}
+                  <div className="space-y-2">
+                    <Label htmlFor="serviceName" className="text-sm font-medium">
+                      Service Type <span className="text-red-500">*</span>
+                    </Label>
+                    <select
+                      id="serviceName"
+                      required
+                      value={partnerForm.serviceName}
+                      onChange={(e) => handlePartnerFormChange("serviceName", e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background"
+                    >
+                      <option value="">Select a service type</option>
+                      {serviceTypes.map((service) => (
+                        <option key={service} value={service}>
+                          {service}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-sm font-medium">
+                      Full Name <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      required
+                      placeholder="Enter your full name"
+                      value={partnerForm.name}
+                      onChange={(e) => handlePartnerFormChange("name", e.target.value)}
+                    />
+                  </div>
+
+                  {/* Phone */}
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-sm font-medium">
+                      Phone Number <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      required
+                      placeholder="Enter your phone number"
+                      value={partnerForm.phone}
+                      onChange={(e) => handlePartnerFormChange("phone", e.target.value)}
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium">
+                      Email Address <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      placeholder="Enter your email address"
+                      value={partnerForm.email}
+                      onChange={(e) => handlePartnerFormChange("email", e.target.value)}
+                    />
+                  </div>
+
+                  {/* Address */}
+                  <div className="space-y-2">
+                    <Label htmlFor="address" className="text-sm font-medium">
+                      Business Address <span className="text-red-500">*</span>
+                    </Label>
+                    <Textarea
+                      id="address"
+                      required
+                      placeholder="Enter your business address"
+                      rows={3}
+                      value={partnerForm.address}
+                      onChange={(e) => handlePartnerFormChange("address", e.target.value)}
+                    />
+                  </div>
+
+                  {/* Additional Message */}
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-sm font-medium">
+                      Additional Message
+                    </Label>
+                    <Textarea
+                      id="message"
+                      placeholder="Tell us about your business and why you want to partner with us..."
+                      rows={4}
+                      value={partnerForm.message}
+                      onChange={(e) => handlePartnerFormChange("message", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  className="w-full group"
+                  size="lg"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Submit Application
+                      <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-xs text-muted-foreground text-center">
+                  By submitting this form, you agree to our terms and conditions. 
+                  We'll contact you within 24-48 hours.
+                </p>
+              </form>
             </CardContent>
           </Card>
         </div>

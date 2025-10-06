@@ -1,32 +1,10 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
-  {
-    title: "Capturing Moments,",
-    highlight: "Creating Memories",
-    description: "Professional photography and videography services for your special moments. We blend creativity with technical excellence to tell your unique story.",
-    primaryCTA: "Explore Services",
-    secondaryCTA: "View Portfolio",
-    image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1920&q=80",
-  },
-  {
-    title: "Your Story,",
-    highlight: "Beautifully Told",
-    description: "From intimate moments to grand celebrations, we capture the essence of every occasion with artistic vision and technical precision.",
-    primaryCTA: "Our Services",
-    secondaryCTA: "Learn More",
-    image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1920&q=80",
-  },
-  {
-    title: "Excellence in",
-    highlight: "Every Frame",
-    description: "Premium photography and videography that transforms your special moments into timeless art. Let's create something extraordinary together.",
-    primaryCTA: "Get Started",
-    secondaryCTA: "See Portfolio",
-    image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80",
-  },
+  { image: "/images/hero1.jpeg" },
+  { image: "/images/hero2.jpeg" },
+  { image: "/images/hero3.jpeg" },
 ];
 
 const HeroCarousel = () => {
@@ -72,18 +50,14 @@ const HeroCarousel = () => {
           <div
             key={index}
             className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-              index === currentSlide
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-105"
+              index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
             }`}
           >
             <img
               src={slide.image}
-              alt={slide.title}
+              alt={`Slide ${index + 1}`}
               className="w-full h-full object-cover"
             />
-
-            {/* Dark overlay for text readability */}
             <div className="absolute inset-0 bg-black/40" />
           </div>
         ))}
@@ -103,81 +77,6 @@ const HeroCarousel = () => {
             }}
           />
         ))}
-      </div>
-
-      {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {slides.map((slide, index) => (
-            <div
-              key={index}
-              className={`transition-all duration-700 ${
-                index === currentSlide
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 absolute translate-y-8 scale-95 pointer-events-none"
-              }`}
-            >
-              {/* Decorative element */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 animate-slide-down">
-                <Sparkles className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm text-white font-medium">Premium Photography Services</span>
-              </div>
-
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight text-white animate-slide-up">
-                {slide.title}
-                <br />
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent animate-gradient">
-                  {slide.highlight}
-                </span>
-              </h1>
-              
-              <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-10 leading-relaxed max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                {slide.description}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.4s" }}>
-                <Button
-                  size="lg"
-                  className="text-lg px-10 py-7 bg-white text-black hover:bg-white/90 group relative overflow-hidden"
-                  onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
-                >
-                  <span className="relative z-10 flex items-center">
-                    {slide.primaryCTA}
-                    <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-lg px-10 py-7 border-2 border-white/30 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:border-white/50 group"
-                  onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
-                >
-                  <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
-                  {slide.secondaryCTA}
-                </Button>
-              </div>
-
-              {/* Stats */}
-              <div className="flex flex-wrap justify-center gap-8 mt-16 animate-fade-in" style={{ animationDelay: "0.6s" }}>
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-1">500+</div>
-                  <div className="text-sm text-white/70">Happy Clients</div>
-                </div>
-                <div className="w-px h-12 bg-white/20" />
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-1">1000+</div>
-                  <div className="text-sm text-white/70">Events Covered</div>
-                </div>
-                <div className="w-px h-12 bg-white/20" />
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-1">10+</div>
-                  <div className="text-sm text-white/70">Years Experience</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Navigation Arrows */}
@@ -220,7 +119,6 @@ const HeroCarousel = () => {
           <div className="w-1.5 h-3 bg-white rounded-full animate-scroll" />
         </div>
       </div>
-
     </section>
   );
 };

@@ -1,9 +1,26 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera, Video, BookImage, Palette, Lightbulb, Clapperboard, X, CheckCircle, Clock, Award, BookOpen } from "lucide-react";
+import { Camera, Video, BookImage, Palette, Lightbulb, Clapperboard, X, CheckCircle, Clock, Award, BookOpen, User, Mail, Phone, MessageSquare } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAZCNRSPlDFTzK_HNBKxRYQkX7XJIzSSW4",
+  authDomain: "mark-studio-4b30a.firebaseapp.com",
+  projectId: "mark-studio-4b30a",
+  storageBucket: "mark-studio-4b30a.firebasestorage.app",
+  messagingSenderId: "717134874279",
+  appId: "1:717134874279:web:e2d5ac9923c79ae21e3d82",
+  measurementId: "G-NNNZWPJ6X1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const courses = [
   {
@@ -229,10 +246,59 @@ const courses = [
 
 const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [showEnrollForm, setShowEnrollForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    about: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleEnrollClick = () => {
-    navigate("/contact");
+    setShowEnrollForm(true);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmitEnrollment = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await addDoc(collection(db, "enrollments"), {
+        studentName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        about: formData.about,
+        courseTitle: selectedCourse.title,
+        courseDuration: selectedCourse.duration,
+        courseLevel: selectedCourse.level,
+        enrollmentDate: new Date().toISOString(),
+        timestamp: new Date()
+      });
+
+      setSubmitSuccess(true);
+      setTimeout(() => {
+        setShowEnrollForm(false);
+        setSelectedCourse(null);
+        setFormData({ name: "", email: "", phone: "", about: "" });
+        setSubmitSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error submitting enrollment:", error);
+      alert("Failed to submit enrollment. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -297,8 +363,8 @@ const Courses = () => {
         </div>
       </section>
 
-      {/* Modal */}
-      {selectedCourse && (
+      {/* Course Details Modal */}
+      {selectedCourse && !showEnrollForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-background rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden animate-scale-in">
             <div className="sticky top-0 bg-gradient-to-r from-primary to-accent p-6 flex items-center justify-between z-10">
@@ -409,6 +475,143 @@ const Courses = () => {
                 Enroll Now
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Enrollment Form Modal */}
+      {selectedCourse && showEnrollForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden animate-scale-in">
+            <div className="bg-gradient-to-r from-primary to-accent p-6 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <selectedCourse.icon className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Enroll in Course</h2>
+                  <p className="text-white/80 text-sm mt-1">{selectedCourse.title}</p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setShowEnrollForm(false);
+                  setFormData({ name: "", email: "", phone: "", about: "" });
+                }}
+                className="text-white hover:bg-white/20"
+              >
+                <X className="w-6 h-6" />
+              </Button>
+            </div>
+
+            {submitSuccess ? (
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-10 h-10 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Enrollment Successful!</h3>
+                <p className="text-muted-foreground">
+                  Thank you for enrolling. We'll contact you soon with more details.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitEnrollment} className="p-8 space-y-6">
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <User className="w-4 h-4 text-primary" />
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <Mail className="w-4 h-4 text-primary" />
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <Phone className="w-4 h-4 text-primary" />
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="+91 1234567890"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <MessageSquare className="w-4 h-4 text-primary" />
+                    About You
+                  </label>
+                  <textarea
+                    name="about"
+                    value={formData.about}
+                    onChange={handleInputChange}
+                    rows="4"
+                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                    placeholder="Tell us about your background and why you're interested in this course..."
+                  />
+                </div>
+
+                <div className="bg-primary/5 p-4 rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Course:</strong> {selectedCourse.title}<br />
+                    <strong>Duration:</strong> {selectedCourse.duration}<br />
+                    <strong>Level:</strong> {selectedCourse.level}
+                  </p>
+                </div>
+
+                <div className="flex gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      setShowEnrollForm(false);
+                      setFormData({ name: "", email: "", phone: "", about: "" });
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit Enrollment"}
+                  </Button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

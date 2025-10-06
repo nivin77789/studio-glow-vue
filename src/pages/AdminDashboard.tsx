@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Camera, LogOut, Image, BookOpen, Users, MessageSquare, Mail, Inbox, Trash2, CheckCircle } from "lucide-react";
+import { Mail, Inbox, Trash2, CheckCircle, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Sparkles, Music, Mic2 } from "lucide-react";
 import { toast } from "sonner";
 import { db } from "@/lib/firebase";
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -27,11 +24,53 @@ interface NewsletterSubscriber {
   status: string;
 }
 
+interface CourseEnrollment {
+  id: string;
+  studentName: string;
+  email: string;
+  phone: string;
+  about: string;
+  courseTitle: string;
+  courseDuration: string;
+  courseLevel: string;
+  enrollmentDate: string;
+  timestamp: any;
+  status?: string;
+}
+
+interface CollaborationRequest {
+  id: string;
+  serviceName: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  message: string;
+  timestamp: any;
+  status: string;
+}
+
+const serviceIcons: { [key: string]: any } = {
+  "Wedding Halls": Building2,
+  "Party Halls": Users,
+  "Interior Designers": Palette,
+  "Makeup Artists": Sparkles,
+  "Orchestra": Music,
+  "DJ Services": Mic2,
+  "Photography": Camera,
+  "Videography": Camera,
+  "Catering": Users,
+  "Decoration": Sparkles,
+  "Other": Users
+};
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
   const [newsletterSubscribers, setNewsletterSubscribers] = useState<NewsletterSubscriber[]>([]);
+  const [courseEnrollments, setCourseEnrollments] = useState<CourseEnrollment[]>([]);
+  const [collaborationRequests, setCollaborationRequests] = useState<CollaborationRequest[]>([]);
 
   useEffect(() => {
     const auth = localStorage.getItem("isAdminAuthenticated");
@@ -74,14 +113,42 @@ const AdminDashboard = () => {
     return () => unsubscribe();
   }, [isAuthenticated]);
 
+  // Fetch course enrollments
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "enrollments"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const enrollments: CourseEnrollment[] = [];
+      snapshot.forEach((doc) => {
+        enrollments.push({ id: doc.id, ...doc.data() } as CourseEnrollment);
+      });
+      setCourseEnrollments(enrollments);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
+  // Fetch collaboration requests
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "partnerSubmissions"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const requests: CollaborationRequest[] = [];
+      snapshot.forEach((doc) => {
+        requests.push({ id: doc.id, ...doc.data() } as CollaborationRequest);
+      });
+      setCollaborationRequests(requests);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
   const handleLogout = () => {
     localStorage.removeItem("isAdminAuthenticated");
     toast.success("Logged out successfully");
     navigate("/admin");
-  };
-
-  const handleSave = (section: string) => {
-    toast.success(`${section} updated successfully!`);
   };
 
   const handleDeleteContact = async (id: string) => {
@@ -113,15 +180,58 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteEnrollment = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "enrollments", id));
+      toast.success("Enrollment deleted");
+    } catch (error) {
+      toast.error("Failed to delete enrollment");
+    }
+  };
+
+  const handleMarkEnrollmentAsContacted = async (id: string) => {
+    try {
+      await updateDoc(doc(db, "enrollments", id), {
+        status: "contacted"
+      });
+      toast.success("Marked as contacted");
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const handleDeleteCollaboration = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "partnerSubmissions", id));
+      toast.success("Collaboration request deleted");
+    } catch (error) {
+      toast.error("Failed to delete request");
+    }
+  };
+
+  const handleMarkCollaborationAsContacted = async (id: string) => {
+    try {
+      await updateDoc(doc(db, "partnerSubmissions", id), {
+        status: "contacted"
+      });
+      toast.success("Marked as contacted");
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
+  };
+
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "N/A";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return date.toLocaleString();
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  const getServiceIcon = (serviceName: string) => {
+    const IconComponent = serviceIcons[serviceName] || Users;
+    return <IconComponent className="w-4 h-4" />;
+  };
+
+  if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -146,8 +256,26 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="hero" className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+        <Tabs defaultValue="collaborations" className="space-y-6">
+          <TabsList className="grid grid-cols-4 gap-2">
+            <TabsTrigger value="collaborations" className="relative">
+              <Building2 className="w-4 h-4 mr-2" />
+              Collaborations
+              {collaborationRequests.filter(c => c.status !== "contacted").length > 0 && (
+                <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-destructive text-destructive-foreground px-2 py-0.5 text-xs font-semibold">
+                  {collaborationRequests.filter(c => c.status !== "contacted").length}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="enrollments" className="relative">
+              <GraduationCap className="w-4 h-4 mr-2" />
+              Enrollments
+              {courseEnrollments.filter(e => e.status !== "contacted").length > 0 && (
+                <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-destructive text-destructive-foreground px-2 py-0.5 text-xs font-semibold">
+                  {courseEnrollments.filter(e => e.status !== "contacted").length}
+                </span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="contacts" className="relative">
               <Inbox className="w-4 h-4 mr-2" />
               Contacts
@@ -161,13 +289,198 @@ const AdminDashboard = () => {
               <Mail className="w-4 h-4 mr-2" />
               Newsletter
             </TabsTrigger>
-            <TabsTrigger value="hero">Hero</TabsTrigger>
-            <TabsTrigger value="founder">Founder</TabsTrigger>
-            <TabsTrigger value="courses">Courses</TabsTrigger>
-            <TabsTrigger value="services">Services</TabsTrigger>
-            <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-            <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
           </TabsList>
+
+          {/* Collaborations Section */}
+          <TabsContent value="collaborations">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5" />
+                  Collaboration Requests
+                  <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                    {collaborationRequests.length} total
+                  </span>
+                </CardTitle>
+                <CardDescription>View and manage partnership requests from service providers</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {collaborationRequests.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No collaboration requests yet</p>
+                  ) : (
+                    collaborationRequests.map((request) => (
+                      <Card key={request.id} className={`p-4 ${request.status !== "contacted" ? "border-primary" : ""}`}>
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className="font-semibold text-lg">{request.name}</h4>
+                                {request.status !== "contacted" && (
+                                  <span className="inline-flex items-center rounded-full border-transparent bg-primary text-primary-foreground px-2 py-0.5 text-xs font-semibold">
+                                    New
+                                  </span>
+                                )}
+                              </div>
+                              
+                              <div className="space-y-1.5 text-sm">
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  {getServiceIcon(request.serviceName)}
+                                  <span className="font-medium text-foreground">{request.serviceName}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <Mail className="w-4 h-4" />
+                                  <span>{request.email}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <Phone className="w-4 h-4" />
+                                  <span>{request.phone}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <User className="w-4 h-4" />
+                                  <span className="text-xs">{request.address}</span>
+                                </div>
+                              </div>
+                              
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Submitted: {formatDate(request.timestamp)}
+                              </p>
+                            </div>
+                            
+                            <div className="flex gap-2">
+                              {request.status !== "contacted" && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleMarkCollaborationAsContacted(request.id)}
+                                  title="Mark as contacted"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </Button>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteCollaboration(request.id)}
+                                title="Delete request"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          {request.message && (
+                            <div className="mt-3 p-3 bg-muted rounded-lg">
+                              <p className="text-xs font-semibold text-muted-foreground mb-1">Additional Message:</p>
+                              <p className="text-sm">{request.message}</p>
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Enrollments Section */}
+          <TabsContent value="enrollments">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5" />
+                  Course Enrollments
+                  <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                    {courseEnrollments.length} total
+                  </span>
+                </CardTitle>
+                <CardDescription>View and manage student course enrollments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {courseEnrollments.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No course enrollments yet</p>
+                  ) : (
+                    courseEnrollments.map((enrollment) => (
+                      <Card key={enrollment.id} className={`p-4 ${enrollment.status !== "contacted" ? "border-primary" : ""}`}>
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className="font-semibold text-lg">{enrollment.studentName}</h4>
+                                {enrollment.status !== "contacted" && (
+                                  <span className="inline-flex items-center rounded-full border-transparent bg-primary text-primary-foreground px-2 py-0.5 text-xs font-semibold">
+                                    New
+                                  </span>
+                                )}
+                              </div>
+                              
+                              <div className="space-y-1.5 text-sm">
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <Mail className="w-4 h-4" />
+                                  <span>{enrollment.email}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <Phone className="w-4 h-4" />
+                                  <span>{enrollment.phone}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <GraduationCap className="w-4 h-4" />
+                                  <span className="font-medium text-foreground">{enrollment.courseTitle}</span>
+                                </div>
+                              </div>
+                              
+                              <div className="flex gap-2 mt-2">
+                                <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs">
+                                  {enrollment.courseDuration}
+                                </span>
+                                <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs">
+                                  {enrollment.courseLevel}
+                                </span>
+                              </div>
+                              
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Enrolled: {formatDate(enrollment.timestamp)}
+                              </p>
+                            </div>
+                            
+                            <div className="flex gap-2">
+                              {enrollment.status !== "contacted" && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleMarkEnrollmentAsContacted(enrollment.id)}
+                                  title="Mark as contacted"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </Button>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteEnrollment(enrollment.id)}
+                                title="Delete enrollment"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          {enrollment.about && (
+                            <div className="mt-3 p-3 bg-muted rounded-lg">
+                              <p className="text-xs font-semibold text-muted-foreground mb-1">About Student:</p>
+                              <p className="text-sm">{enrollment.about}</p>
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Contacts Section */}
           <TabsContent value="contacts">
@@ -271,197 +584,6 @@ const AdminDashboard = () => {
                     ))
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Hero Section */}
-          <TabsContent value="hero">
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Image className="w-5 h-5" />
-                  Hero Section
-                </CardTitle>
-                <CardDescription>Manage hero carousel content</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Slide 1 Title</Label>
-                  <Input defaultValue="Capturing Moments" />
-                </div>
-                <div>
-                  <Label>Slide 1 Highlight</Label>
-                  <Input defaultValue="Creating Memories" />
-                </div>
-                <div>
-                  <Label>Slide 1 Description</Label>
-                  <Textarea defaultValue="Professional photography and videography services..." />
-                </div>
-                <Button onClick={() => handleSave("Hero Section")}>Save Changes</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Founder Section */}
-          <TabsContent value="founder">
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Founder Information
-                </CardTitle>
-                <CardDescription>Update founder details and bio</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Name</Label>
-                  <Input defaultValue="John Nivin" />
-                </div>
-                <div>
-                  <Label>Title</Label>
-                  <Input defaultValue="Founder & Lead Photographer" />
-                </div>
-                <div>
-                  <Label>Bio</Label>
-                  <Textarea 
-                    rows={6}
-                    defaultValue="With over 15 years of experience in photography and videography..."
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Instagram</Label>
-                    <Input placeholder="Instagram URL" />
-                  </div>
-                  <div>
-                    <Label>Facebook</Label>
-                    <Input placeholder="Facebook URL" />
-                  </div>
-                </div>
-                <Button onClick={() => handleSave("Founder Information")}>Save Changes</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Courses Section */}
-          <TabsContent value="courses">
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5" />
-                  Courses Management
-                </CardTitle>
-                <CardDescription>Add or edit course offerings</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Course Name</Label>
-                  <Input placeholder="e.g., Professional Photography Basics" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Duration</Label>
-                    <Input placeholder="e.g., 8 weeks" />
-                  </div>
-                  <div>
-                    <Label>Level</Label>
-                    <Input placeholder="e.g., Beginner" />
-                  </div>
-                </div>
-                <div>
-                  <Label>Description</Label>
-                  <Textarea placeholder="Course description..." />
-                </div>
-                <Button onClick={() => handleSave("Courses")}>Add Course</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Services Section */}
-          <TabsContent value="services">
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Camera className="w-5 h-5" />
-                  Services Management
-                </CardTitle>
-                <CardDescription>Manage service offerings</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Service Name</Label>
-                  <Input placeholder="e.g., Wedding Photography" />
-                </div>
-                <div>
-                  <Label>Description</Label>
-                  <Textarea placeholder="Service description..." />
-                </div>
-                <div>
-                  <Label>Price Range</Label>
-                  <Input placeholder="e.g., $500 - $2000" />
-                </div>
-                <Button onClick={() => handleSave("Services")}>Add Service</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Portfolio Section */}
-          <TabsContent value="portfolio">
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Image className="w-5 h-5" />
-                  Portfolio Management
-                </CardTitle>
-                <CardDescription>Upload and manage portfolio images</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Image Title</Label>
-                  <Input placeholder="e.g., Elegant Wedding Ceremony" />
-                </div>
-                <div>
-                  <Label>Category</Label>
-                  <Input placeholder="e.g., Wedding" />
-                </div>
-                <div>
-                  <Label>Image Upload</Label>
-                  <Input type="file" accept="image/*" />
-                </div>
-                <Button onClick={() => handleSave("Portfolio")}>Upload Image</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Testimonials Section */}
-          <TabsContent value="testimonials">
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5" />
-                  Testimonials Management
-                </CardTitle>
-                <CardDescription>Add or edit client testimonials</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Client Name</Label>
-                  <Input placeholder="e.g., Sarah Johnson" />
-                </div>
-                <div>
-                  <Label>Service</Label>
-                  <Input placeholder="e.g., Wedding Photography" />
-                </div>
-                <div>
-                  <Label>Rating (1-5)</Label>
-                  <Input type="number" min="1" max="5" defaultValue="5" />
-                </div>
-                <div>
-                  <Label>Testimonial</Label>
-                  <Textarea placeholder="Client feedback..." rows={4} />
-                </div>
-                <Button onClick={() => handleSave("Testimonials")}>Add Testimonial</Button>
               </CardContent>
             </Card>
           </TabsContent>
