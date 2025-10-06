@@ -10,7 +10,6 @@ import { Camera, LogOut, Image, BookOpen, Users, MessageSquare, Mail, Inbox, Tra
 import { toast } from "sonner";
 import { db } from "@/lib/firebase";
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { Badge } from "@/components/ui/badge";
 
 interface ContactSubmission {
   id: string;
@@ -153,9 +152,9 @@ const AdminDashboard = () => {
               <Inbox className="w-4 h-4 mr-2" />
               Contacts
               {contactSubmissions.filter(c => c.status === "unread").length > 0 && (
-                <Badge variant="destructive" className="ml-2 h-5 min-w-5 p-1 text-xs">
+                <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-destructive text-destructive-foreground px-2 py-0.5 text-xs font-semibold">
                   {contactSubmissions.filter(c => c.status === "unread").length}
-                </Badge>
+                </span>
               )}
             </TabsTrigger>
             <TabsTrigger value="newsletter">
@@ -177,7 +176,9 @@ const AdminDashboard = () => {
                 <CardTitle className="flex items-center gap-2">
                   <Inbox className="w-5 h-5" />
                   Contact Submissions
-                  <Badge variant="secondary">{contactSubmissions.length} total</Badge>
+                  <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                    {contactSubmissions.length} total
+                  </span>
                 </CardTitle>
                 <CardDescription>View and manage contact form submissions</CardDescription>
               </CardHeader>
@@ -194,7 +195,9 @@ const AdminDashboard = () => {
                               <div className="flex items-center gap-2 mb-1">
                                 <h4 className="font-semibold">{submission.name}</h4>
                                 {submission.status === "unread" && (
-                                  <Badge variant="default" className="text-xs">New</Badge>
+                                  <span className="inline-flex items-center rounded-full border-transparent bg-primary text-primary-foreground px-2 py-0.5 text-xs font-semibold">
+                                    New
+                                  </span>
                                 )}
                               </div>
                               <p className="text-sm text-muted-foreground">{submission.email}</p>
@@ -238,7 +241,9 @@ const AdminDashboard = () => {
                 <CardTitle className="flex items-center gap-2">
                   <Mail className="w-5 h-5" />
                   Newsletter Subscribers
-                  <Badge variant="secondary">{newsletterSubscribers.length} subscribers</Badge>
+                  <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                    {newsletterSubscribers.length} subscribers
+                  </span>
                 </CardTitle>
                 <CardDescription>Manage newsletter email list</CardDescription>
               </CardHeader>
