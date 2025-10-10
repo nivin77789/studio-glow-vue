@@ -7,7 +7,7 @@ import AnimatedCursor from "@/components/AnimatedCursor";
 import Index from "./pages/Index";
 import CoursesPage from "./pages/CoursesPage";
 import PortfolioPage from "./pages/PortfolioPage";
-import ServicesPage from "./pages/ServicesPage";
+import ExperiencePage from "./pages/ExperiencePage";
 import ContactPage from "./pages/ContactPage";
 import CollaborationsPage from "./pages/CollaborationsPage";
 import PrintsPage from "./pages/PrintsPage";
@@ -28,7 +28,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/experience" element={<ExperiencePage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/collaborations" element={<CollaborationsPage />} />
           <Route path="/prints" element={<PrintsPage />} />

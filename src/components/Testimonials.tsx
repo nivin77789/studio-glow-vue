@@ -1,6 +1,12 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Star, Quote } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 interface Testimonial {
   id: number;
@@ -60,7 +66,7 @@ const Testimonials = () => {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} className="py-20 relative overflow-hidden">
+    <section ref={ref} className="py-20 relative overflow-hidden bg-muted/30">
       {/* Animated background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-20 right-1/4 w-96 h-96 bg-gradient-to-br from-accent/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
@@ -69,64 +75,75 @@ const Testimonials = () => {
 
       <div className="container mx-auto px-4">
         <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">What Our Clients Say</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">What Our Clients Say</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Don't just take our word for it - hear from our satisfied clients
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className={`group relative transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <div className="glass rounded-2xl p-8 h-full hover-lift card-elegant relative overflow-hidden">
-                {/* Animated gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className={`max-w-7xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {testimonials.map((testimonial) => (
+                <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                  <div className="group relative h-full">
+                    <div className="glass rounded-2xl p-8 h-full hover-lift card-elegant relative overflow-hidden">
+                      {/* Animated gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* Quote icon */}
-                <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <Quote className="w-16 h-16 text-primary" />
-                </div>
+                      {/* Quote icon */}
+                      <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <Quote className="w-16 h-16 text-primary" />
+                      </div>
 
-                <div className="relative z-10">
-                  {/* Rating */}
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 fill-accent text-accent group-hover:scale-110 transition-transform"
-                        style={{ transitionDelay: `${i * 50}ms` }}
-                      />
-                    ))}
-                  </div>
+                      <div className="relative z-10">
+                        {/* Rating */}
+                        <div className="flex gap-1 mb-4">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="w-5 h-5 fill-accent text-accent group-hover:scale-110 transition-transform"
+                              style={{ transitionDelay: `${i * 50}ms` }}
+                            />
+                          ))}
+                        </div>
 
-                  {/* Content */}
-                  <p className="text-foreground/80 mb-6 leading-relaxed">
-                    "{testimonial.content}"
-                  </p>
+                        {/* Content */}
+                        <p className="text-foreground/80 mb-6 leading-relaxed">
+                          "{testimonial.content}"
+                        </p>
 
-                  {/* Author */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-border/50">
-                    <Avatar className="w-12 h-12 ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                      <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold">
-                        {testimonial.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-semibold text-foreground">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                        {/* Author */}
+                        <div className="flex items-center gap-3 pt-4 border-t border-border/50">
+                          <Avatar className="w-12 h-12 ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
+                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold">
+                              {testimonial.name.split(' ').map(n => n[0]).join('')}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-semibold text-foreground">{testimonial.name}</p>
+                            <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          ))}
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
 
         {/* CTA */}

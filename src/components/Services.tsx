@@ -19,61 +19,85 @@ const services = [
     icon: Heart,
     title: "Wedding",
     description: "Capturing timeless wedding moments with elegance and love.",
+    category: "Wedding"
   },
   {
     icon: Sparkles,
     title: "Engagement",
     description: "Beautiful engagement stories told through cinematic frames.",
+    category: "Engagement"
+  },
+  {
+    icon: Sparkles,
+    title: "Pre Wedding",
+    description: "Romantic pre-wedding photoshoots at stunning locations.",
+    category: "Engagement"
   },
   {
     icon: Film,
     title: "Stories",
     description: "Personalized love and life stories woven into visuals.",
+    category: "Wedding"
   },
   {
     icon: Music,
     title: "Reception",
     description: "Joyful receptions captured with vibrant details.",
+    category: "Wedding"
   },
   {
-    icon: BookOpen,
-    title: "Magazine",
-    description: "Creative magazine-style photography & design.",
+    icon: PartyPopper,
+    title: "Haldi",
+    description: "Colorful haldi ceremonies with vibrant traditions.",
+    category: "Wedding"
   },
   {
-    icon: Mic,
-    title: "Podcast",
-    description: "Engaging podcasts to tell inspiring stories.",
+    icon: Sparkles,
+    title: "Mehandi",
+    description: "Intricate mehandi designs and joyful celebrations.",
+    category: "Wedding"
   },
   {
     icon: Baby,
     title: "Baby Shower",
     description: "Cherishing the joy of parenthood with adorable clicks.",
+    category: "Maternity"
+  },
+  {
+    icon: Baby,
+    title: "Annaprasanna",
+    description: "First feeding ceremony captured with love and tradition.",
+    category: "Maternity"
   },
   {
     icon: Home,
     title: "House Warming",
     description: "Memorable beginnings in your dream home.",
+    category: "House Warming"
   },
   {
     icon: Music,
     title: "Sangeeth",
     description: "Vibrant music and dance nights captured beautifully.",
+    category: "Wedding"
   },
   {
     icon: Cake,
     title: "Birthday",
     description: "Fun and colorful birthday celebrations.",
+    category: "Birthday"
   },
   {
     icon: PartyPopper,
     title: "Concerts",
     description: "Live concert energy captured with passion.",
+    category: "Concert"
   },
   {
     icon: Baby,
     title: "Maternity",
     description: "Beautiful maternity moments filled with love & hope.",
+    category: "Maternity"
   },
 ];
 
@@ -170,9 +194,9 @@ const Services = () => {
       <section id="services" className="py-24 bg-muted/30" ref={ref}>
         <div className="container mx-auto px-4">
           <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Services</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Portfolio</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              We offer a variety of premium services to capture your special moments beautifully.
+              Explore our work across different occasions and celebrations.
             </p>
           </div>
 

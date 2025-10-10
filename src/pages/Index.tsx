@@ -26,36 +26,20 @@ const Index = () => {
     >
       {/* 3D Photography-inspired background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        {/* Light leaks with 3D effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-purple-500/10 mix-blend-screen animate-pulse" />
-        <div
-          className="absolute inset-0 bg-gradient-to-tl from-yellow-400/10 via-transparent to-red-400/10 mix-blend-screen animate-pulse"
-          style={{ animationDuration: "10s" }}
-        />
-
-        {/* 3D Floating spheres with enhanced animations */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float-rotate" />
-        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
-        <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-cube" />
-        <div className="absolute top-1/3 left-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-spin-slow" />
-
-        {/* Moving lens flare */}
-        <div className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-12 animate-lensflare" />
-
-        {/* 3D Focus rings (autofocus animation) */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[200px] h-[200px] border border-white/20 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d' }} />
-          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d', animationDelay: '0.5s' }} />
-          <div className="w-[400px] h-[400px] border border-white/5 rounded-full animate-focus" style={{ transformStyle: 'preserve-3d', animationDelay: '1s' }} />
-        </div>
-
-        {/* Viewfinder grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]" />
-
-        {/* Film grain */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/noise.png')] opacity-20 mix-blend-overlay animate-grain" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-tl from-accent/15 to-primary/15 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }} />
         
-        {/* Floating particles with 3D effect */}
+        <div className="absolute top-20 right-20 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-pulse" />
+        <div className="absolute bottom-40 left-40 w-24 h-24 bg-accent/10 rounded-full blur-lg animate-float" />
+        
+        <div className="absolute top-1/3 right-1/3 w-48 h-48 border-2 border-primary/20 rounded-full animate-ping" style={{ animationDuration: '3s' }} />
+        
+        <div className="absolute inset-0 opacity-20 mix-blend-overlay bg-repeat animate-grain" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px'
+        }} />
+        
         {[...Array(15)].map((_, i) => (
           <div
             key={i}
@@ -65,7 +49,6 @@ const Index = () => {
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
               animationDuration: `${5 + Math.random() * 10}s`,
-              transform: `translateZ(${Math.random() * 100}px)`,
             }}
           />
         ))}

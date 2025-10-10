@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Moon, Sun, Camera } from "lucide-react";
+import { Menu, X, Moon, Sun, Camera, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
@@ -34,9 +34,9 @@ const Header = () => {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Courses", href: "/courses" },
+    { name: "Education", href: "/courses" },
+    { name: "Experience", href: "/experience", special: true },
     { name: "Portfolio", href: "/portfolio" },
-    { name: "Services", href: "/services" },
     { name: "Collaborations", href: "/collaborations" },
     { name: "Prints", href: "/prints" },
     { name: "Contact", href: "/contact" },
@@ -62,10 +62,16 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
-                
+                className={`text-foreground/80 hover:text-primary transition-colors font-medium relative group ${
+                  link.special ? 'animate-pulse' : ''
+                }`}
+                style={link.special ? {
+                  textShadow: '0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary))',
+                  fontWeight: 'bold'
+                } : {}}
               >
                 {link.name}
+                {link.special && <Sparkles className="inline-block w-4 h-4 ml-1 animate-pulse text-accent" />}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
               </Link>
             ))}

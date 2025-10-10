@@ -575,7 +575,7 @@ const Courses = () => {
                     name="about"
                     value={formData.about}
                     onChange={handleInputChange}
-                    rows="4"
+                    rows={4}
                     className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                     placeholder="Tell us about your background and why you're interested in this course..."
                   />
