@@ -63,9 +63,7 @@ const Header = () => {
                 key={link.name}
                 to={link.href}
                 className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
-                style={{
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.5)',
-                }}
+                
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
