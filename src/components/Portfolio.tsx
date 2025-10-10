@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-// Local images instead of Unsplash
+// Local gallery images
 const galleryImages = {
   Wedding: ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg", "/images/4.jpeg", "/images/5.jpeg"],
   Engagement: ["/images/6.jpeg", "/images/7.jpeg", "/images/8.jpeg", "/images/9.jpeg"],
@@ -23,23 +23,87 @@ const galleryImages = {
   Concert: ["/images/21.jpeg", "/images/22.jpeg", "/images/23.jpeg", "/images/24.jpeg"],
 };
 
+// GIFs for cards
 const services = [
-  { icon: Heart, title: "Wedding", description: "Capturing timeless wedding moments with elegance and love.", category: "Wedding" },
-  { icon: Sparkles, title: "Engagement", description: "Beautiful engagement stories told through cinematic frames.", category: "Engagement" },
-  { icon: Film, title: "Stories", description: "Personalized love and life stories woven into visuals.", category: "Wedding" },
-  { icon: Music, title: "Reception", description: "Joyful receptions captured with vibrant details.", category: "Wedding" },
-  { icon: PartyPopper, title: "Haldi", description: "Colorful haldi ceremonies with vibrant traditions.", category: "Wedding" },
-  { icon: Baby, title: "Maternity", description: "Beautiful maternity moments filled with love & hope.", category: "Maternity" },
-  { icon: Home, title: "House Warming", description: "Memorable beginnings in your dream home.", category: "House Warming" },
-  { icon: Cake, title: "Birthday", description: "Fun and colorful birthday celebrations.", category: "Birthday" },
-  { icon: PartyPopper, title: "Concerts", description: "Live concert energy captured with passion.", category: "Concert" },
+  {
+    icon: Heart,
+    title: "Wedding",
+    description: "Capturing timeless wedding moments with elegance and love.",
+    category: "Wedding",
+    thumbnail: "https://media.giphy.com/media/3o6nURjX6oK1fY2FwI/giphy_s.gif",
+    gif: "https://media.giphy.com/media/3o6nURjX6oK1fY2FwI/giphy.gif",
+  },
+  {
+    icon: Sparkles,
+    title: "Engagement",
+    description: "Beautiful engagement stories told through cinematic frames.",
+    category: "Engagement",
+    thumbnail: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy_s.gif",
+    gif: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif",
+  },
+  {
+    icon: Film,
+    title: "Stories",
+    description: "Personalized love and life stories woven into visuals.",
+    category: "Wedding",
+    thumbnail: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy_s.gif",
+    gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif",
+  },
+  {
+    icon: Music,
+    title: "Reception",
+    description: "Joyful receptions captured with vibrant details.",
+    category: "Wedding",
+    thumbnail: "https://media.giphy.com/media/26xBukh1GZNzYxWVa/giphy_s.gif",
+    gif: "https://media.giphy.com/media/26xBukh1GZNzYxWVa/giphy.gif",
+  },
+  {
+    icon: PartyPopper,
+    title: "Haldi",
+    description: "Colorful haldi ceremonies with vibrant traditions.",
+    category: "Wedding",
+    thumbnail: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy_s.gif",
+    gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif",
+  },
+  {
+    icon: Baby,
+    title: "Maternity",
+    description: "Beautiful maternity moments filled with love & hope.",
+    category: "Maternity",
+    thumbnail: "https://media.giphy.com/media/3oKIPwoeGErMmaI43C/giphy_s.gif",
+    gif: "https://media.giphy.com/media/3oKIPwoeGErMmaI43C/giphy.gif",
+  },
+  {
+    icon: Home,
+    title: "House Warming",
+    description: "Memorable beginnings in your dream home.",
+    category: "House Warming",
+    thumbnail: "https://media.giphy.com/media/26tPghhb310zx1x8Q/giphy_s.gif",
+    gif: "https://media.giphy.com/media/26tPghhb310zx1x8Q/giphy.gif",
+  },
+  {
+    icon: Cake,
+    title: "Birthday",
+    description: "Fun and colorful birthday celebrations.",
+    category: "Birthday",
+    thumbnail: "https://media.giphy.com/media/3o7btYwqNJv5iJdG3K/giphy_s.gif",
+    gif: "https://media.giphy.com/media/3o7btYwqNJv5iJdG3K/giphy.gif",
+  },
+  {
+    icon: PartyPopper,
+    title: "Concerts",
+    description: "Live concert energy captured with passion.",
+    category: "Concert",
+    thumbnail: "https://media.giphy.com/media/3o7bu8sRnYpTOG1p8k/giphy_s.gif",
+    gif: "https://media.giphy.com/media/3o7bu8sRnYpTOG1p8k/giphy.gif",
+  },
 ];
 
 export default function Services() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showAll, setShowAll] = useState(false); // for "See More"
+  const [showAll, setShowAll] = useState(false);
 
   const handleCardClick = (category) => {
     setSelectedService(category);
@@ -47,24 +111,20 @@ export default function Services() {
   };
 
   const closeGallery = () => setSelectedService(null);
-
   const nextImage = () => {
     const images = galleryImages[selectedService];
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
-
   const prevImage = () => {
     const images = galleryImages[selectedService];
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
   const currentGallery = selectedService ? galleryImages[selectedService] : [];
-
-  // Limit cards shown before "See More"
   const visibleServices = showAll ? services : services.slice(0, 4);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors duration-300 min-h-screen">
+    <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors duration-300">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
@@ -76,27 +136,36 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Service cards */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6`}>
+        {/* Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {visibleServices.map((service, index) => (
             <div
               key={index}
-              className="group cursor-pointer bg-white dark:bg-slate-800 rounded-xl shadow-md card-glow p-6 fade-in border border-gray-100 dark:border-slate-700 transition-all"
               onClick={() => handleCardClick(service.category)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              className="relative cursor-pointer rounded-xl shadow-md overflow-hidden group border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all"
             >
-              <div
-                className={`mb-4 inline-flex p-3 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-all icon-container ${
-                  hoveredIndex === index ? "icon-bounce" : "icon-float"
-                }`}
-              >
-                <service.icon className="w-8 h-8" />
+              {/* Background GIF/thumbnail */}
+              <img
+                src={hoveredIndex === index ? service.gif : service.thumbnail}
+                alt={service.title}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+              />
+
+              {/* Overlay for readability */}
+              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-all duration-500"></div>
+
+              {/* Card content */}
+              <div className="relative p-6 text-center z-10 text-white">
+                <div className="flex justify-center mb-4">
+                  <div className="p-3 rounded-xl bg-purple-600/70">
+                    <service.icon className="w-8 h-8" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                <p className="text-sm opacity-90">{service.description}</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                {service.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">{service.description}</p>
             </div>
           ))}
         </div>
@@ -114,9 +183,15 @@ export default function Services() {
 
       {/* Gallery Modal */}
       {selectedService && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4" onClick={closeGallery}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4"
+          onClick={closeGallery}
+        >
           <div className="relative w-full max-w-6xl" onClick={(e) => e.stopPropagation()}>
-            <button onClick={closeGallery} className="absolute -top-12 right-0 text-white hover:text-purple-400 transition">
+            <button
+              onClick={closeGallery}
+              className="absolute -top-12 right-0 text-white hover:text-purple-400 transition"
+            >
               <X className="w-8 h-8" />
             </button>
 
