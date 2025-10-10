@@ -1,121 +1,129 @@
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Camera, Aperture, Sparkles, Video, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const slides = [
-  { image: "/images/hero1.jpeg" },
-  { image: "/images/hero2.jpeg" },
-  { image: "/images/hero3.jpeg" },
-];
-
-const HeroCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  useEffect(() => {
-    if (isPaused) return;
-
-    const interval = setInterval(() => {
-      handleSlideChange((currentSlide + 1) % slides.length);
-    }, 6000);
-
-    return () => clearInterval(interval);
-  }, [isPaused, currentSlide]);
-
-  const handleSlideChange = (newSlide) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentSlide(newSlide);
-    setTimeout(() => setIsAnimating(false), 700);
-  };
-
-  const nextSlide = () => {
-    handleSlideChange((currentSlide + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    handleSlideChange((currentSlide - 1 + slides.length) % slides.length);
-  };
-
+const HeroLanding = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden text-white"
     >
-      {/* Background Images */}
-      <div className="absolute inset-0">
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-              index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
-            }`}
-          >
-            <img
-              src={slide.image}
-              alt={`Slide ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40" />
-          </div>
-        ))}
+      {/* --- Cinematic 3D background overlays --- */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Light leaks */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-purple-500/10 mix-blend-screen animate-pulse" />
+        <div
+          className="absolute inset-0 bg-gradient-to-tl from-yellow-400/10 via-transparent to-red-400/10 mix-blend-screen animate-pulse"
+          style={{ animationDuration: "10s" }}
+        />
+
+        {/* 3D floating spheres */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float-rotate" />
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
+        <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-cube" />
+        <div className="absolute top-1/3 left-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-spin-slow" />
+
+        {/* Lens flare beam */}
+        <div className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-12 animate-lensflare" />
+
+        {/* Focus rings */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[200px] h-[200px] border border-white/20 rounded-full animate-focus" />
+          <div className="w-[300px] h-[300px] border border-white/10 rounded-full animate-focus" style={{ animationDelay: "0.5s" }} />
+          <div className="w-[400px] h-[400px] border border-white/5 rounded-full animate-focus" style={{ animationDelay: "1s" }} />
+        </div>
+
+        {/* Subtle film grain texture */}
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/noise.png')] opacity-15 mix-blend-overlay animate-grain" />
       </div>
 
-      {/* Animated particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-6 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all group"
-        aria-label="Previous slide"
+      {/* --- Floating animated icons --- */}
+      <motion.div
+        className="absolute top-1/4 left-10 hidden md:block"
+        animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+        transition={{ repeat: Infinity, duration: 6 }}
       >
-        <ChevronLeft className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all group"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
-      </button>
+        <Camera className="w-10 h-10 text-purple-400/80" />
+      </motion.div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleSlideChange(index)}
-            className={`relative h-1 rounded-full transition-all duration-500 overflow-hidden ${
-              index === currentSlide ? "w-12 bg-white" : "w-8 bg-white/30 hover:bg-white/50"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
+      <motion.div
+        className="absolute top-1/3 right-12 hidden md:block"
+        animate={{ y: [0, -15, 0], rotate: [0, -5, 5, 0] }}
+        transition={{ repeat: Infinity, duration: 8 }}
+      >
+        <Aperture className="w-10 h-10 text-pink-400/80" />
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-1/3 left-1/3 hidden md:block"
+        animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
+        transition={{ repeat: Infinity, duration: 5 }}
+      >
+        <Video className="w-10 h-10 text-blue-400/80" />
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-1/4 right-1/3 hidden md:block"
+        animate={{ y: [0, -12, 0], rotate: [0, -6, 6, 0] }}
+        transition={{ repeat: Infinity, duration: 7 }}
+      >
+        <Heart className="w-10 h-10 text-red-400/80" />
+      </motion.div>
+
+      <motion.div
+        className="absolute top-12 right-1/2 hidden md:block"
+        animate={{ y: [0, -8, 0], rotate: [0, 10, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 9 }}
+      >
+        <Sparkles className="w-10 h-10 text-yellow-300/70" />
+      </motion.div>
+
+      {/* --- Main content --- */}
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.3 }}
+        className="z-10 px-6 max-w-3xl"
+      >
+        <h1 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+          Aurora Studio
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 1.2 }}
+          className="text-lg md:text-xl text-gray-400 mb-10 leading-relaxed"
+        >
+          We capture the light, emotion, and story behind every frame. 
+          From weddings to cinematic storytelling — your memories deserve magic.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
+          className="flex flex-wrap justify-center gap-4"
+        >
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg hover:shadow-pink-500/40 hover:scale-105 transition-all"
           >
-            {index === currentSlide && (
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 animate-shimmer" />
-            )}
-          </button>
-        ))}
-      </div>
+            Book a Shoot
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-white/40 text-gray-400 hover:bg-white/10 hover:border-white/60 transition-all"
+          >
+            View Portfolio
+          </Button>
+        </motion.div>
+      </motion.div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 backdrop-blur-sm flex items-start justify-center p-2">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
           <div className="w-1.5 h-3 bg-white rounded-full animate-scroll" />
         </div>
       </div>
@@ -123,4 +131,4 @@ const HeroCarousel = () => {
   );
 };
 
-export default HeroCarousel;
+export default HeroLanding;
