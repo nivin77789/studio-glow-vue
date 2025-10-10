@@ -169,7 +169,7 @@ const ExperiencePage = () => {
                   <Trophy className="w-5 h-5 mr-2" />
                   Register Now
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 text-lg px-8 py-6 backdrop-blur-sm">
+                <Button size="lg" variant="outline" className="border-white text-grey hover:bg-white/20 text-lg px-8 py-6 backdrop-blur-sm">
                   <Eye className="w-5 h-5 mr-2" />
                   Learn More
                 </Button>
@@ -223,7 +223,7 @@ const ExperiencePage = () => {
                       </div>
                     </div>
                     <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg mb-3 group-hover:text-primary transition-colors">
+                      <h3 className="font-semibold text-sm mb-3 group-hover:text-primary transition-colors">
                         {workshop.title}
                       </h3>
                       <div className="space-y-2 text-sm text-muted-foreground">

@@ -1,195 +1,175 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Heart,
+  Sparkles,
+  Film,
+  Music,
+  Baby,
+  Home,
+  Cake,
+  PartyPopper,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
-const categories = [
-  "All",
-  "Wedding",
-  "Birthday",
-  "Maternity",
-  "Concert",
-  "Engagement",
-  "House Warming",
+// Local images instead of Unsplash
+const galleryImages = {
+  Wedding: ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg", "/images/4.jpeg", "/images/5.jpeg"],
+  Engagement: ["/images/6.jpeg", "/images/7.jpeg", "/images/8.jpeg", "/images/9.jpeg"],
+  Maternity: ["/images/10.jpeg", "/images/11.jpeg", "/images/12.jpeg", "/images/13.jpeg"],
+  "House Warming": ["/images/14.jpeg", "/images/15.jpeg", "/images/16.jpeg"],
+  Birthday: ["/images/17.jpeg", "/images/18.jpeg", "/images/19.jpeg", "/images/20.jpeg"],
+  Concert: ["/images/21.jpeg", "/images/22.jpeg", "/images/23.jpeg", "/images/24.jpeg"],
+};
+
+const services = [
+  { icon: Heart, title: "Wedding", description: "Capturing timeless wedding moments with elegance and love.", category: "Wedding" },
+  { icon: Sparkles, title: "Engagement", description: "Beautiful engagement stories told through cinematic frames.", category: "Engagement" },
+  { icon: Film, title: "Stories", description: "Personalized love and life stories woven into visuals.", category: "Wedding" },
+  { icon: Music, title: "Reception", description: "Joyful receptions captured with vibrant details.", category: "Wedding" },
+  { icon: PartyPopper, title: "Haldi", description: "Colorful haldi ceremonies with vibrant traditions.", category: "Wedding" },
+  { icon: Baby, title: "Maternity", description: "Beautiful maternity moments filled with love & hope.", category: "Maternity" },
+  { icon: Home, title: "House Warming", description: "Memorable beginnings in your dream home.", category: "House Warming" },
+  { icon: Cake, title: "Birthday", description: "Fun and colorful birthday celebrations.", category: "Birthday" },
+  { icon: PartyPopper, title: "Concerts", description: "Live concert energy captured with passion.", category: "Concert" },
 ];
 
-// Generate 50 portfolio items with categories
-const portfolioItems = Array.from({ length: 50 }, (_, i) => {
-  const id = i + 1;
-  const catList = [
-    "Wedding",
-    "Birthday",
-    "Maternity",
-    "Concert",
-    "Engagement",
-    "House Warming",
-  ];
-  return {
-    id,
-    category: catList[i % catList.length],
-    title: `${catList[i % catList.length]} Event ${id}`,
-    image: `/images/${id}.jpeg`,
-    featured: id % 10 === 0, // every 10th image is featured
+export default function Services() {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showAll, setShowAll] = useState(false); // for "See More"
+
+  const handleCardClick = (category) => {
+    setSelectedService(category);
+    setCurrentImageIndex(0);
   };
-});
 
-const Portfolio = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [showAll, setShowAll] = useState(false);
+  const closeGallery = () => setSelectedService(null);
 
-  // Filter images based on active category
-  const filteredItems =
-    activeCategory === "All"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === activeCategory);
+  const nextImage = () => {
+    const images = galleryImages[selectedService];
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
 
-  const featuredItem = filteredItems[currentSlide % filteredItems.length];
+  const prevImage = () => {
+    const images = galleryImages[selectedService];
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
 
-  // Show only 1 row (4 images) or all
-  const gridImages = showAll
-    ? filteredItems.filter((item) => item.id !== featuredItem.id)
-    : filteredItems.filter((item) => item.id !== featuredItem.id).slice(0, 4);
+  const currentGallery = selectedService ? galleryImages[selectedService] : [];
 
-  const nextSlide = () =>
-    setCurrentSlide((prev) => (prev + 1) % filteredItems.length);
-  const prevSlide = () =>
-    setCurrentSlide(
-      (prev) => (prev - 1 + filteredItems.length) % filteredItems.length
-    );
+  // Limit cards shown before "See More"
+  const visibleServices = showAll ? services : services.slice(0, 4);
 
   return (
-    <section
-      id="portfolio"
-      className="min-h-screen bg-gradient-to-b from-gray-100 to-white text-gray-900 dark:from-gray-900 dark:to-black dark:text-white py-20 px-6 md:px-12 relative overflow-hidden"
-    >
-      {/* Section Header */}
-      <div className="max-w-7xl mx-auto text-center mb-16">
-        <h2 className="text-4xl md:text-6xl font-bold mb-4">
-          Our{" "}
-          <span className="text-[#5033E8] dark:text-[#5033E8]">
-            Portfolio
-          </span>
-        </h2>
-        <p className="text-gray-700 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-          Explore our finest photography and videography works across various
-          occasions and themes.
-        </p>
-      </div>
+    <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors duration-300 min-h-screen">
+      <div className="container mx-auto px-4 max-w-7xl">
+        {/* Header */}
+        <div className="text-center mb-16 fade-in">
+          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            Our Portfolio
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Explore our work across different occasions and celebrations.
+          </p>
+        </div>
 
-      {/* Category Filter Buttons */}
-      <div className="flex flex-wrap justify-center gap-4 mb-12">
-        {categories.map((category) => (
-          <Button
-            key={category}
-            variant={activeCategory === category ? "default" : "outline"}
-            className={`px-6 py-2 rounded-full text-sm ${
-              activeCategory === category
-                ? "bg-[#5033E8] text-white"
-                : "border border-gray-300 text-gray-800 dark:border-white/30 dark:text-white/80 hover:bg-gray-200 dark:hover:bg-white/10"
-            }`}
-            onClick={() => {
-              setActiveCategory(category);
-              setCurrentSlide(0); // reset featured slider
-              setShowAll(false); // reset show more
-            }}
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
+        {/* Service cards */}
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6`}>
+          {visibleServices.map((service, index) => (
+            <div
+              key={index}
+              className="group cursor-pointer bg-white dark:bg-slate-800 rounded-xl shadow-md card-glow p-6 fade-in border border-gray-100 dark:border-slate-700 transition-all"
+              onClick={() => handleCardClick(service.category)}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <div
+                className={`mb-4 inline-flex p-3 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-all icon-container ${
+                  hoveredIndex === index ? "icon-bounce" : "icon-float"
+                }`}
+              >
+                <service.icon className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                {service.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">{service.description}</p>
+            </div>
+          ))}
+        </div>
 
-      {/* Featured Image */}
-      {filteredItems.length > 0 ? (
-        <div className="relative max-w-5xl mx-auto mb-16 rounded-2xl overflow-hidden shadow-2xl">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={featuredItem.id}
-              src={featuredItem.image}
-              alt={featuredItem.title}
-              className="w-full h-[500px] object-cover"
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.8 }}
-            />
-          </AnimatePresence>
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-8">
-            <h3 className="text-2xl md:text-3xl font-semibold text-white">
-              {featuredItem.title}
-            </h3>
-            <p className="text-white/70">{featuredItem.category}</p>
-          </div>
-
-          {/* Slider Arrows */}
+        {/* See More Button */}
+        <div className="text-center mt-10">
           <button
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 dark:bg-white/20 hover:bg-white/20 dark:hover:bg-white/30 p-3 rounded-full border border-white/20 dark:border-white/40 transition-all"
+            onClick={() => setShowAll(!showAll)}
+            className="px-6 py-3 rounded-full bg-purple-600 text-white font-medium hover:bg-purple-700 transition-all"
           >
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 dark:bg-white/20 hover:bg-white/20 dark:hover:bg-white/30 p-3 rounded-full border border-white/20 dark:border-white/40 transition-all"
-          >
-            <ChevronRight className="w-6 h-6 text-white" />
+            {showAll ? "See Less" : "See More"}
           </button>
         </div>
-      ) : (
-        <p className="text-center text-gray-700 dark:text-gray-300 text-lg mb-16">
-          No images found for this category.
-        </p>
-      )}
+      </div>
 
-      {/* Grid of Images */}
-      <motion.div
-        layout
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-7xl mx-auto mb-6"
-      >
-        {gridImages.map((item) => (
-          <motion.div
-            key={item.id}
-            className="relative rounded-xl overflow-hidden group shadow-lg"
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img
-              src={item.image}
-              alt={item.title}
-              className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-black/50 dark:bg-white/10 opacity-0 group-hover:opacity-100 flex flex-col justify-center items-center transition-all duration-500">
-              <h4 className="text-lg font-semibold mb-2 text-white dark:text-black">
-                {item.title}
-              </h4>
-              <p className="text-white/70 dark:text-black/70 mb-2">{item.category}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-white text-black dark:text-white hover:bg-white hover:text-black dark:hover:bg-gray-200 dark:hover:text-black"
-              >
-                <Eye className="w-4 h-4 mr-2" /> View
-              </Button>
+      {/* Gallery Modal */}
+      {selectedService && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4" onClick={closeGallery}>
+          <div className="relative w-full max-w-6xl" onClick={(e) => e.stopPropagation()}>
+            <button onClick={closeGallery} className="absolute -top-12 right-0 text-white hover:text-purple-400 transition">
+              <X className="w-8 h-8" />
+            </button>
+
+            <div className="text-center mb-6">
+              <h3 className="text-3xl font-bold text-white">{selectedService} Gallery</h3>
+              <p className="text-white/70 mt-2">
+                {currentImageIndex + 1} / {currentGallery.length}
+              </p>
             </div>
-          </motion.div>
-        ))}
-      </motion.div>
 
-      {/* See More Button */}
-      {!showAll && filteredItems.length > 5 && (
-        <div className="text-center mt-4">
-          <Button
-            size="lg"
-            onClick={() => setShowAll(true)}
-            className="bg-[#5033E8] text-white hover:bg-[#3a28b0]"
-          >
-            See More
-          </Button>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src={currentGallery[currentImageIndex]}
+                alt={`${selectedService} ${currentImageIndex + 1}`}
+                className="w-full h-[70vh] object-contain transition-all duration-500 ease-in-out transform scale-100 hover:scale-[1.02]"
+              />
+              {currentGallery.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Thumbnails */}
+            <div className="flex gap-2 mt-6 overflow-x-auto pb-2 px-1">
+              {currentGallery.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                    idx === currentImageIndex
+                      ? "border-purple-500 ring-2 ring-purple-400"
+                      : "border-white/20 hover:border-white/50"
+                  }`}
+                >
+                  <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </section>
   );
-};
-
-export default Portfolio;
+}

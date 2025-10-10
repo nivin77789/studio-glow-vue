@@ -61,7 +61,6 @@ const Index = () => {
       <HeroCarousel />
       <Founder />
       <Courses />
-      <Services />
       <Portfolio />
       <Collaborations />
       <Prints />
