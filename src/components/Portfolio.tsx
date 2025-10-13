@@ -95,6 +95,17 @@ export default function Services() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile/tablet on mount
+  useState(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleCardClick = (category) => {
     setSelectedService(category);
@@ -138,13 +149,13 @@ export default function Services() {
             >
               <div
                 onClick={() => handleCardClick(service.category)}
-                className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all h-64"
+                className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all aspect-square w-full"
               >
                 {/* Background Video */}
                 <video
                   ref={(el) => {
                     if (el) {
-                      if (hoveredIndex === index) {
+                      if (isMobile || hoveredIndex === index) {
                         el.play();
                       } else {
                         el.pause();
