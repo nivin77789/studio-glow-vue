@@ -91,8 +91,12 @@ const Collaborations = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedCollab, setSelectedCollab] = useState<typeof collaborations[0] | null>(null);
   const [showPartnerForm, setShowPartnerForm] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const itemsPerRow = 3;
+  const displayedCollaborations = showAll ? collaborations : collaborations.slice(0, itemsPerRow);
 
   const [partnerForm, setPartnerForm] = useState({
     serviceName: "",
@@ -174,7 +178,7 @@ const Collaborations = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {collaborations.map((collab, index) => (
+            {displayedCollaborations.map((collab, index) => (
               <Card
                 key={index}
                 className={`group hover-lift border-0 card-elegant overflow-hidden transition-all duration-500 ${
@@ -231,6 +235,55 @@ const Collaborations = () => {
               </Card>
             ))}
           </div>
+
+          {collaborations.length > itemsPerRow && (
+            <div className="flex justify-center mt-12">
+              <Button
+                onClick={() => setShowAll(!showAll)}
+                variant="outline"
+                size="lg"
+                className="group"
+              >
+                {showAll ? (
+                  <>
+                    Show Less
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="ml-2 transition-transform group-hover:-translate-y-1"
+                    >
+                      <path d="m18 15-6-6-6 6"/>
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    Show More ({collaborations.length - itemsPerRow} more)
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="ml-2 transition-transform group-hover:translate-y-1"
+                    >
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
 
           {/* CTA Section */}
           <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>

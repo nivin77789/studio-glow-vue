@@ -100,9 +100,13 @@ const Prints = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedPrint, setSelectedPrint] = useState<PrintType | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string>("frame");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const itemsPerRow = 3;
+  const displayedPrints = showAll ? printTypes : printTypes.slice(0, itemsPerRow);
 
   const handleOrder = (printType: string, variant?: string) => {
     const message = variant 
@@ -310,7 +314,7 @@ const Prints = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {printTypes.map((print, index) => {
+          {displayedPrints.map((print, index) => {
             const Icon = print.icon;
             return (
               <div
@@ -351,6 +355,55 @@ const Prints = () => {
             );
           })}
         </div>
+
+        {printTypes.length > itemsPerRow && (
+          <div className="flex justify-center mt-12">
+            <Button
+              onClick={() => setShowAll(!showAll)}
+              variant="outline"
+              size="lg"
+              className="group"
+            >
+              {showAll ? (
+                <>
+                  Show Less
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="ml-2 transition-transform group-hover:-translate-y-1"
+                  >
+                    <path d="m18 15-6-6-6 6"/>
+                  </svg>
+                </>
+              ) : (
+                <>
+                  Show More ({printTypes.length - itemsPerRow} more)
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="ml-2 transition-transform group-hover:translate-y-1"
+                  >
+                    <path d="m6 9 6 6 6-6"/>
+                  </svg>
+                </>
+              )}
+            </Button>
+          </div>
+        )}
 
         {/* CTA Section */}
         <div className={`mt-20 text-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
