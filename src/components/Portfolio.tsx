@@ -203,7 +203,7 @@ export default function Services() {
           <div className="relative w-full max-w-6xl" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={closeGallery}
-              className="absolute -top-4 right-0 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:rotate-90 duration-300 group"
+              className="absolute -top-4 md:-top-4 top-4 right-0 md:right-0 right-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:rotate-90 duration-300 group z-10"
               aria-label="Close gallery"
             >
               <X className="w-6 h-6 group-hover:scale-110 transition-transform" />
