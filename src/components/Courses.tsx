@@ -247,6 +247,7 @@ const courses = [
 const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showEnrollForm, setShowEnrollForm] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -256,6 +257,9 @@ const Courses = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const navigate = useNavigate();
+
+  const itemsPerRow = 3;
+  const displayedCourses = showAll ? courses : courses.slice(0, itemsPerRow);
 
   const handleEnrollClick = () => {
     setShowEnrollForm(true);
@@ -313,7 +317,7 @@ const Courses = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course, index) => (
+            {displayedCourses.map((course, index) => (
               <Card
                 key={index}
                 className="group hover-lift border-0 bg-card card-elegant overflow-hidden flex flex-col h-full"
@@ -360,6 +364,55 @@ const Courses = () => {
               </Card>
             ))}
           </div>
+
+          {courses.length > itemsPerRow && (
+            <div className="flex justify-center mt-12">
+              <Button
+                onClick={() => setShowAll(!showAll)}
+                variant="outline"
+                size="lg"
+                className="group"
+              >
+                {showAll ? (
+                  <>
+                    Show Less
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="ml-2 transition-transform group-hover:-translate-y-1"
+                    >
+                      <path d="m18 15-6-6-6 6"/>
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    Show More ({courses.length - itemsPerRow} more)
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="ml-2 transition-transform group-hover:translate-y-1"
+                    >
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
