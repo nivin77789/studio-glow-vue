@@ -23,87 +23,78 @@ const galleryImages = {
   Concert: ["/images/21.jpeg", "/images/22.jpeg", "/images/23.jpeg", "/images/24.jpeg"],
 };
 
-// GIFs for cards
+// Videos for cards
 const services = [
   {
     icon: Heart,
     title: "Wedding",
     description: "Capturing timeless wedding moments with elegance and love.",
     category: "Wedding",
-    thumbnail: "https://media.giphy.com/media/3o6nURjX6oK1fY2FwI/giphy_s.gif",
-    gif: "https://media.giphy.com/media/3o6nURjX6oK1fY2FwI/giphy.gif",
+    video: "/gif/wed.mp4",
   },
   {
     icon: Sparkles,
     title: "Engagement",
     description: "Beautiful engagement stories told through cinematic frames.",
     category: "Engagement",
-    thumbnail: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy_s.gif",
-    gif: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif",
+    video: "/gif/engagement.mp4",
   },
   {
     icon: Film,
     title: "Stories",
     description: "Personalized love and life stories woven into visuals.",
     category: "Wedding",
-    thumbnail: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy_s.gif",
-    gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif",
+    video: "/gif/stories.mp4",
   },
   {
     icon: Music,
     title: "Reception",
     description: "Joyful receptions captured with vibrant details.",
     category: "Wedding",
-    thumbnail: "https://media.giphy.com/media/26xBukh1GZNzYxWVa/giphy_s.gif",
-    gif: "https://media.giphy.com/media/26xBukh1GZNzYxWVa/giphy.gif",
+    video: "/gif/reception.mp4",
   },
   {
     icon: PartyPopper,
     title: "Haldi",
     description: "Colorful haldi ceremonies with vibrant traditions.",
     category: "Wedding",
-    thumbnail: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy_s.gif",
-    gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif",
+    video: "/gif/haldi.mp4",
   },
   {
     icon: Baby,
     title: "Maternity",
     description: "Beautiful maternity moments filled with love & hope.",
     category: "Maternity",
-    thumbnail: "https://media.giphy.com/media/3oKIPwoeGErMmaI43C/giphy_s.gif",
-    gif: "https://media.giphy.com/media/3oKIPwoeGErMmaI43C/giphy.gif",
+    video: "/gif/maternity.mp4",
   },
   {
     icon: Home,
     title: "House Warming",
     description: "Memorable beginnings in your dream home.",
     category: "House Warming",
-    thumbnail: "https://media.giphy.com/media/26tPghhb310zx1x8Q/giphy_s.gif",
-    gif: "https://media.giphy.com/media/26tPghhb310zx1x8Q/giphy.gif",
+    video: "/gif/housewarming.mp4",
   },
   {
     icon: Cake,
     title: "Birthday",
     description: "Fun and colorful birthday celebrations.",
     category: "Birthday",
-    thumbnail: "https://media.giphy.com/media/3o7btYwqNJv5iJdG3K/giphy_s.gif",
-    gif: "https://media.giphy.com/media/3o7btYwqNJv5iJdG3K/giphy.gif",
+    video: "/gif/birthday.mp4",
   },
   {
     icon: PartyPopper,
     title: "Concerts",
     description: "Live concert energy captured with passion.",
     category: "Concert",
-    thumbnail: "https://media.giphy.com/media/3o7bu8sRnYpTOG1p8k/giphy_s.gif",
-    gif: "https://media.giphy.com/media/3o7bu8sRnYpTOG1p8k/giphy.gif",
+    video: "/gif/concert.mp4",
   },
 ];
 
 export default function Services() {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const handleCardClick = (category) => {
     setSelectedService(category);
@@ -139,33 +130,44 @@ export default function Services() {
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {visibleServices.map((service, index) => (
-            <div
-              key={index}
-              onClick={() => handleCardClick(service.category)}
+            <div 
+              key={index} 
+              className="group"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="relative cursor-pointer rounded-xl shadow-md overflow-hidden group border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all"
             >
-              {/* Background GIF/thumbnail */}
-              <img
-                src={hoveredIndex === index ? service.gif : service.thumbnail}
-                alt={service.title}
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
-              />
+              <div
+                onClick={() => handleCardClick(service.category)}
+                className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all h-64"
+              >
+                {/* Background Video */}
+                <video
+                  ref={(el) => {
+                    if (el) {
+                      if (hoveredIndex === index) {
+                        el.play();
+                      } else {
+                        el.pause();
+                        el.currentTime = 0;
+                      }
+                    }
+                  }}
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover scale-125"
+                >
+                  <source src={service.video} type="video/mp4" />
+                </video>
 
-              {/* Overlay for readability */}
-              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-all duration-500"></div>
-
-              {/* Card content */}
-              <div className="relative p-6 text-center z-10 text-white">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 rounded-xl bg-purple-600/70">
-                    <service.icon className="w-8 h-8" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <p className="text-sm opacity-90">{service.description}</p>
+                {/* Overlay for readability */}
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
               </div>
+              
+              {/* Title below card */}
+              <h3 className="text-xl font-semibold mt-4 text-center text-gray-800 dark:text-gray-200">
+                {service.title}
+              </h3>
             </div>
           ))}
         </div>
