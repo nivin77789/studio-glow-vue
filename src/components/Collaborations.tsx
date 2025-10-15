@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X } from "lucide-react";
+import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X, Camera } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -98,11 +98,8 @@ const Collaborations = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedCollab, setSelectedCollab] = useState<typeof collaborations[0] | null>(null);
   const [showPartnerForm, setShowPartnerForm] = useState(false);
-  // Removed showAll in favor of horizontal carousel controls
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-
-  const itemsPerRow = 3;
 
   const [partnerForm, setPartnerForm] = useState({
     serviceName: "",
@@ -136,7 +133,6 @@ const Collaborations = () => {
     setIsSubmitting(true);
 
     try {
-      // Add document to Firestore
       await addDoc(collection(db, "partnerSubmissions"), {
         ...partnerForm,
         timestamp: new Date(),
@@ -148,7 +144,6 @@ const Collaborations = () => {
         description: "We'll get back to you soon. Thank you for your interest!",
       });
 
-      // Reset form and close modal
       setPartnerForm({
         serviceName: "",
         name: "",
@@ -173,7 +168,14 @@ const Collaborations = () => {
 
   return (
     <>
-      <section id="collaborations" className="py-24" ref={ref}>
+      <section id="collaborations" className="py-24 relative overflow-hidden" ref={ref}>
+        {/* Photography-themed background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
+
+          
+        </div>
+
         <div className="container mx-auto px-4">
           <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <Badge className="mb-4 px-4 py-2 text-sm">Our Partners</Badge>
@@ -269,6 +271,16 @@ const Collaborations = () => {
             </Card>
           </div>
         </div>
+
+        <style>{`
+          @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          .animate-spin-slow {
+            animation: spin-slow 30s linear infinite;
+          }
+        `}</style>
       </section>
 
       {/* Collaboration Details Modal */}

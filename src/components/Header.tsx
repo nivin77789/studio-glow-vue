@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Moon, Sun, Camera, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -14,6 +14,9 @@ const Header = () => {
     }
     return isDark;
   });
+  
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,6 +45,33 @@ const Header = () => {
     { name: "Contact", href: "/contact" },
   ];
 
+  // Determine text color based on page and scroll state
+  const getTextColor = () => {
+    if (isHomePage) {
+      // On home page: white until scrolled, then theme color
+      return isScrolled 
+        ? 'text-foreground/80 hover:text-primary' 
+        : 'text-white hover:text-white/80';
+    } else {
+      // On other pages: always use theme color
+      return 'text-foreground/80 hover:text-primary';
+    }
+  };
+
+  const getLogoColor = () => {
+    if (isHomePage && !isScrolled) {
+      return 'text-white';
+    }
+    return 'text-primary';
+  };
+
+  const getMobileMenuColor = () => {
+    if (isHomePage && !isScrolled) {
+      return 'text-white';
+    }
+    return '';
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -52,8 +82,10 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <Camera className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
-            <span className="text-2xl font-bold gradient-text">Mark Studio</span>
+            <Camera className={`w-8 h-8 transition-all group-hover:scale-110 ${getLogoColor()}`} />
+            <span className={`text-2xl font-bold transition-colors ${isHomePage && !isScrolled ? 'text-white' : 'gradient-text'}`}>
+              Mark Studio
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -62,11 +94,13 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`text-foreground/80 hover:text-primary transition-colors font-medium relative group ${
+                className={`transition-colors font-medium relative group ${
                   link.special ? 'animate-pulse' : ''
-                }`}
-                style={link.special ? {
-                  textShadow: '0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary))',
+                } ${getTextColor()}`}
+                style={link.special && isHomePage && !isScrolled ? {
+                  textShadow: '0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6)',
+                  fontWeight: 'bold'
+                } : link.special ? {
                   fontWeight: 'bold'
                 } : {}}
               >
@@ -79,7 +113,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="ml-2"
+              className="ml-2 text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
             >
               {isDarkMode ? (
                 <Sun className="w-5 h-5" />
@@ -95,6 +129,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
+              className="text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
             >
               {isDarkMode ? (
                 <Sun className="w-5 h-5" />
@@ -106,6 +141,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={getMobileMenuColor()}
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -123,7 +159,7 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="block py-3 text-foreground/80 hover:text-primary transition-colors font-medium"
+                className={`block py-3 transition-colors font-medium ${getTextColor()}`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}

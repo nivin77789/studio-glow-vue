@@ -254,7 +254,6 @@ const courses = [
 const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showEnrollForm, setShowEnrollForm] = useState(false);
-  // Removed showAll in favor of horizontal carousel controls
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -264,8 +263,6 @@ const Courses = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const navigate = useNavigate();
-
-  const itemsPerRow = 3;
 
   const handleEnrollClick = () => {
     setShowEnrollForm(true);
@@ -313,7 +310,12 @@ const Courses = () => {
 
   return (
     <>
-      <section id="courses" className="py-24 bg-background">
+      <section id="courses" className="py-24 relative overflow-hidden">
+        {/* Photography-themed background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
+        </div>
+
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Learn with the Best</h2>
@@ -360,13 +362,15 @@ const Courses = () => {
                       ))}
                     </ul>
 
-                    <Button 
-                      className="w-full group/btn"
+                    <button 
+                      className="gradient-btn w-full group/btn relative overflow-hidden"
                       onClick={() => setSelectedCourse(course)}
                     >
-                      Read More
-                      <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                    </Button>
+                      <span className="relative z-10 flex items-center justify-center">
+                        Read More
+                        <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                      </span>
+                    </button>
                   </div>
                 </CardContent>
               </Card>
@@ -378,6 +382,111 @@ const Courses = () => {
             </Carousel>
           </div>
         </div>
+
+        <style>{`
+          @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          .animate-spin-slow {
+            animation: spin-slow 30s linear infinite;
+          }
+          
+          .gradient-btn {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+          
+          .gradient-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+          
+          .gradient-btn:hover::before {
+            opacity: 1;
+          }
+          
+          .gradient-btn::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
+            background-size: 200% 200%;
+            z-index: -1;
+            animation: gradientShift 3s ease infinite;
+            opacity: 0;
+          }
+          
+          .gradient-btn:hover::after {
+            opacity: 0.5;
+          }
+          
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          
+          .gradient-btn-secondary {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            background: transparent;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-clip: padding-box;
+          }
+          
+          .gradient-btn-secondary::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 0.5rem;
+            padding: 2px;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+          }
+          
+          .gradient-btn-secondary:hover {
+            background: linear-gradient(135deg, hsl(var(--primary))/0.1 0%, hsl(var(--accent))/0.1 100%);
+          }
+          
+          .pulse-btn {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            border: none;
+            cursor: pointer;
+            animation: pulse 2s ease-in-out infinite;
+          }
+          
+          @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 hsla(var(--primary), 0.7); }
+            50% { box-shadow: 0 0 0 10px hsla(var(--primary), 0); }
+          }
+        `}</style>
       </section>
 
       {/* Course Details Modal */}
@@ -478,19 +587,18 @@ const Courses = () => {
             </div>
 
             <div className="sticky bottom-0 bg-background border-t p-6 flex gap-4">
-              <Button
-                variant="outline"
-                className="flex-1"
+              <button
+                className="gradient-btn-secondary flex-1"
                 onClick={() => setSelectedCourse(null)}
               >
                 Close
-              </Button>
-              <Button
-                className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90"
+              </button>
+              <button
+                className="pulse-btn flex-1"
                 onClick={handleEnrollClick}
               >
                 Enroll Now
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -607,10 +715,9 @@ const Courses = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button
+                  <button
                     type="button"
-                    variant="outline"
-                    className="flex-1"
+                    className="gradient-btn-secondary flex-1"
                     onClick={() => {
                       setShowEnrollForm(false);
                       setFormData({ name: "", email: "", phone: "", about: "" });
@@ -618,14 +725,16 @@ const Courses = () => {
                     disabled={isSubmitting}
                   >
                     Cancel
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                    className="gradient-btn flex-1"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Submitting..." : "Submit Enrollment"}
-                  </Button>
+                    <span className="relative z-10">
+                      {isSubmitting ? "Submitting..." : "Submit Enrollment"}
+                    </span>
+                  </button>
                 </div>
               </form>
             )}

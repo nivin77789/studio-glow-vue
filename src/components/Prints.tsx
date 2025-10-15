@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -107,12 +107,9 @@ const Prints = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedPrint, setSelectedPrint] = useState<PrintType | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  // Removed showAll in favor of horizontal carousel controls
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string>("frame");
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const itemsPerRow = 3;
 
   const handleOrder = (printType: string, variant?: string) => {
     const message = variant 
@@ -144,109 +141,277 @@ const Prints = () => {
   };
 
   const ProductPreview = () => {
+    const [imageAspectRatio, setImageAspectRatio] = useState(1);
+
+    useEffect(() => {
+      if (previewImage) {
+        const img = new window.Image();
+        img.onload = () => {
+          setImageAspectRatio(img.width / img.height);
+        };
+        img.src = previewImage;
+      }
+    }, [previewImage]);
+
+    // Calculate frame dimensions based on image aspect ratio
+    const getFrameDimensions = () => {
+      if (imageAspectRatio > 1.3) {
+        // Landscape
+        return { width: 'w-80 md:w-96', height: 'h-56 md:h-64' };
+      } else if (imageAspectRatio < 0.8) {
+        // Portrait
+        return { width: 'w-56 md:w-64', height: 'h-80 md:h-96' };
+      } else {
+        // Square
+        return { width: 'w-64 md:w-80', height: 'h-64 md:h-80' };
+      }
+    };
+
+    const frameDims = getFrameDimensions();
+
     return (
-      <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 border border-border">
+      <div className="relative w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-border flex items-center justify-center">
+        {/* Wall texture background */}
+        <div className="absolute inset-0 opacity-30" style={{
+          backgroundImage: `repeating-linear-gradient(90deg, rgba(0,0,0,.03) 0px, transparent 1px, transparent 2px, rgba(0,0,0,.03) 3px),
+                           repeating-linear-gradient(180deg, rgba(0,0,0,.03) 0px, transparent 1px, transparent 2px, rgba(0,0,0,.03) 3px)`
+        }} />
+
         {/* 3D Model Container */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          {/* Frame 3D Model */}
+        <div className="relative flex items-center justify-center">
+          {/* IKEA-style Frame 3D Model */}
           {selectedProduct === "frame" && (
-            <div className="relative w-48 h-48 md:w-64 md:h-64 transform-gpu perspective-1000">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-800 to-amber-600 rounded-lg shadow-2xl transform-gpu rotate-y-15">
-                {/* Frame Border */}
-                <div className="absolute inset-2 border-4 border-amber-200 rounded-md shadow-inner" />
-                {/* Image inside frame */}
-                {previewImage && (
-                  <div 
-                    className="absolute inset-4 m-2 bg-cover bg-center rounded-sm transform-gpu rotate-y-1"
-                    style={{ backgroundImage: `url(${previewImage})` }}
-                  />
-                )}
-                {/* Frame shine effect */}
-                <div className="absolute top-0 left-1/4 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-200 to-transparent opacity-60" />
-                <div className="absolute top-1/4 left-0 w-1 h-1/2 bg-gradient-to-b from-transparent via-amber-200 to-transparent opacity-60" />
+            <div className={`relative ${frameDims.width} ${frameDims.height} transform-gpu`} style={{ perspective: '1000px' }}>
+              {/* Main frame container with 3D rotation */}
+              <div className="relative w-full h-full" style={{ 
+                transform: 'rotateY(-2deg) rotateX(1deg)',
+                transformStyle: 'preserve-3d'
+              }}>
+                {/* Frame outer border - IKEA RIBBA style */}
+                <div className="absolute inset-0 bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-900 rounded-sm shadow-2xl" style={{
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255,255,255,0.1)'
+                }}>
+                  {/* Frame bevel - outer edge highlight */}
+                  <div className="absolute inset-0 border border-neutral-600 rounded-sm" />
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-neutral-500 to-transparent opacity-40" />
+                  <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-r from-neutral-500 to-transparent opacity-40" />
+                  
+                  {/* Frame width - realistic depth */}
+                  <div className="absolute inset-3 bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-sm shadow-inner">
+                    {/* Inner bevel */}
+                    <div className="absolute inset-0 border border-neutral-900 rounded-sm" />
+                    
+                    {/* White mat board - IKEA style */}
+                    <div className="absolute inset-2 bg-gradient-to-br from-white to-gray-50 rounded-sm shadow-lg">
+                      {/* Mat board texture */}
+                      <div className="absolute inset-0 opacity-5" style={{
+                        backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px)',
+                        backgroundSize: '4px 4px'
+                      }} />
+                      
+                      {/* Mat board inner opening */}
+                      <div className="absolute inset-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-sm shadow-inner">
+                        {/* Photo/Image */}
+                        {previewImage ? (
+                          <div 
+                            className="absolute inset-0 bg-cover bg-center rounded-sm"
+                            style={{ 
+                              backgroundImage: `url(${previewImage})`,
+                              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+                            }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                            <div className="text-center">
+                              <Image className="w-16 h-16 mx-auto mb-2 opacity-30" />
+                              <p className="text-sm">Upload a photo</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Glass reflection effect */}
+                  <div className="absolute inset-3 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-sm pointer-events-none" />
+                  <div className="absolute top-8 left-8 w-24 h-24 bg-white/20 blur-2xl rounded-full" />
+                </div>
+                
+                {/* Frame shadow on wall */}
+                <div className="absolute inset-0 rounded-sm" style={{
+                  transform: 'translateZ(-20px)',
+                  boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.4)'
+                }} />
               </div>
-              {/* Shadow */}
-              <div className="absolute -bottom-4 left-4 right-4 h-4 bg-black/20 blur-md rounded-full" />
+              
+              {/* Floor shadow */}
+              <div className="absolute -bottom-8 left-8 right-8 h-4 bg-black/30 blur-xl rounded-full" style={{
+                transform: 'translateZ(-50px) rotateX(90deg)'
+              }} />
             </div>
           )}
 
           {/* Magazine 3D Model */}
           {selectedProduct === "magazine" && (
-            <div className="relative w-32 h-48 md:w-40 md:h-60 transform-gpu perspective-1000">
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 rounded-sm shadow-2xl transform-gpu rotate-y-25">
+            <div className="relative w-48 h-64 md:w-56 md:h-80 transform-gpu" style={{ perspective: '1000px' }}>
+              <div className="relative w-full h-full" style={{
+                transform: 'rotateY(-15deg) rotateX(2deg)',
+                transformStyle: 'preserve-3d'
+              }}>
                 {/* Magazine spine */}
-                <div className="absolute -left-2 top-2 bottom-2 w-2 bg-gradient-to-b from-gray-900 to-gray-700 rounded-l-sm" />
-                {/* Magazine cover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-sm">
-                  {previewImage && (
+                <div className="absolute -left-3 top-0 bottom-0 w-3 bg-gradient-to-r from-gray-900 to-gray-700 rounded-l-sm shadow-xl" style={{
+                  transform: 'translateZ(-2px)'
+                }} />
+                
+                {/* Back cover (slightly visible) */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-600 rounded-r-sm" style={{
+                  transform: 'translateZ(-4px)'
+                }} />
+                
+                {/* Front cover */}
+                <div className="absolute inset-0 bg-white rounded-r-sm shadow-2xl overflow-hidden">
+                  {previewImage ? (
                     <div 
-                      className="absolute inset-1 bg-cover bg-center rounded-sm opacity-90"
+                      className="absolute inset-0 bg-cover bg-center"
                       style={{ backgroundImage: `url(${previewImage})` }}
                     />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600" />
                   )}
-                  {/* Magazine title */}
-                  <div className="absolute bottom-2 left-2 right-2 h-6 bg-white/20 backdrop-blur-sm rounded" />
+                  
+                  {/* Magazine title bar */}
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-sm p-4">
+                    <div className="h-2 bg-gray-300 rounded mb-2" />
+                    <div className="h-2 bg-gray-200 rounded w-3/4" />
+                  </div>
+                  
+                  {/* Glossy effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute top-10 right-10 w-32 h-32 bg-white/20 blur-3xl" />
                 </div>
+                
                 {/* Pages effect */}
-                <div className="absolute -right-1 top-1 bottom-1 w-1 bg-gradient-to-b from-white/30 to-white/10 rounded-r-sm" />
+                <div className="absolute -right-1 top-1 bottom-1 w-1 bg-gradient-to-b from-white/80 to-white/30 rounded-r-sm" style={{
+                  transform: 'translateZ(2px)'
+                }} />
               </div>
-              {/* Shadow */}
-              <div className="absolute -bottom-4 left-2 right-2 h-4 bg-black/20 blur-md rounded-full transform-gpu rotate-y-25" />
+              
+              <div className="absolute -bottom-6 left-4 right-4 h-4 bg-black/30 blur-xl rounded-full" />
             </div>
           )}
 
           {/* Calendar 3D Model */}
           {selectedProduct === "calendar" && (
-            <div className="relative w-48 h-36 md:w-56 md:h-44 transform-gpu perspective-1000">
-              <div className="absolute inset-0 bg-white rounded-lg shadow-2xl transform-gpu rotate-x-10">
-                {/* Calendar stand */}
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-16 h-6 bg-gradient-to-b from-gray-400 to-gray-300 rounded-full" />
-                {/* Calendar pages */}
-                <div className="absolute inset-1 bg-gradient-to-b from-blue-50 to-white rounded border">
-                  {previewImage && (
-                    <div 
-                      className="absolute top-0 left-0 right-0 h-3/5 bg-cover bg-center rounded-t"
-                      style={{ backgroundImage: `url(${previewImage})` }}
-                    />
-                  )}
-                  {/* Calendar grid */}
-                  <div className="absolute bottom-0 left-0 right-0 h-2/5 bg-white p-2">
-                    <div className="grid grid-cols-7 gap-1">
-                      {[...Array(7)].map((_, i) => (
-                        <div key={i} className="h-2 bg-gray-200 rounded" />
-                      ))}
+            <div className="relative w-64 h-48 md:w-80 md:h-56 transform-gpu" style={{ perspective: '1000px' }}>
+              <div className="relative w-full h-full" style={{
+                transform: 'rotateX(-8deg)',
+                transformStyle: 'preserve-3d'
+              }}>
+                {/* Calendar base/stand */}
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-24 h-8 bg-gradient-to-b from-gray-400 to-gray-500 rounded-lg shadow-xl" style={{
+                  transform: 'rotateX(90deg) translateZ(-4px)'
+                }} />
+                
+                {/* Calendar back board */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-white rounded-lg shadow-2xl border border-gray-200">
+                  {/* Spiral binding holes at top */}
+                  <div className="absolute top-2 left-0 right-0 flex justify-center gap-4">
+                    {[...Array(12)].map((_, i) => (
+                      <div key={i} className="w-2 h-2 bg-gray-300 rounded-full shadow-inner" />
+                    ))}
+                  </div>
+                  
+                  {/* Current month page */}
+                  <div className="absolute inset-4 bg-white rounded shadow-lg overflow-hidden">
+                    {/* Photo section */}
+                    {previewImage ? (
+                      <div 
+                        className="absolute top-0 left-0 right-0 h-3/5 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${previewImage})` }}
+                      />
+                    ) : (
+                      <div className="absolute top-0 left-0 right-0 h-3/5 bg-gradient-to-br from-blue-400 to-purple-500" />
+                    )}
+                    
+                    {/* Month name */}
+                    <div className="absolute top-[58%] left-0 right-0 h-10 bg-gradient-to-r from-primary to-accent flex items-center justify-center">
+                      <div className="text-white font-bold text-lg">DECEMBER 2024</div>
+                    </div>
+                    
+                    {/* Calendar grid */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[32%] bg-white p-3">
+                      <div className="grid grid-cols-7 gap-1 text-xs text-center">
+                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                          <div key={i} className="font-semibold text-gray-600">{day}</div>
+                        ))}
+                        {[...Array(31)].map((_, i) => (
+                          <div key={i} className="h-3 flex items-center justify-center text-gray-700 text-[10px]">
+                            {i + 1}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-                {/* Spiral binding */}
-                <div className="absolute top-0 left-2 right-2 h-3 bg-gradient-to-b from-yellow-400 to-yellow-300 rounded-t" />
               </div>
-              {/* Shadow */}
-              <div className="absolute -bottom-4 left-4 right-4 h-4 bg-black/20 blur-md rounded-full" />
+              
+              <div className="absolute -bottom-6 left-8 right-8 h-4 bg-black/30 blur-xl rounded-full" />
             </div>
           )}
 
           {/* Album 3D Model */}
           {selectedProduct === "album" && (
-            <div className="relative w-40 h-48 md:w-48 md:h-56 transform-gpu perspective-1000">
-              <div className="absolute inset-0 bg-gradient-to-br from-rose-800 to-rose-600 rounded-lg shadow-2xl transform-gpu rotate-y-20">
-                {/* Cover */}
-                <div className="absolute inset-1 bg-gradient-to-br from-rose-600 to-rose-400 rounded border-2 border-rose-200">
-                  {previewImage && (
-                    <div 
-                      className="absolute inset-2 bg-cover bg-center rounded opacity-80"
-                      style={{ backgroundImage: `url(${previewImage})` }}
-                    />
-                  )}
-                  {/* Title emboss */}
-                  <div className="absolute bottom-3 left-3 right-3 h-4 bg-white/10 backdrop-blur-sm rounded-full" />
+            <div className="relative w-56 h-64 md:w-64 md:h-80 transform-gpu" style={{ perspective: '1000px' }}>
+              <div className="relative w-full h-full" style={{
+                transform: 'rotateY(-20deg) rotateX(3deg)',
+                transformStyle: 'preserve-3d'
+              }}>
+                {/* Album spine */}
+                <div className="absolute -left-4 top-0 bottom-0 w-4 bg-gradient-to-r from-rose-900 to-rose-700 shadow-xl" style={{
+                  transform: 'rotateY(-90deg) translateX(-2px)',
+                  transformOrigin: 'right'
+                }} />
+                
+                {/* Album cover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-800 to-rose-600 rounded-r-lg shadow-2xl">
+                  {/* Leather texture */}
+                  <div className="absolute inset-0 opacity-20" style={{
+                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,.1) 2px, rgba(0,0,0,.1) 4px)`
+                  }} />
+                  
+                  {/* Embossed border */}
+                  <div className="absolute inset-4 border-2 border-rose-400/40 rounded">
+                    {/* Photo window */}
+                    {previewImage ? (
+                      <div 
+                        className="absolute inset-3 bg-cover bg-center rounded shadow-inner"
+                        style={{ backgroundImage: `url(${previewImage})` }}
+                      />
+                    ) : (
+                      <div className="absolute inset-3 bg-gradient-to-br from-rose-600 to-rose-400 rounded" />
+                    )}
+                    
+                    {/* Title plate */}
+                    <div className="absolute bottom-4 left-4 right-4 h-8 bg-gradient-to-r from-amber-600 to-amber-500 rounded shadow-lg flex items-center justify-center">
+                      <div className="text-white font-serif text-sm tracking-wide">MEMORIES</div>
+                    </div>
+                  </div>
+                  
+                  {/* Leather shine */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-r-lg pointer-events-none" />
+                  <div className="absolute top-12 right-12 w-32 h-32 bg-white/10 blur-3xl" />
                 </div>
-                {/* Pages stack effect */}
-                <div className="absolute -right-2 top-2 bottom-2 w-3 bg-gradient-to-b from-white/40 to-white/10 rounded-r-lg" />
-                <div className="absolute -right-1 top-3 bottom-3 w-1 bg-gradient-to-b from-white/20 to-white/5 rounded-r" />
+                
+                {/* Pages stack */}
+                <div className="absolute -right-2 top-2 bottom-2 w-2 bg-gradient-to-b from-white/60 to-white/20 rounded-r" style={{
+                  transform: 'translateZ(4px)'
+                }} />
+                <div className="absolute -right-1 top-3 bottom-3 w-1 bg-gradient-to-b from-white/40 to-white/10 rounded-r" style={{
+                  transform: 'translateZ(6px)'
+                }} />
               </div>
-              {/* Shadow */}
-              <div className="absolute -bottom-4 left-3 right-3 h-4 bg-black/20 blur-md rounded-full transform-gpu rotate-y-20" />
+              
+              <div className="absolute -bottom-6 left-6 right-6 h-4 bg-black/30 blur-xl rounded-full" />
             </div>
           )}
         </div>

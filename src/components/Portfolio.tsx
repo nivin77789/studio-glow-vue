@@ -18,6 +18,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Camera,
 } from "lucide-react";
 
 // Local gallery images
@@ -100,7 +101,6 @@ const services = [
 export default function Services() {
   const [selectedService, setSelectedService] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  // Removed showAll in favor of horizontal carousel controls
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -132,7 +132,12 @@ export default function Services() {
   const currentGallery = selectedService ? galleryImages[selectedService] : [];
 
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-background transition-colors duration-300">
+    <section className="py-24 relative overflow-hidden transition-colors duration-300">
+      {/* Photography-themed background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
+      </div>
+
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
@@ -265,6 +270,16 @@ export default function Services() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 30s linear infinite;
+        }
+      `}</style>
     </section>
   );
 }
