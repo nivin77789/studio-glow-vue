@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
 import { Camera, Video, BookImage, Palette, Lightbulb, Clapperboard, X, CheckCircle, Clock, Award, BookOpen, User, Mail, Phone, MessageSquare } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -247,7 +254,7 @@ const courses = [
 const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showEnrollForm, setShowEnrollForm] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  // Removed showAll in favor of horizontal carousel controls
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -259,7 +266,6 @@ const Courses = () => {
   const navigate = useNavigate();
 
   const itemsPerRow = 3;
-  const displayedCourses = showAll ? courses : courses.slice(0, itemsPerRow);
 
   const handleEnrollClick = () => {
     setShowEnrollForm(true);
@@ -316,10 +322,12 @@ const Courses = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayedCourses.map((course, index) => (
+          <div className="relative">
+            <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+              <CarouselContent className="-ml-2 md:-ml-4">
+            {courses.map((course, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
               <Card
-                key={index}
                 className="group hover-lift border-0 bg-card card-elegant overflow-hidden flex flex-col h-full"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -362,57 +370,13 @@ const Courses = () => {
                   </div>
                 </CardContent>
               </Card>
+              </CarouselItem>
             ))}
+              </CarouselContent>
+              <CarouselPrevious className="-left-6 md:-left-10" />
+              <CarouselNext className="-right-6 md:-right-10" />
+            </Carousel>
           </div>
-
-          {courses.length > itemsPerRow && (
-            <div className="flex justify-center mt-12">
-              <Button
-                onClick={() => setShowAll(!showAll)}
-                variant="outline"
-                size="lg"
-                className="group"
-              >
-                {showAll ? (
-                  <>
-                    Show Less
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="ml-2 transition-transform group-hover:-translate-y-1"
-                    >
-                      <path d="m18 15-6-6-6 6"/>
-                    </svg>
-                  </>
-                ) : (
-                  <>
-                    Show More ({courses.length - itemsPerRow} more)
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="ml-2 transition-transform group-hover:translate-y-1"
-                    >
-                      <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
         </div>
       </section>
 

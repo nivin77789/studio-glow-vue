@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -97,11 +104,7 @@ const competitions = [
 
 const ExperiencePage = () => {
   const { ref, isVisible } = useScrollReveal();
-  const [showAllWorkshops, setShowAllWorkshops] = useState(false);
-  const [showAllCompetitions, setShowAllCompetitions] = useState(false);
-
-  const displayedWorkshops = showAllWorkshops ? workshops : workshops.slice(0, 4);
-  const displayedCompetitions = showAllCompetitions ? competitions : competitions.slice(0, 4);
+  // Replace view more with horizontal carousels
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -200,10 +203,12 @@ const ExperiencePage = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {displayedWorkshops.map((workshop, index) => (
+            <div className="relative mb-8">
+              <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+                <CarouselContent className="-ml-2 md:-ml-4">
+              {workshops.map((workshop, index) => (
+                <CarouselItem key={workshop.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/4">
                 <motion.div
-                  key={workshop.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={isVisible ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: index * 0.1 }}
@@ -250,20 +255,13 @@ const ExperiencePage = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
+                </CarouselItem>
               ))}
+                </CarouselContent>
+                <CarouselPrevious className="-left-6 md:-left-10" />
+                <CarouselNext className="-right-6 md:-right-10" />
+              </Carousel>
             </div>
-
-            {!showAllWorkshops && workshops.length > 4 && (
-              <div className="text-center">
-                <Button 
-                  size="lg" 
-                  onClick={() => setShowAllWorkshops(true)}
-                  className="bg-gradient-to-r from-primary to-accent"
-                >
-                  View More Workshops
-                </Button>
-              </div>
-            )}
           </div>
         </section>
 
@@ -281,10 +279,12 @@ const ExperiencePage = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {displayedCompetitions.map((competition, index) => (
+            <div className="relative mb-8">
+              <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+                <CarouselContent className="-ml-2 md:-ml-4">
+              {competitions.map((competition, index) => (
+                <CarouselItem key={competition.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/4">
                 <motion.div
-                  key={competition.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -329,20 +329,13 @@ const ExperiencePage = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
+                </CarouselItem>
               ))}
+                </CarouselContent>
+                <CarouselPrevious className="-left-6 md:-left-10" />
+                <CarouselNext className="-right-6 md:-right-10" />
+              </Carousel>
             </div>
-
-            {!showAllCompetitions && competitions.length > 4 && (
-              <div className="text-center">
-                <Button 
-                  size="lg" 
-                  onClick={() => setShowAllCompetitions(true)}
-                  className="bg-gradient-to-r from-accent to-primary"
-                >
-                  View More Competitions
-                </Button>
-              </div>
-            )}
           </div>
         </section>
       </main>

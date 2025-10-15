@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -91,12 +98,11 @@ const Collaborations = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedCollab, setSelectedCollab] = useState<typeof collaborations[0] | null>(null);
   const [showPartnerForm, setShowPartnerForm] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  // Removed showAll in favor of horizontal carousel controls
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const itemsPerRow = 3;
-  const displayedCollaborations = showAll ? collaborations : collaborations.slice(0, itemsPerRow);
 
   const [partnerForm, setPartnerForm] = useState({
     serviceName: "",
@@ -177,10 +183,12 @@ const Collaborations = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayedCollaborations.map((collab, index) => (
+          <div className="relative">
+            <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+              <CarouselContent className="-ml-2 md:-ml-4">
+            {collaborations.map((collab, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
               <Card
-                key={index}
                 className={`group hover-lift border-0 card-elegant overflow-hidden transition-all duration-500 ${
                   isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                 }`}
@@ -233,57 +241,13 @@ const Collaborations = () => {
                   </div>
                 </CardContent>
               </Card>
+              </CarouselItem>
             ))}
+              </CarouselContent>
+              <CarouselPrevious className="-left-6 md:-left-10" />
+              <CarouselNext className="-right-6 md:-right-10" />
+            </Carousel>
           </div>
-
-          {collaborations.length > itemsPerRow && (
-            <div className="flex justify-center mt-12">
-              <Button
-                onClick={() => setShowAll(!showAll)}
-                variant="outline"
-                size="lg"
-                className="group"
-              >
-                {showAll ? (
-                  <>
-                    Show Less
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="ml-2 transition-transform group-hover:-translate-y-1"
-                    >
-                      <path d="m18 15-6-6-6 6"/>
-                    </svg>
-                  </>
-                ) : (
-                  <>
-                    Show More ({collaborations.length - itemsPerRow} more)
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="ml-2 transition-transform group-hover:translate-y-1"
-                    >
-                      <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
 
           {/* CTA Section */}
           <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>

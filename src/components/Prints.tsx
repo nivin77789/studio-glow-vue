@@ -1,4 +1,11 @@
 import { useState, useRef } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -100,13 +107,12 @@ const Prints = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selectedPrint, setSelectedPrint] = useState<PrintType | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  // Removed showAll in favor of horizontal carousel controls
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string>("frame");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const itemsPerRow = 3;
-  const displayedPrints = showAll ? printTypes : printTypes.slice(0, itemsPerRow);
 
   const handleOrder = (printType: string, variant?: string) => {
     const message = variant 
@@ -313,12 +319,14 @@ const Prints = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedPrints.map((print, index) => {
+        <div className="relative">
+          <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-2 md:-ml-4">
+          {printTypes.map((print, index) => {
             const Icon = print.icon;
             return (
+              <CarouselItem key={print.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
               <div
-                key={print.id}
                 className={`group relative transition-all duration-700 ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
@@ -352,58 +360,14 @@ const Prints = () => {
                   </Button>
                 </div>
               </div>
+              </CarouselItem>
             );
           })}
+            </CarouselContent>
+            <CarouselPrevious className="-left-6 md:-left-10" />
+            <CarouselNext className="-right-6 md:-right-10" />
+          </Carousel>
         </div>
-
-        {printTypes.length > itemsPerRow && (
-          <div className="flex justify-center mt-12">
-            <Button
-              onClick={() => setShowAll(!showAll)}
-              variant="outline"
-              size="lg"
-              className="group"
-            >
-              {showAll ? (
-                <>
-                  Show Less
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="ml-2 transition-transform group-hover:-translate-y-1"
-                  >
-                    <path d="m18 15-6-6-6 6"/>
-                  </svg>
-                </>
-              ) : (
-                <>
-                  Show More ({printTypes.length - itemsPerRow} more)
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="ml-2 transition-transform group-hover:translate-y-1"
-                  >
-                    <path d="m6 9 6 6 6-6"/>
-                  </svg>
-                </>
-              )}
-            </Button>
-          </div>
-        )}
 
         {/* CTA Section */}
         <div className={`mt-20 text-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>

@@ -11,7 +11,7 @@ const HeroLanding = () => {
       {/* --- Cinematic 3D background overlays --- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         {/* Light leaks */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-purple-500/10 mix-blend-screen animate-pulse" />
+        <div className="absolute inset-0 bg-gold-soft mix-blend-screen animate-pulse" />
         <div
           className="absolute inset-0 bg-gradient-to-tl from-yellow-400/10 via-transparent to-red-400/10 mix-blend-screen animate-pulse"
           style={{ animationDuration: "10s" }}
@@ -21,7 +21,7 @@ const HeroLanding = () => {
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float-rotate" />
         <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
         <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-cube" />
-        <div className="absolute top-1/3 left-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-spin-slow" />
+        <div className="absolute top-1/3 left-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-spin-slow" />
 
         {/* Lens flare beam */}
         <div className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-12 animate-lensflare" />
@@ -43,7 +43,7 @@ const HeroLanding = () => {
         animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
         transition={{ repeat: Infinity, duration: 6 }}
       >
-        <Camera className="w-10 h-10 text-purple-400/80" />
+        <Camera className="w-10 h-10 text-yellow-300/80" />
       </motion.div>
 
       <motion.div
@@ -51,7 +51,7 @@ const HeroLanding = () => {
         animate={{ y: [0, -15, 0], rotate: [0, -5, 5, 0] }}
         transition={{ repeat: Infinity, duration: 8 }}
       >
-        <Aperture className="w-10 h-10 text-pink-400/80" />
+        <Aperture className="w-10 h-10 text-yellow-200/80" />
       </motion.div>
 
       <motion.div
@@ -59,7 +59,7 @@ const HeroLanding = () => {
         animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
         transition={{ repeat: Infinity, duration: 5 }}
       >
-        <Video className="w-10 h-10 text-blue-400/80" />
+        <Video className="w-10 h-10 text-amber-300/80" />
       </motion.div>
 
       <motion.div
@@ -67,7 +67,7 @@ const HeroLanding = () => {
         animate={{ y: [0, -12, 0], rotate: [0, -6, 6, 0] }}
         transition={{ repeat: Infinity, duration: 7 }}
       >
-        <Heart className="w-10 h-10 text-red-400/80" />
+        <Heart className="w-10 h-10 text-amber-200/80" />
       </motion.div>
 
       <motion.div
@@ -75,7 +75,7 @@ const HeroLanding = () => {
         animate={{ y: [0, -8, 0], rotate: [0, 10, -10, 0] }}
         transition={{ repeat: Infinity, duration: 9 }}
       >
-        <Sparkles className="w-10 h-10 text-yellow-300/70" />
+        <Sparkles className="w-10 h-10 text-yellow-300/80" />
       </motion.div>
 
       {/* --- Main content --- */}
@@ -85,7 +85,7 @@ const HeroLanding = () => {
         transition={{ duration: 1.3 }}
         className="z-10 px-6 max-w-3xl"
       >
-        <h1 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+        <h1 className="text-5xl md:text-7xl font-extrabold mb-6 gradient-text">
           Mark Studio
         </h1>
 
@@ -107,14 +107,13 @@ const HeroLanding = () => {
         >
           <Button
             size="lg"
-            className="bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg hover:shadow-pink-500/40 hover:scale-105 transition-all"
+            className="btn-gold px-8 py-6"
           >
             Book a Shoot
           </Button>
           <Button
             size="lg"
-            variant="outline"
-            className="border-white/40 text-gray-400 hover:bg-white/10 hover:border-white/60 transition-all"
+            className="btn-gold-outline px-8 py-6 border-white/30 text-white hover:bg-white/10"
           >
             View Portfolio
           </Button>

@@ -1,4 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import {
   Heart,
   Sparkles,
@@ -93,12 +100,12 @@ const services = [
 export default function Services() {
   const [selectedService, setSelectedService] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showAll, setShowAll] = useState(false);
+  // Removed showAll in favor of horizontal carousel controls
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile/tablet on mount
-  useState(() => {
+  useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
@@ -123,14 +130,13 @@ export default function Services() {
   };
 
   const currentGallery = selectedService ? galleryImages[selectedService] : [];
-  const visibleServices = showAll ? services : services.slice(0, 4);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors duration-300">
+    <section className="py-24 bg-gradient-to-b from-background to-background transition-colors duration-300">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold mb-4 gradient-text">
             Our Portfolio
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -138,59 +144,59 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {visibleServices.map((service, index) => (
-            <div 
-              key={index} 
-              className="group"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <div
-                onClick={() => handleCardClick(service.category)}
-                className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all aspect-square w-full"
-              >
-                {/* Background Video */}
-                <video
-                  ref={(el) => {
-                    if (el) {
-                      if (isMobile || hoveredIndex === index) {
-                        el.play();
-                      } else {
-                        el.pause();
-                        el.currentTime = 0;
-                      }
-                    }
-                  }}
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover scale-125"
-                >
-                  <source src={service.video} type="video/mp4" />
-                </video>
-
-                {/* Overlay for readability */}
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
-              </div>
-              
-              {/* Title below card */}
-              <h3 className="text-xl font-semibold mt-4 text-center text-gray-800 dark:text-gray-200">
-                {service.title}
-              </h3>
-            </div>
-          ))}
-        </div>
-
-        {/* See More Button */}
-        <div className="text-center mt-10">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="px-6 py-3 rounded-full bg-purple-600 text-white font-medium hover:bg-purple-700 transition-all"
+        {/* Cards Carousel */}
+        <div className="relative">
+          <Carousel
+            opts={{ align: "start", dragFree: true }}
+            className="w-full"
           >
-            {showAll ? "See Less" : "See More"}
-          </button>
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {services.map((service, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 sm:basis-1/2 lg:basis-1/4">
+                  <div
+                    className="group"
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                  >
+                    <div
+                      onClick={() => handleCardClick(service.category)}
+                      className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all aspect-square w-full"
+                    >
+                      {/* Background Video */}
+                      <video
+                        ref={(el) => {
+                          if (el) {
+                            if (isMobile || hoveredIndex === index) {
+                              el.play();
+                            } else {
+                              el.pause();
+                              el.currentTime = 0;
+                            }
+                          }
+                        }}
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover scale-125"
+                      >
+                        <source src={service.video} type="video/mp4" />
+                      </video>
+
+                      {/* Overlay for readability */}
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
+                    </div>
+
+                    {/* Title below card */}
+                    <h3 className="text-xl font-semibold mt-4 text-center text-gray-800 dark:text-gray-200">
+                      {service.title}
+                    </h3>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-6 md:-left-10" />
+            <CarouselNext className="-right-6 md:-right-10" />
+          </Carousel>
         </div>
       </div>
 
@@ -248,7 +254,7 @@ export default function Services() {
                   onClick={() => setCurrentImageIndex(idx)}
                   className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                     idx === currentImageIndex
-                      ? "border-purple-500 ring-2 ring-purple-400"
+                      ? "border-primary ring-2 ring-primary/60"
                       : "border-white/20 hover:border-white/50"
                   }`}
                 >
