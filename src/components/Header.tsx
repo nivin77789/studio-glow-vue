@@ -113,7 +113,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="ml-2 text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
+              className="ml-2 text-primary hover:text-accent hover:bg-primary/10 transition-all duration-300"
             >
               {isDarkMode ? (
                 <Sun className="w-5 h-5" />
@@ -129,7 +129,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
+              className="text-primary hover:text-accent hover:bg-primary/10 transition-all duration-300"
             >
               {isDarkMode ? (
                 <Sun className="w-5 h-5" />

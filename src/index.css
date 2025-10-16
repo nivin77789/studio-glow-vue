@@ -60,50 +60,50 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 30 25% 7%; /* deep charcoal with warm tint */
-    --foreground: 48 30% 96%; /* near white with warm tint */
+    --background: 0 0% 0%; /* pure black */
+    --foreground: 45 100% 85%; /* luxury gold text */
 
-    --card: 30 25% 10%;
-    --card-foreground: 48 30% 96%;
+    --card: 0 0% 5%; /* near black for cards */
+    --card-foreground: 45 100% 85%;
 
-    --popover: 30 25% 10%;
-    --popover-foreground: 48 30% 96%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 45 100% 85%;
 
-    /* luminous golds for dark */
-    --primary: 48 96% 58%;
-    --primary-foreground: 30 30% 10%;
+    /* luxury gold accents */
+    --primary: 45 100% 65%; /* bright luxury gold */
+    --primary-foreground: 0 0% 0%; /* black text on gold */
 
-    --secondary: 30 15% 16%;
-    --secondary-foreground: 48 96% 70%;
+    --secondary: 0 0% 10%; /* dark gray */
+    --secondary-foreground: 45 100% 75%;
 
-    --muted: 30 15% 16%;
-    --muted-foreground: 35 10% 70%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 45 30% 60%;
 
-    --accent: 42 96% 62%;
-    --accent-foreground: 30 30% 10%;
+    --accent: 45 100% 58%; /* vibrant gold */
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 63% 41%;
-    --destructive-foreground: 48 30% 96%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 18%;
-    --input: 30 15% 18%;
-    --ring: 48 96% 58%;
+    --border: 45 100% 20%; /* subtle gold borders */
+    --input: 0 0% 15%;
+    --ring: 45 100% 65%;
 
-    /* Dark mode custom tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(48 96% 58%), hsl(42 96% 62%));
-    --gradient-accent: linear-gradient(135deg, hsl(40 92% 58%), hsl(52 96% 55%));
-    --gradient-hero: linear-gradient(135deg, hsl(48 96% 58% / 0.9), hsl(42 96% 62% / 0.85));
-    --shadow-elegant: 0 10px 40px -10px hsl(48 96% 58% / 0.25);
-    --shadow-glow: 0 0 40px hsl(42 96% 62% / 0.2);
+    /* Dark mode custom tokens - luxury gold */
+    --gradient-primary: linear-gradient(135deg, hsl(45 100% 65%), hsl(42 100% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(48 100% 60%), hsl(42 100% 50%));
+    --gradient-hero: linear-gradient(135deg, hsl(45 100% 65% / 0.95), hsl(42 100% 55% / 0.9));
+    --shadow-elegant: 0 10px 40px -10px hsl(45 100% 50% / 0.4);
+    --shadow-glow: 0 0 50px hsl(45 100% 50% / 0.3);
 
-    --sidebar-background: 30 20% 9%;
-    --sidebar-foreground: 48 30% 94%;
-    --sidebar-primary: 48 96% 58%;
-    --sidebar-primary-foreground: 30 30% 10%;
-    --sidebar-accent: 30 15% 14%;
-    --sidebar-accent-foreground: 48 30% 94%;
-    --sidebar-border: 30 15% 16%;
-    --sidebar-ring: 48 96% 58%;
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 45 100% 80%;
+    --sidebar-primary: 45 100% 65%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 8%;
+    --sidebar-accent-foreground: 45 100% 80%;
+    --sidebar-border: 45 50% 15%;
+    --sidebar-ring: 45 100% 65%;
   }
 }
 
