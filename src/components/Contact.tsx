@@ -78,7 +78,7 @@ const Contact = () => {
 
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Form */}
-          <Card className={`border-0 card-elegant transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+          <Card className={`border transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -129,7 +129,7 @@ const Contact = () => {
             {contactInfo.map((info, index) => (
               <Card
                 key={index}
-                className="group hover-lift cursor-pointer border-0 card-elegant"
+                className="group hover-lift cursor-pointer border"
               >
                 <CardContent className="p-6">
                   <a
@@ -151,7 +151,7 @@ const Contact = () => {
             ))}
 
             {/* Google Maps Embed */}
-            <div className="rounded-xl overflow-hidden h-64 card-elegant shadow-lg">
+            <div className="rounded-xl overflow-hidden h-64 border">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.2617447839787!2d77.75727371482186!3d13.004553990819894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae0fafe1c1e5e9%3A0x697f3a7d629a588a!2sSaycheezz%20-%20Photography%20%26%20Videography!5e0!3m2!1sen!2sin!4v1696420000000!5m2!1sen!2sin"
                 width="100%"

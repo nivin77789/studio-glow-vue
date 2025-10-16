@@ -330,7 +330,7 @@ const Courses = () => {
             {courses.map((course, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
               <Card
-                className="group hover-lift border-0 bg-card card-elegant overflow-hidden flex flex-col h-full"
+                className="group hover-lift border bg-card overflow-hidden flex flex-col h-full"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <CardContent className="p-0 flex flex-col h-full">

@@ -139,9 +139,9 @@ All colors MUST be HSL.
     @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
   }
 
-  /* Card with elegant shadow */
+  /* Card with minimal shadow */
   .card-elegant {
-    box-shadow: var(--shadow-elegant);
+    box-shadow: none;
   }
 
   /* Luxury gold button */

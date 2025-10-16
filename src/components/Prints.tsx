@@ -423,7 +423,7 @@ const Prints = () => {
     <section ref={ref} className="py-20 relative overflow-hidden">
       {/* Stylish Banner */}
       <div className={`container mx-auto px-4 mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-        <div className="glass rounded-2xl p-6 border border-primary/20 hover-lift card-elegant relative overflow-hidden">
+        <div className="glass rounded-2xl p-6 border border-primary/20 hover-lift relative overflow-hidden">
           {/* Animated background */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 animate-gradient-x" />
           
@@ -500,7 +500,7 @@ const Prints = () => {
                   transform: isVisible ? 'perspective(1000px) rotateY(0deg)' : 'perspective(1000px) rotateY(-15deg)'
                 }}
               >
-                <div className="glass rounded-2xl p-8 hover-lift card-elegant h-full transition-transform duration-500 hover:scale-105" 
+                <div className="glass rounded-2xl p-8 hover-lift h-full transition-transform duration-500 hover:scale-105" 
                      style={{ transformStyle: 'preserve-3d' }}>
                   {/* Animated gradient border */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl" />
@@ -536,7 +536,7 @@ const Prints = () => {
 
         {/* CTA Section */}
         <div className={`mt-20 text-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="glass rounded-3xl p-12 card-elegant max-w-4xl mx-auto hover:scale-105 transition-transform duration-500">
+          <div className="glass rounded-3xl p-12 max-w-4xl mx-auto hover:scale-105 transition-transform duration-500">
             <h3 className="text-3xl font-bold mb-4 gradient-text">Custom Print Solutions</h3>
             <p className="text-muted-foreground mb-8 text-lg">
               Can't find what you're looking for? We offer custom printing solutions tailored to your needs.

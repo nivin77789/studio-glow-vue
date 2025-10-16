@@ -98,7 +98,7 @@ const Testimonials = () => {
               {testimonials.map((testimonial) => (
                 <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                   <div className="group relative h-full">
-                    <div className="glass rounded-2xl p-8 h-full hover-lift card-elegant relative overflow-hidden">
+                    <div className="glass rounded-2xl p-8 h-full hover-lift relative overflow-hidden">
                       {/* Animated gradient overlay on hover */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

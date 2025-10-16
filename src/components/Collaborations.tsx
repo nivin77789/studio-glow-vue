@@ -191,7 +191,7 @@ const Collaborations = () => {
             {collaborations.map((collab, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
               <Card
-                className={`group hover-lift border-0 card-elegant overflow-hidden transition-all duration-500 ${
+                className={`group hover-lift border overflow-hidden transition-all duration-500 ${
                   isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                 }`}
                 style={{ 
@@ -253,7 +253,7 @@ const Collaborations = () => {
 
           {/* CTA Section */}
           <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <Card className="card-elegant inline-block">
+            <Card className="border inline-block">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold mb-4">Want to Partner with Us?</h3>
                 <p className="text-muted-foreground mb-6 max-w-md">

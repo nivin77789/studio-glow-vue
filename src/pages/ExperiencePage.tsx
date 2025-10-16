@@ -213,7 +213,7 @@ const ExperiencePage = () => {
                   animate={isVisible ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="group overflow-hidden hover-lift card-elegant h-full">
+                  <Card className="group overflow-hidden hover-lift border h-full">
                     <div className="relative overflow-hidden h-48">
                       <img 
                         src={workshop.image} 
@@ -290,7 +290,7 @@ const ExperiencePage = () => {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="group overflow-hidden hover-lift card-elegant h-full">
+                  <Card className="group overflow-hidden hover-lift border h-full">
                     <div className="relative overflow-hidden h-48">
                       <img 
                         src={competition.image} 
