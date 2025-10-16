@@ -124,23 +124,6 @@ const Index = () => {
             background: 'radial-gradient(circle at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0.6) 100%)'
           }} 
         />
-        
-        {/* Lens aperture circles with expansion animation */}
-        {[...Array(10)].map((_, i) => (
-          <div
-            key={`aperture-${i}`}
-            className="absolute rounded-full border border-primary/8 dark:border-primary/15 animate-expand"
-            style={{
-              width: `${120 + i * 90}px`,
-              height: `${120 + i * 90}px`,
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              animationDelay: `${i * 0.4}s`,
-              animationDuration: `${4 + i * 0.5}s`,
-            }}
-          />
-        ))}
 
         {/* Radial light beams */}
         {[...Array(12)].map((_, i) => (
