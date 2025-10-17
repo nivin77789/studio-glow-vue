@@ -9,6 +9,7 @@ import Prints from "@/components/Prints";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import Faq from "@/components/faq";
 
 const Index = () => {
   const [shutter, setShutter] = useState(false);
@@ -310,6 +311,7 @@ const Index = () => {
       <Collaborations />
       <Prints />
       <Testimonials />
+      <Faq />
       <Contact />
       <Footer />
     </div>

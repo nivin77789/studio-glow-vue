@@ -6,10 +6,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye, Maximize2 } from "lucide-react";
+import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye, Maximize2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import * as THREE from 'three';
 
 // Simple scroll reveal hook
@@ -55,6 +57,7 @@ interface PrintType {
   icon: any;
   description: string;
   variants?: { name: string; image: string }[];
+  features?: string[];
 }
 
 const printTypes: PrintType[] = [
@@ -63,6 +66,7 @@ const printTypes: PrintType[] = [
     name: "Premium Frames",
     icon: Frame,
     description: "Beautiful custom frames in various styles",
+    features: ["Museum-quality materials", "Custom sizing available", "UV protection glass", "Professional mounting"],
     variants: [
       { name: "Classic Wooden Frame", image: frameClassic },
       { name: "Modern Metal Frame", image: frameModern },
@@ -77,6 +81,7 @@ const printTypes: PrintType[] = [
     name: "Portrait Albums",
     icon: BookOpen,
     description: "Elegant portrait orientation photo albums",
+    features: ["Leather bound covers", "Archival quality paper", "Customizable layouts", "Premium finish"],
     variants: [
       { name: "Leather Bound Portrait", image: albumPortrait },
       { name: "Classic Portrait Album", image: albumPortrait },
@@ -89,6 +94,7 @@ const printTypes: PrintType[] = [
     name: "Landscape Albums",
     icon: BookOpen,
     description: "Stunning landscape orientation albums",
+    features: ["Wide format pages", "Panoramic spreads", "Hardcover binding", "Photo-safe materials"],
     variants: [
       { name: "Panoramic Landscape Album", image: albumLandscape },
       { name: "Wide Format Collection", image: albumLandscape },
@@ -101,6 +107,7 @@ const printTypes: PrintType[] = [
     name: "Custom Calendars",
     icon: Calendar,
     description: "Personalized calendars with your memories",
+    features: ["12-month layouts", "Custom start date", "High-quality printing", "Spiral or saddle binding"],
     variants: [
       { name: "Wall Calendar 2024", image: calendarImg },
       { name: "Desk Calendar", image: calendarImg },
@@ -113,6 +120,7 @@ const printTypes: PrintType[] = [
     name: "Photo Magazines",
     icon: Image,
     description: "Professional magazine-style photo books",
+    features: ["Glossy or matte finish", "Editorial layouts", "Custom page count", "Professional binding"],
     variants: [
       { name: "Glossy Magazine Format", image: magazineImg },
       { name: "Matte Finish Magazine", image: magazineImg },
@@ -125,6 +133,7 @@ const printTypes: PrintType[] = [
     name: "Canvas Prints",
     icon: Sparkles,
     description: "Museum-quality canvas prints",
+    features: ["Gallery-wrap finish", "Fade-resistant inks", "Ready to hang", "Multiple sizes"],
     variants: [
       { name: "Stretched Canvas", image: frameModern },
       { name: "Framed Canvas Print", image: frameClassic },
@@ -145,12 +154,10 @@ const ThreeDViewer = ({ productType, userImage }) => {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf5f5f5);
     sceneRef.current = scene;
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(
       45,
       containerRef.current.clientWidth / containerRef.current.clientHeight,
@@ -160,7 +167,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     camera.position.set(0, 0, 5);
     cameraRef.current = camera;
 
-    // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     renderer.shadowMap.enabled = true;
@@ -168,7 +174,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
@@ -183,7 +188,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     pointLight.position.set(-5, 3, -5);
     scene.add(pointLight);
 
-    // Create product based on type
     const productGroup = new THREE.Group();
     frameRef.current = productGroup;
 
@@ -199,7 +203,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
 
     scene.add(productGroup);
 
-    // Animation
     let animationId;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
@@ -212,7 +215,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     };
     animate();
 
-    // Mouse interaction
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
 
@@ -241,7 +243,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     renderer.domElement.addEventListener('mousemove', onMouseMove);
     renderer.domElement.addEventListener('mouseup', onMouseUp);
 
-    // Handle resize
     const handleResize = () => {
       if (!containerRef.current || !camera || !renderer) return;
       camera.aspect = containerRef.current.clientWidth / containerRef.current.clientHeight;
@@ -250,7 +251,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
       cancelAnimationFrame(animationId);
       renderer.domElement.removeEventListener('mousedown', onMouseDown);
@@ -265,7 +265,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
   }, [productType, userImage]);
 
   const createFrame = (group, userImage) => {
-    // Frame border
     const frameGeometry = new THREE.BoxGeometry(3, 4, 0.2);
     const frameMaterial = new THREE.MeshStandardMaterial({
       color: 0x2c1810,
@@ -277,7 +276,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     frameMesh.receiveShadow = true;
     group.add(frameMesh);
 
-    // Inner frame
     const innerGeometry = new THREE.BoxGeometry(2.6, 3.6, 0.15);
     const innerMaterial = new THREE.MeshStandardMaterial({
       color: 0xf5f5dc,
@@ -287,7 +285,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     innerMesh.position.z = 0.1;
     group.add(innerMesh);
 
-    // Photo/Canvas
     const photoGeometry = new THREE.PlaneGeometry(2.2, 3.2);
     let photoMaterial;
     
@@ -306,7 +303,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     photoMesh.position.z = 0.16;
     group.add(photoMesh);
 
-    // Glass effect
     const glassGeometry = new THREE.PlaneGeometry(2.5, 3.5);
     const glassMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
@@ -323,7 +319,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
   };
 
   const createMagazine = (group, userImage) => {
-    // Magazine cover
     const coverGeometry = new THREE.BoxGeometry(2.5, 3.5, 0.05);
     const coverMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -334,7 +329,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     coverMesh.castShadow = true;
     group.add(coverMesh);
 
-    // Cover image
     const imageGeometry = new THREE.PlaneGeometry(2.4, 2.8);
     let imageMaterial;
     
@@ -353,7 +347,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     imageMesh.position.set(0, 0.35, 0.026);
     group.add(imageMesh);
 
-    // Pages
     for (let i = 0; i < 10; i++) {
       const pageGeometry = new THREE.BoxGeometry(2.48, 3.48, 0.01);
       const pageMaterial = new THREE.MeshStandardMaterial({
@@ -365,7 +358,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
       group.add(pageMesh);
     }
 
-    // Spine
     const spineGeometry = new THREE.BoxGeometry(0.15, 3.5, 0.15);
     const spineMaterial = new THREE.MeshStandardMaterial({
       color: 0x1e293b,
@@ -377,7 +369,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
   };
 
   const createCalendar = (group, userImage) => {
-    // Calendar board
     const boardGeometry = new THREE.BoxGeometry(3, 3.5, 0.1);
     const boardMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -387,7 +378,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     boardMesh.castShadow = true;
     group.add(boardMesh);
 
-    // Photo section
     const photoGeometry = new THREE.PlaneGeometry(2.8, 2);
     let photoMaterial;
     
@@ -406,7 +396,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     photoMesh.position.set(0, 0.7, 0.051);
     group.add(photoMesh);
 
-    // Month bar
     const monthBarGeometry = new THREE.PlaneGeometry(2.8, 0.3);
     const monthBarMaterial = new THREE.MeshStandardMaterial({
       color: 0xd97706,
@@ -416,7 +405,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     monthBarMesh.position.set(0, -0.45, 0.051);
     group.add(monthBarMesh);
 
-    // Calendar grid
     const gridGeometry = new THREE.PlaneGeometry(2.8, 1);
     const gridMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -426,7 +414,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     gridMesh.position.set(0, -1.2, 0.051);
     group.add(gridMesh);
 
-    // Spiral binding
     for (let i = 0; i < 12; i++) {
       const ringGeometry = new THREE.TorusGeometry(0.08, 0.02, 16, 32);
       const ringMaterial = new THREE.MeshStandardMaterial({
@@ -442,7 +429,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
   };
 
   const createAlbum = (group, userImage) => {
-    // Album cover
     const coverGeometry = new THREE.BoxGeometry(3, 3.5, 0.15);
     const coverMaterial = new THREE.MeshStandardMaterial({
       color: 0x7f1d1d,
@@ -453,7 +439,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     coverMesh.castShadow = true;
     group.add(coverMesh);
 
-    // Embossed border
     const borderGeometry = new THREE.BoxGeometry(2.6, 3.1, 0.02);
     const borderMaterial = new THREE.MeshStandardMaterial({
       color: 0x991b1b,
@@ -463,7 +448,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     borderMesh.position.z = 0.076;
     group.add(borderMesh);
 
-    // Photo window
     const photoGeometry = new THREE.PlaneGeometry(2, 2.5);
     let photoMaterial;
     
@@ -482,7 +466,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     photoMesh.position.set(0, 0.3, 0.087);
     group.add(photoMesh);
 
-    // Title plate
     const titleGeometry = new THREE.BoxGeometry(2, 0.4, 0.03);
     const titleMaterial = new THREE.MeshStandardMaterial({
       color: 0xf59e0b,
@@ -493,7 +476,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
     titleMesh.position.set(0, -1.2, 0.09);
     group.add(titleMesh);
 
-    // Pages
     for (let i = 0; i < 15; i++) {
       const pageGeometry = new THREE.BoxGeometry(2.95, 3.45, 0.01);
       const pageMaterial = new THREE.MeshStandardMaterial({
@@ -505,7 +487,6 @@ const ThreeDViewer = ({ productType, userImage }) => {
       group.add(pageMesh);
     }
 
-    // Spine
     const spineGeometry = new THREE.BoxGeometry(0.2, 3.5, 0.2);
     const spineMaterial = new THREE.MeshStandardMaterial({
       color: 0x7f1d1d,
@@ -517,7 +498,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
   };
 
   return (
-    <div ref={containerRef} className="w-full h-[500px] rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800" />
+    <div ref={containerRef} className="w-full h-[500px] rounded-xl bg-gradient-to-br from-primary/5 to-accent/5" />
   );
 };
 
@@ -566,69 +547,72 @@ const Prints = () => {
   };
 
   return (
-    <section ref={ref} className="py-20 relative overflow-hidden">
-      {/* Stylish Banner */}
-      <div className={`container mx-auto px-4 mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-amber-200 dark:border-yellow-700 shadow-lg relative overflow-hidden">
-          {/* Animated background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10" />
-          
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center animate-pulse">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">Try Our New 3D Preview!</h3>
-                <p className="text-gray-600 dark:text-gray-400">Upload your photo and see how it looks in realistic 3D</p>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-              <Button 
-                onClick={triggerFileInput}
-                className="gap-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white"
-              >
-                <Upload className="w-4 h-4" />
-                Upload Photo
-              </Button>
-              
-              <select 
-                value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="frame">Frame</option>
-                <option value="magazine">Magazine</option>
-                <option value="calendar">Calendar</option>
-                <option value="album">Album</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3D Animated background elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-yellow-500/5 rounded-full blur-3xl" />
+    <section id="prints" ref={ref} className="py-24 relative overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
       </div>
 
       <div className="container mx-auto px-4">
-        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">Print Your Memories</h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+        {/* Banner */}
+        <div className={`mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
+          <Card className="border overflow-hidden rounded-xl">
+            <CardContent className="p-0">
+              <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="inline-flex p-4 rounded-xl bg-primary/10 text-primary">
+                      <Sparkles className="w-8 h-8" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2">Try Our New 3D Preview!</h3>
+                      <p className="text-muted-foreground">Upload your photo and see how it looks in realistic 3D</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <Button 
+                      onClick={triggerFileInput}
+                      className="gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Upload Photo
+                    </Button>
+                    
+                    <select 
+                      value={selectedProduct}
+                      onChange={(e) => setSelectedProduct(e.target.value)}
+                      className="px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                      <option value="frame">Frame</option>
+                      <option value="magazine">Magazine</option>
+                      <option value="calendar">Calendar</option>
+                      <option value="album">Album</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Header */}
+        <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <Badge className="mb-4 px-4 py-2 text-sm">Print Services</Badge>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">Print Your Memories</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Transform your digital moments into timeless physical treasures
           </p>
         </div>
 
+        {/* Carousel */}
         <div className="relative">
           <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
             <CarouselContent className="-ml-2 md:-ml-4">
@@ -636,32 +620,57 @@ const Prints = () => {
                 const Icon = print.icon;
                 return (
                   <CarouselItem key={print.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
-                    <div
-                      className={`group relative transition-all duration-700 ${
-                        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    <Card
+                      className={`group hover-lift border overflow-hidden transition-all duration-500 ${
+                        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                       }`}
-                      style={{ transitionDelay: `${index * 150}ms` }}
+                      style={{ 
+                        animationDelay: `${index * 0.1}s`,
+                        transitionDelay: `${index * 0.05}s`
+                      }}
                     >
-                      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-2xl h-full transition-all duration-500 hover:scale-105 border border-gray-200 dark:border-gray-700">
-                        {/* Icon with 3D animation */}
-                        <div className="relative mb-6">
-                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <Icon className="w-8 h-8 text-white" />
+                      <CardContent className="p-0">
+                        <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden rounded-t-xl">
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
+                          <div className="relative">
+                            <div className="mb-4 inline-flex p-4 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110">
+                              <Icon className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                              {print.name}
+                            </h3>
                           </div>
                         </div>
 
-                        <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">{print.name}</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">{print.description}</p>
+                        <div className="p-6">
+                          <p className="text-muted-foreground mb-4">{print.description}</p>
+                          
+                          <ul className="space-y-2 mb-6">
+                            {print.features?.map((feature, idx) => (
+                              <li key={idx} className="flex items-center gap-2 text-sm">
+                                <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
 
-                        <Button
-                          onClick={() => setSelectedPrint(print)}
-                          className="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white"
-                        >
-                          <span>View Options</span>
-                          <Sparkles className="ml-2 w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
+                          <div className="flex gap-2">
+                            <Button 
+                              className="flex-1"
+                              onClick={() => setSelectedPrint(print)}
+                            >
+                              View Options
+                            </Button>
+                           <Button 
+                              variant="outline"
+                              onClick={() => handleOrder(print.name)}
+                            >
+                              <Phone className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </CarouselItem>
                 );
               })}
@@ -672,81 +681,90 @@ const Prints = () => {
         </div>
 
         {/* CTA Section */}
-        <div className={`mt-20 text-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-12 max-w-4xl mx-auto shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform duration-500">
-            <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">Custom Print Solutions</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">
-              Can't find what you're looking for? We offer custom printing solutions tailored to your needs.
-            </p>
-            <Button 
-              size="lg" 
-              onClick={() => handleOrder("Custom Print Solutions")}
-              className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white"
-            >
-              Contact Us for Custom Orders
-            </Button>
-          </div>
+        <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <Card className="border inline-block">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold mb-4">Custom Print Solutions</h3>
+              <p className="text-muted-foreground mb-6 max-w-md">
+                Can't find what you're looking for? We offer custom printing solutions tailored to your needs.
+              </p>
+              <Button 
+                size="lg" 
+                className="group"
+                onClick={() => handleOrder("Custom Print Solutions")}
+              >
+                Contact Us for Custom Orders
+                <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
       {/* Variants Dialog */}
       <Dialog open={!!selectedPrint} onOpenChange={() => setSelectedPrint(null)}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto rounded-xl">
           <DialogHeader>
-            <DialogTitle className="text-3xl bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent flex items-center gap-3">
-              {selectedPrint && <selectedPrint.icon className="w-8 h-8 text-amber-600" />}
-              {selectedPrint?.name}
-            </DialogTitle>
-            <DialogDescription>
-              Browse through our {selectedPrint?.name.toLowerCase()} options and select your favorite
-            </DialogDescription>
+            <div className="p-6 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl -m-6 mb-0">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="relative">
+                <div className="inline-flex p-4 rounded-xl bg-white/20 backdrop-blur-sm mb-4">
+                  {selectedPrint && <selectedPrint.icon className="w-8 h-8" />}
+                </div>
+                <DialogTitle className="text-3xl font-bold mb-2">{selectedPrint?.name}</DialogTitle>
+                <DialogDescription className="text-white/90">
+                  Browse through our {selectedPrint?.name.toLowerCase()} options and select your favorite
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6">
             {selectedPrint?.variants?.map((variant, index) => (
               <div
                 key={variant.name}
-                className="group relative hover:scale-105 transition-transform duration-300"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className={`group transition-all duration-500 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 0.1}s` }}
               >
-                <div className="relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-2xl transition-all duration-300">
-                  {/* Animated background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  {/* Image preview */}
-                  <div className="relative mb-4 h-48 rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-500">
-                    <img 
-                      src={variant.image} 
-                      alt={variant.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  </div>
-                  
-                  <h4 className="font-semibold text-lg mb-2 relative z-10 text-gray-900 dark:text-white">{variant.name}</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 relative z-10">
-                    Premium quality {variant.name.toLowerCase()} with professional finishing
-                  </p>
-                  
-                  <div className="flex gap-2 relative z-10">
-                    <Button
-                      onClick={() => handle3DView(variant)}
-                      className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white"
-                      size="sm"
-                    >
-                      <Maximize2 className="w-4 h-4 mr-2" />
-                      3D View
-                    </Button>
-                    <Button
-                      onClick={() => handleOrder(selectedPrint.name, variant.name)}
-                      className="flex-1"
-                      variant="outline"
-                      size="sm"
-                    >
-                      Order Now
-                    </Button>
-                  </div>
-                </div>
+                <Card className="border overflow-hidden hover-lift">
+                  <CardContent className="p-0">
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={variant.image} 
+                        alt={variant.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    </div>
+                    
+                    <div className="p-6">
+                      <h4 className="font-semibold text-lg mb-2">{variant.name}</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Premium quality {variant.name.toLowerCase()} with professional finishing
+                      </p>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => handle3DView(variant)}
+                          className="flex-1"
+                          size="sm"
+                        >
+                          <Maximize2 className="w-4 h-4 mr-2" />
+                          3D View
+                        </Button>
+                        <Button
+                          onClick={() => handleOrder(selectedPrint.name, variant.name)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Order Now
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             ))}
           </div>
@@ -755,73 +773,130 @@ const Prints = () => {
 
       {/* 3D Viewer Dialog */}
       <Dialog open={show3DViewer} onOpenChange={setShow3DViewer}>
-        <DialogContent className="max-w-5xl max-h-[90vh]">
+        <DialogContent className="max-w-5xl max-h-[90vh] rounded-xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent flex items-center gap-2">
-              <Eye className="w-6 h-6 text-amber-600" />
-              3D Product Viewer - {selected3DProduct?.name}
-            </DialogTitle>
-            <DialogDescription>
-              Drag to rotate • Scroll to zoom • Experience your product in stunning 3D
-            </DialogDescription>
+            <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl -m-6 mb-0">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <button
+                onClick={() => setShow3DViewer(false)}
+                className="absolute top-4 right-4 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="relative">
+                <div className="inline-flex p-4 rounded-xl bg-white/20 backdrop-blur-sm mb-4">
+                  <Eye className="w-8 h-8" />
+                </div>
+                <DialogTitle className="text-3xl font-bold mb-2">
+                  3D Product Viewer
+                </DialogTitle>
+                <DialogDescription className="text-white/90">
+                  {selected3DProduct?.name} • Drag to rotate • Scroll to zoom
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           
-          <ThreeDViewer 
-            productType={selectedProduct} 
-            userImage={previewImage}
-          />
-          
-          <div className="flex flex-col sm:flex-row gap-3 justify-end mt-6">
-            <Button variant="outline" onClick={() => setShow3DViewer(false)}>
-              Close
-            </Button>
-            <Button 
-              onClick={() => {
-                handleOrder(`${selected3DProduct?.name || selectedProduct}`);
-                setShow3DViewer(false);
-              }}
-              className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white"
-            >
-              Order This Product
-            </Button>
+          <div className="p-6">
+            <ThreeDViewer 
+              productType={selectedProduct} 
+              userImage={previewImage}
+            />
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-end mt-6">
+              <Button variant="outline" onClick={() => setShow3DViewer(false)}>
+                Close
+              </Button>
+              <Button 
+                onClick={() => {
+                  handleOrder(`${selected3DProduct?.name || selectedProduct}`);
+                  setShow3DViewer(false);
+                }}
+                className="group"
+              >
+                Order This Product
+                <Sparkles className="ml-2 w-4 h-4 group-hover:rotate-12 transition-transform" />
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* Preview Dialog */}
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl rounded-xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent flex items-center gap-2">
-              <Eye className="w-6 h-6 text-amber-600" />
-              Product Preview
-            </DialogTitle>
-            <DialogDescription>
-              See how your photo looks in our {selectedProduct} product
-            </DialogDescription>
+            <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl -m-6 mb-0">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <button
+                onClick={() => setShowPreview(false)}
+                className="absolute top-4 right-4 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="relative">
+                <div className="inline-flex p-4 rounded-xl bg-white/20 backdrop-blur-sm mb-4">
+                  <Eye className="w-8 h-8" />
+                </div>
+                <DialogTitle className="text-3xl font-bold mb-2">Product Preview</DialogTitle>
+                <DialogDescription className="text-white/90">
+                  See how your photo looks in our {selectedProduct} product
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           
-          <ThreeDViewer 
-            productType={selectedProduct} 
-            userImage={previewImage}
-          />
-          
-          <div className="flex flex-col sm:flex-row gap-3 justify-end mt-6">
-            <Button variant="outline" onClick={() => setShowPreview(false)}>
-              Close
-            </Button>
-            <Button 
-              onClick={() => {
-                handleOrder(`${selectedProduct.charAt(0).toUpperCase() + selectedProduct.slice(1)} Print`);
-                setShowPreview(false);
-              }}
-              className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white"
-            >
-              Order This Product
-            </Button>
+          <div className="p-6">
+            <ThreeDViewer 
+              productType={selectedProduct} 
+              userImage={previewImage}
+            />
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-end mt-6">
+              <Button variant="outline" onClick={() => setShowPreview(false)}>
+                Close
+              </Button>
+              <Button 
+                onClick={() => {
+                  handleOrder(`${selectedProduct.charAt(0).toUpperCase() + selectedProduct.slice(1)} Print`);
+                  setShowPreview(false);
+                }}
+                className="group"
+              >
+                Order This Product
+                <Sparkles className="ml-2 w-4 h-4 group-hover:rotate-12 transition-transform" />
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
+
+      <style>{`
+        .hover-lift {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-text {
+          background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+      `}</style>
     </section>
   );
 };

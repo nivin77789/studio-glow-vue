@@ -1,15 +1,23 @@
+/* ===== IMPORT FONT ===== */
+@import url('https://fonts.googleapis.com/css2?family=Eirene+Sans:wght@400;500;600;700&display=swap');
+
+/* ===== TAILWIND LAYERS ===== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* 
+  ✨ LUXURY METALLIC GOLD DESIGN SYSTEM
+  Font: Eirene Sans
+  Color scheme: Metallic gold + warm neutrals
+  Includes gradients, glow shadows, and smooth animations.
 */
 
 @layer base {
   :root {
-    --background: 45 33% 98%; /* warm off-white */
-    --foreground: 30 25% 12%; /* deep brown for text */
+    /* ===== Core Colors ===== */
+    --background: 45 33% 98%;
+    --foreground: 30 25% 12%;
 
     --card: 45 33% 99%;
     --card-foreground: 30 25% 12%;
@@ -17,19 +25,17 @@ All colors MUST be HSL.
     --popover: 45 33% 100%;
     --popover-foreground: 30 25% 12%;
 
-    /* Luxury gold primary */
-    --primary: 46 85% 46%; /* rich gold */
-    --primary-foreground: 30 30% 10%; /* near-black brown for contrast */
+    /* ===== Metallic Gold Palette ===== */
+    --primary: 46 90% 50%;
+    --primary-foreground: 30 25% 10%;
 
-    /* Soft warm neutrals */
     --secondary: 45 25% 94%;
     --secondary-foreground: 46 85% 36%;
 
     --muted: 45 20% 95%;
     --muted-foreground: 35 15% 38%;
 
-    /* Lighter accent gold */
-    --accent: 40 92% 58%;
+    --accent: 45 95% 60%;
     --accent-foreground: 30 25% 12%;
 
     --destructive: 0 72% 45%;
@@ -37,64 +43,99 @@ All colors MUST be HSL.
 
     --border: 40 20% 88%;
     --input: 40 20% 88%;
-    --ring: 46 85% 46%;
+    --ring: 45 95% 55%;
 
     --radius: 0.75rem;
 
-    /* Custom design tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(46 85% 46%), hsl(40 92% 58%));
-    --gradient-accent: linear-gradient(135deg, hsl(38 92% 62%), hsl(48 96% 55%));
-    --gradient-hero: linear-gradient(135deg, hsl(46 85% 46% / 0.95), hsl(40 92% 58% / 0.9));
-    --shadow-elegant: 0 10px 40px -10px hsl(40 60% 40% / 0.25);
-    --shadow-glow: 0 0 40px hsl(46 85% 46% / 0.2);
+    /* ===== Gradients & Shadows ===== */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(43 92% 52%) 0%,
+      hsl(46 90% 58%) 25%,
+      hsl(48 96% 60%) 50%,
+      hsl(45 95% 55%) 75%,
+      hsl(43 92% 52%) 100%
+    );
+
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(45 100% 62%) 0%,
+      hsl(50 96% 70%) 50%,
+      hsl(45 95% 58%) 100%
+    );
+
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(45 90% 50% / 0.95),
+      hsl(48 96% 60% / 0.9)
+    );
+
+    --shadow-elegant: 0 10px 40px -10px hsl(45 80% 40% / 0.25);
+    --shadow-glow: 0 0 40px hsl(46 90% 55% / 0.35);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    /* ===== Sidebar ===== */
     --sidebar-background: 45 33% 99%;
     --sidebar-foreground: 30 25% 18%;
-    --sidebar-primary: 46 85% 46%;
+    --sidebar-primary: 46 90% 50%;
     --sidebar-primary-foreground: 30 30% 10%;
     --sidebar-accent: 45 25% 95%;
     --sidebar-accent-foreground: 30 25% 18%;
     --sidebar-border: 40 20% 90%;
-    --sidebar-ring: 46 85% 46%;
+    --sidebar-ring: 45 95% 55%;
   }
 
+  /* ===== DARK MODE ===== */
   .dark {
-    --background: 0 0% 0%; /* pure black */
-    --foreground: 45 100% 85%; /* luxury gold text */
+    --background: 0 0% 0%;
+    --foreground: 45 100% 85%;
 
-    --card: 0 0% 5%; /* near black for cards */
+    --card: 0 0% 5%;
     --card-foreground: 45 100% 85%;
 
     --popover: 0 0% 5%;
     --popover-foreground: 45 100% 85%;
 
-    /* luxury gold accents */
-    --primary: 45 100% 65%; /* bright luxury gold */
-    --primary-foreground: 0 0% 0%; /* black text on gold */
+    --primary: 45 100% 70%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 10%; /* dark gray */
+    --secondary: 0 0% 10%;
     --secondary-foreground: 45 100% 75%;
 
     --muted: 0 0% 12%;
     --muted-foreground: 45 30% 60%;
 
-    --accent: 45 100% 58%; /* vibrant gold */
+    --accent: 45 100% 65%;
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 45 100% 20%; /* subtle gold borders */
+    --border: 45 100% 20%;
     --input: 0 0% 15%;
-    --ring: 45 100% 65%;
+    --ring: 45 100% 70%;
 
-    /* Dark mode custom tokens - luxury gold */
-    --gradient-primary: linear-gradient(135deg, hsl(45 100% 65%), hsl(42 100% 55%));
-    --gradient-accent: linear-gradient(135deg, hsl(48 100% 60%), hsl(42 100% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(45 100% 65% / 0.95), hsl(42 100% 55% / 0.9));
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(45 100% 70%) 0%,
+      hsl(48 100% 60%) 50%,
+      hsl(43 100% 55%) 100%
+    );
+
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(50 100% 65%) 0%,
+      hsl(45 100% 55%) 100%
+    );
+
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(45 100% 70% / 0.95),
+      hsl(43 100% 55% / 0.9)
+    );
+
     --shadow-elegant: 0 10px 40px -10px hsl(45 100% 50% / 0.4);
-    --shadow-glow: 0 0 50px hsl(45 100% 50% / 0.3);
+    --shadow-glow: 0 0 50px hsl(45 100% 60% / 0.4);
 
     --sidebar-background: 0 0% 3%;
     --sidebar-foreground: 45 100% 80%;
@@ -105,94 +146,109 @@ All colors MUST be HSL.
     --sidebar-border: 45 50% 15%;
     --sidebar-ring: 45 100% 65%;
   }
-}
 
-@layer base {
+  /* ===== Base Styles ===== */
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Eirene Sans', sans-serif;
   }
 
-  /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
   }
 }
 
 @layer utilities {
-  /* Glass morphism effect */
   .glass {
     @apply bg-background/80 backdrop-blur-lg border border-border/50;
   }
 
-  /* Gradient text */
   .gradient-text {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-primary);
   }
 
-  /* Hover lift effect */
   .hover-lift {
     @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
   }
 
-  /* Card with minimal shadow */
   .card-elegant {
     box-shadow: none;
   }
 
-  /* Luxury gold button */
   .btn-gold {
     @apply rounded-full font-semibold transition-all shadow-lg;
     background-image: var(--gradient-primary);
     color: hsl(var(--primary-foreground));
   }
+
   .btn-gold:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 10px 30px hsl(46 85% 46% / 0.35);
-    transform: translateY(-1px);
+    filter: brightness(1.1);
+    box-shadow: 0 10px 30px hsl(46 90% 55% / 0.35);
+    transform: translateY(-2px);
   }
+
   .btn-gold:active {
     transform: translateY(0);
   }
 
-  /* Gold outline button */
   .btn-gold-outline {
     @apply rounded-full font-semibold transition-all;
-    border: 1px solid hsl(var(--primary) / 0.5);
+    border: 1px solid hsl(var(--primary) / 0.6);
     color: hsl(var(--foreground));
     background: transparent;
   }
+
   .btn-gold-outline:hover {
     background: hsl(var(--primary) / 0.08);
     border-color: hsl(var(--primary));
   }
 
-  /* Gold gradient background helper */
   .bg-gold-soft {
     background-image: var(--gradient-accent);
     opacity: 0.15;
   }
 
-  /* Grid pattern background */
   .bg-grid-pattern {
     background-image: linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
                       linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
   }
 }
+
+/* ===== Animations ===== */
+@keyframes metallic-shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.metallic {
+  background-image: linear-gradient(
+    110deg,
+    hsl(46 90% 55%) 0%,
+    hsl(50 100% 80%) 25%,
+    hsl(45 95% 55%) 50%,
+    hsl(50 100% 80%) 75%,
+    hsl(46 90% 55%) 100%
+  );
+  background-size: 200% auto;
+  animation: metallic-shine 3s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 @keyframes float {
-  0%, 100% { transform: translateY(0px) translateX(0); }
-  50% { transform: translateY(-20px) translateX(10px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
 }
 .animate-float {
   animation: float 5s ease-in-out infinite;
 }
 
-/* 3D Card Animation */
 @keyframes rotate-3d {
   0% { transform: perspective(1000px) rotateY(0deg); }
   100% { transform: perspective(1000px) rotateY(360deg); }
@@ -201,37 +257,6 @@ All colors MUST be HSL.
   animation: rotate-3d 20s linear infinite;
 }
 
-/* Float with rotation */
-@keyframes float-rotate {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-30px) rotate(10deg); }
-}
-.animate-float-rotate {
-  animation: float-rotate 8s ease-in-out infinite;
-}
-
-/* Spin slow */
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-.animate-spin-slow {
-  animation: spin-slow 60s linear infinite;
-}
-
-/* Slide animations */
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes slide-down {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-slide-up { animation: slide-up 0.6s ease-out; }
-.animate-slide-down { animation: slide-down 0.6s ease-out; }
-
-/* Gradient animation */
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -239,83 +264,4 @@ All colors MUST be HSL.
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient-shift 3s ease infinite;
-}
-
-/* Shimmer */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-.animate-shimmer {
-  animation: shimmer 2s infinite;
-}
-
-/* Scroll indicator */
-@keyframes scroll {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(12px); opacity: 0; }
-}
-.animate-scroll {
-  animation: scroll 2s ease-in-out infinite;
-}
-
-/* 3D Cube rotation */
-@keyframes cube-rotate {
-  0% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg); }
-  100% { transform: perspective(1000px) rotateX(360deg) rotateY(360deg); }
-}
-.animate-cube {
-  animation: cube-rotate 15s linear infinite;
-}
-
-/* Lens flare */
-@keyframes lensflare {
-  0% { transform: translateX(-100%) rotate(12deg); opacity: 0; }
-  20% { opacity: 0.8; }
-  50% { opacity: 0.4; }
-  100% { transform: translateX(100%) rotate(12deg); opacity: 0; }
-}
-.animate-lensflare {
-  animation: lensflare 12s linear infinite;
-}
-
-/* Film grain */
-@keyframes grain {
-  0%, 100% { background-position: 0 0; }
-  50% { background-position: 20px 20px; }
-}
-.animate-grain {
-  animation: grain 6s steps(10) infinite;
-}
-
-/* Autofocus expanding circles */
-@keyframes focus {
-  0% { transform: scale(0.9); opacity: 0.6; }
-  50% { transform: scale(1.1); opacity: 0.3; }
-  100% { transform: scale(0.9); opacity: 0.6; }
-}
-.animate-focus {
-  animation: focus 3s ease-in-out infinite;
-}
-
-/* Shutter closing/opening */
-@keyframes shutter {
-  0% { opacity: 0; }
-  30% { opacity: 1; }
-  70% { opacity: 1; }
-  100% { opacity: 0; }
-}
-.animate-shutter {
-  animation: shutter 0.8s ease-in-out forwards;
-}
-
-/* Camera flash */
-@keyframes flash {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  30% { opacity: 0.6; }
-  100% { opacity: 0; }
-}
-.animate-flash {
-  animation: flash 0.5s ease-out forwards;
 }
