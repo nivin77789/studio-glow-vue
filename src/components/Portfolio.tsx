@@ -23,12 +23,12 @@ import {
 
 // Local gallery images
 const galleryImages = {
-  Wedding: ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg", "/images/4.jpeg", "/images/5.jpeg"],
-  Engagement: ["/images/6.jpeg", "/images/7.jpeg", "/images/8.jpeg", "/images/9.jpeg"],
-  Maternity: ["/images/10.jpeg", "/images/11.jpeg", "/images/12.jpeg", "/images/13.jpeg"],
-  "House Warming": ["/images/14.jpeg", "/images/15.jpeg", "/images/16.jpeg"],
-  Birthday: ["/images/17.jpeg", "/images/18.jpeg", "/images/19.jpeg", "/images/20.jpeg"],
-  Concert: ["/images/21.jpeg", "/images/22.jpeg", "/images/23.jpeg", "/images/24.jpeg"],
+  Wedding: ["/images/wed/Wedding/1.jpeg", "/images/wed/Wedding/2.jpeg", "/images/wed/Wedding/3.jpeg", "/images/wed/Wedding/4.jpeg", "/images/wed/Wedding/5.jpeg"],
+  Engagement: ["/images/wed/Wedding/6.jpeg", "/images/wed/Wedding/7.jpeg", "/images/wed/Wedding/8.jpeg", "/images/wed/Wedding/9.jpeg"],
+  Maternity: ["/images/wed/Wedding/10.jpeg", "/images/wed/Wedding/11.jpeg", "/images/wed/Wedding/12.jpeg", "/images/wed/Wedding/13.jpeg"],
+  "House Warming": ["/images/wed/Wedding/14.jpeg", "/images/wed/Wedding/15.jpeg", "/images/wed/Wedding/16.jpeg"],
+  Birthday: ["/images/wed/Wedding/17.jpeg", "/images/wed/Wedding/18.jpeg", "/images/wed/Wedding/19.jpeg", "/images/wed/Wedding/20.jpeg"],
+  Concert: ["/images/wed/Wedding/21.jpeg", "/images/wed/Wedding/22.jpeg", "/images/wed/Wedding/23.jpeg", "/images/wed/Wedding/24.jpeg"],
 };
 
 // Videos for cards
