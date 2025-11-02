@@ -22,18 +22,58 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-card border-t border-border">
+    <footer className="bg-card">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-          {/* Brand */}
+          {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
             <a href="#home" className="flex items-center gap-2 mb-4 group">
               <Camera className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
-              <span className="text-2xl font-bold gradient-text">Premium Studio</span>
+              <span className="text-2xl font-bold gradient-text">Trixietales</span>
             </a>
-            <p className="text-muted-foreground mb-4 max-w-sm">
+            <p className="text-muted-foreground mb-6 max-w-sm">
               Professional photography and videography services capturing your most precious moments with creativity and elegance.
             </p>
+
+            {/* Newsletter Section */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Stay Updated</h3>
+              <p className="text-muted-foreground text-sm mb-3">
+                Subscribe to our newsletter for the latest updates and exclusive offers
+              </p>
+              <form className="flex gap-2" onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  await addDoc(collection(db, "newsletterSubscribers"), {
+                    email: email,
+                    timestamp: serverTimestamp(),
+                    status: "active"
+                  });
+                  toast.success("Successfully subscribed to newsletter!");
+                  setEmail("");
+                } catch (error) {
+                  toast.error("Failed to subscribe. Please try again.");
+                  console.error("Error subscribing:", error);
+                }
+              }}>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+
+            {/* Social Links */}
             <div className="flex gap-3">
               {socialLinks.map((social) => (
                 <a
@@ -68,48 +108,8 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* Newsletter Section */}
-        <div className="pt-8 border-t border-border">
-          <div className="max-w-md mx-auto text-center mb-8">
-            <h3 className="text-xl font-semibold mb-2">Stay Updated</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Subscribe to our newsletter for the latest updates and exclusive offers
-            </p>
-            <form className="flex gap-2" onSubmit={async (e) => {
-              e.preventDefault();
-              try {
-                await addDoc(collection(db, "newsletterSubscribers"), {
-                  email: email,
-                  timestamp: serverTimestamp(),
-                  status: "active"
-                });
-                toast.success("Successfully subscribed to newsletter!");
-                setEmail("");
-              } catch (error) {
-                toast.error("Failed to subscribe. Please try again.");
-                console.error("Error subscribing:", error);
-              }
-            }}>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                required
-              />
-              <button
-                type="submit"
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="pt-8 border-t border-border text-center text-muted-foreground">
-          <p>&copy; {currentYear} Premium Studio. All rights reserved.</p>
+        <div className="pt-8 text-center text-muted-foreground">
+          <p>&copy; {currentYear} Trixietales. All rights reserved.</p>
         </div>
       </div>
     </footer>
