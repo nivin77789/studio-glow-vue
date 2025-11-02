@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Inbox, Trash2, CheckCircle, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Sparkles, Music, Mic2 } from "lucide-react";
+import { Mail, Inbox, Trash2, CheckCircle, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Sparkles, Music, Mic2, Plus, Edit, ExternalLink, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { db } from "@/lib/firebase";
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from "firebase/firestore";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ContactSubmission {
   id: string;
@@ -50,6 +53,20 @@ interface CollaborationRequest {
   status: string;
 }
 
+interface Collaborator {
+  id: string;
+  category: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  address: string;
+  location: string;
+  whatsappNumber: string;
+  contactNumber: string;
+  email: string;
+  website?: string;
+}
+
 const serviceIcons: { [key: string]: any } = {
   "Wedding Halls": Building2,
   "Party Halls": Users,
@@ -64,6 +81,15 @@ const serviceIcons: { [key: string]: any } = {
   "Other": Users
 };
 
+const collaboratorCategories = [
+  "Wedding Halls",
+  "Party Halls",
+  "Interior Designers",
+  "Makeup Artists",
+  "Orchestra",
+  "DJ Services",
+];
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -71,6 +97,21 @@ const AdminDashboard = () => {
   const [newsletterSubscribers, setNewsletterSubscribers] = useState<NewsletterSubscriber[]>([]);
   const [courseEnrollments, setCourseEnrollments] = useState<CourseEnrollment[]>([]);
   const [collaborationRequests, setCollaborationRequests] = useState<CollaborationRequest[]>([]);
+  const [collaboratorsList, setCollaboratorsList] = useState<Collaborator[]>([]);
+  const [showCollaboratorForm, setShowCollaboratorForm] = useState(false);
+  const [editingCollaborator, setEditingCollaborator] = useState<Collaborator | null>(null);
+  const [collaboratorForm, setCollaboratorForm] = useState({
+    category: "",
+    name: "",
+    description: "",
+    imageUrl: "",
+    address: "",
+    location: "",
+    whatsappNumber: "",
+    contactNumber: "",
+    email: "",
+    website: ""
+  });
 
   useEffect(() => {
     const auth = localStorage.getItem("isAdminAuthenticated");
@@ -140,6 +181,22 @@ const AdminDashboard = () => {
         requests.push({ id: doc.id, ...doc.data() } as CollaborationRequest);
       });
       setCollaborationRequests(requests);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
+  // Fetch collaborators list
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "collaborators"), orderBy("name", "asc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const collabs: Collaborator[] = [];
+      snapshot.forEach((doc) => {
+        collabs.push({ id: doc.id, ...doc.data() } as Collaborator);
+      });
+      setCollaboratorsList(collabs);
     });
 
     return () => unsubscribe();
@@ -220,6 +277,65 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleCollaboratorFormChange = (field: string, value: string) => {
+    setCollaboratorForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddCollaborator = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingCollaborator) {
+        await updateDoc(doc(db, "collaborators", editingCollaborator.id), collaboratorForm);
+        toast.success("Collaborator updated successfully");
+      } else {
+        await addDoc(collection(db, "collaborators"), collaboratorForm);
+        toast.success("Collaborator added successfully");
+      }
+      setShowCollaboratorForm(false);
+      setEditingCollaborator(null);
+      setCollaboratorForm({
+        category: "",
+        name: "",
+        description: "",
+        imageUrl: "",
+        address: "",
+        location: "",
+        whatsappNumber: "",
+        contactNumber: "",
+        email: "",
+        website: ""
+      });
+    } catch (error) {
+      toast.error("Failed to save collaborator");
+    }
+  };
+
+  const handleEditCollaborator = (collaborator: Collaborator) => {
+    setEditingCollaborator(collaborator);
+    setCollaboratorForm({
+      category: collaborator.category,
+      name: collaborator.name,
+      description: collaborator.description,
+      imageUrl: collaborator.imageUrl,
+      address: collaborator.address,
+      location: collaborator.location,
+      whatsappNumber: collaborator.whatsappNumber,
+      contactNumber: collaborator.contactNumber,
+      email: collaborator.email,
+      website: collaborator.website || ""
+    });
+    setShowCollaboratorForm(true);
+  };
+
+  const handleDeleteCollaborator = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "collaborators", id));
+      toast.success("Collaborator deleted");
+    } catch (error) {
+      toast.error("Failed to delete collaborator");
+    }
+  };
+
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "N/A";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
@@ -256,8 +372,15 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="collaborations" className="space-y-6">
-          <TabsList className="grid grid-cols-4 gap-2">
+        <Tabs defaultValue="collaborators" className="space-y-6">
+          <TabsList className="grid grid-cols-5 gap-2">
+            <TabsTrigger value="collaborators" className="relative">
+              <Users className="w-4 h-4 mr-2" />
+              Collaborators
+              <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-semibold">
+                {collaboratorsList.length}
+              </span>
+            </TabsTrigger>
             <TabsTrigger value="collaborations" className="relative">
               <Building2 className="w-4 h-4 mr-2" />
               Collaborations
@@ -290,6 +413,101 @@ const AdminDashboard = () => {
               Newsletter
             </TabsTrigger>
           </TabsList>
+
+          {/* Collaborators Management Section */}
+          <TabsContent value="collaborators">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Users className="w-5 h-5" />
+                      Manage Collaborators
+                      <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                        {collaboratorsList.length} total
+                      </span>
+                    </CardTitle>
+                    <CardDescription>Add and manage collaborators by category</CardDescription>
+                  </div>
+                  <Button onClick={() => {
+                    setEditingCollaborator(null);
+                    setShowCollaboratorForm(true);
+                  }}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Collaborator
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {collaboratorsList.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No collaborators added yet</p>
+                  ) : (
+                    collaboratorsList.map((collaborator) => (
+                      <Card key={collaborator.id} className="p-4">
+                        <div className="flex items-start gap-4">
+                          <img
+                            src={collaborator.imageUrl}
+                            alt={collaborator.name}
+                            className="w-24 h-24 object-cover rounded-lg"
+                          />
+                          <div className="flex-1 space-y-2">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h4 className="font-semibold text-lg">{collaborator.name}</h4>
+                                <span className="inline-flex items-center rounded-full border-transparent bg-primary/10 text-primary px-2 py-0.5 text-xs font-semibold">
+                                  {collaborator.category}
+                                </span>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleEditCollaborator(collaborator)}
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => handleDeleteCollaborator(collaborator.id)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{collaborator.description}</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div className="flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                <span>{collaborator.location}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Phone className="w-3 h-3" />
+                                <span>{collaborator.contactNumber}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Mail className="w-3 h-3" />
+                                <span className="truncate">{collaborator.email}</span>
+                              </div>
+                              {collaborator.website && (
+                                <div className="flex items-center gap-1">
+                                  <ExternalLink className="w-3 h-3" />
+                                  <a href={collaborator.website} target="_blank" rel="noopener noreferrer" className="truncate hover:text-primary">
+                                    Website
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Collaborations Section */}
           <TabsContent value="collaborations">
@@ -589,6 +807,165 @@ const AdminDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Collaborator Form Modal */}
+      {showCollaboratorForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <CardTitle>{editingCollaborator ? "Edit" : "Add"} Collaborator</CardTitle>
+              <CardDescription>
+                {editingCollaborator ? "Update" : "Add"} collaborator information
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleAddCollaborator} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category *</Label>
+                    <select
+                      id="category"
+                      required
+                      value={collaboratorForm.category}
+                      onChange={(e) => handleCollaboratorFormChange("category", e.target.value)}
+                      className="w-full px-3 py-2 border rounded-lg bg-background"
+                    >
+                      <option value="">Select category</option>
+                      {collaboratorCategories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      required
+                      value={collaboratorForm.name}
+                      onChange={(e) => handleCollaboratorFormChange("name", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description *</Label>
+                  <Textarea
+                    id="description"
+                    required
+                    value={collaboratorForm.description}
+                    onChange={(e) => handleCollaboratorFormChange("description", e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="imageUrl">Image URL *</Label>
+                  <Input
+                    id="imageUrl"
+                    required
+                    type="url"
+                    value={collaboratorForm.imageUrl}
+                    onChange={(e) => handleCollaboratorFormChange("imageUrl", e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location *</Label>
+                    <Input
+                      id="location"
+                      required
+                      value={collaboratorForm.location}
+                      onChange={(e) => handleCollaboratorFormChange("location", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="address">Full Address *</Label>
+                    <Input
+                      id="address"
+                      required
+                      value={collaboratorForm.address}
+                      onChange={(e) => handleCollaboratorFormChange("address", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="contactNumber">Contact Number *</Label>
+                    <Input
+                      id="contactNumber"
+                      required
+                      type="tel"
+                      value={collaboratorForm.contactNumber}
+                      onChange={(e) => handleCollaboratorFormChange("contactNumber", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="whatsappNumber">WhatsApp Number *</Label>
+                    <Input
+                      id="whatsappNumber"
+                      required
+                      type="tel"
+                      value={collaboratorForm.whatsappNumber}
+                      onChange={(e) => handleCollaboratorFormChange("whatsappNumber", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      required
+                      type="email"
+                      value={collaboratorForm.email}
+                      onChange={(e) => handleCollaboratorFormChange("email", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="website">Website (Optional)</Label>
+                    <Input
+                      id="website"
+                      type="url"
+                      value={collaboratorForm.website}
+                      onChange={(e) => handleCollaboratorFormChange("website", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 justify-end pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowCollaboratorForm(false);
+                      setEditingCollaborator(null);
+                      setCollaboratorForm({
+                        category: "",
+                        name: "",
+                        description: "",
+                        imageUrl: "",
+                        address: "",
+                        location: "",
+                        whatsappNumber: "",
+                        contactNumber: "",
+                        email: "",
+                        website: ""
+                      });
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit">
+                    {editingCollaborator ? "Update" : "Add"} Collaborator
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

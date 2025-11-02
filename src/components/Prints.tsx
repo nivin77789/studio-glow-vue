@@ -661,9 +661,9 @@ const Prints = () => {
                             >
                               View Options
                             </Button>
-                           <Button 
+                            <Button 
                               variant="outline"
-                              onClick={() => handleOrder(print.name)}
+                              onClick={() => handleOrder(print.name, null)}
                             >
                               <Phone className="w-4 h-4" />
                             </Button>
@@ -691,7 +691,7 @@ const Prints = () => {
               <Button 
                 size="lg" 
                 className="group"
-                onClick={() => handleOrder("Custom Print Solutions")}
+                onClick={() => handleOrder("Custom Print Solutions", null)}
               >
                 Contact Us for Custom Orders
                 <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
@@ -809,7 +809,7 @@ const Prints = () => {
               </Button>
               <Button 
                 onClick={() => {
-                  handleOrder(`${selected3DProduct?.name || selectedProduct}`);
+                  handleOrder(selected3DProduct?.name || selectedProduct, null);
                   setShow3DViewer(false);
                 }}
                 className="group"
@@ -858,7 +858,7 @@ const Prints = () => {
               </Button>
               <Button 
                 onClick={() => {
-                  handleOrder(`${selectedProduct.charAt(0).toUpperCase() + selectedProduct.slice(1)} Print`);
+                  handleOrder(`${selectedProduct.charAt(0).toUpperCase() + selectedProduct.slice(1)} Print`, null);
                   setShowPreview(false);
                 }}
                 className="group"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X, Camera } from "lucide-react";
+import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X, Camera, ExternalLink, MessageCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,23 +17,22 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useToast } from "@/hooks/use-toast";
 
 // Firebase imports
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAZCNRSPlDFTzK_HNBKxRYQkX7XJIzSSW4",
-  authDomain: "mark-studio-4b30a.firebaseapp.com",
-  projectId: "mark-studio-4b30a",
-  storageBucket: "mark-studio-4b30a.firebasestorage.app",
-  messagingSenderId: "717134874279",
-  appId: "1:717134874279:web:e2d5ac9923c79ae21e3d82",
-  measurementId: "G-NNNZWPJ6X1"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+interface Collaborator {
+  id: string;
+  category: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  address: string;
+  location: string;
+  whatsappNumber: string;
+  contactNumber: string;
+  email: string;
+  website?: string;
+}
 
 const collaborations = [
   {
@@ -99,6 +98,8 @@ const Collaborations = () => {
   const [selectedCollab, setSelectedCollab] = useState<typeof collaborations[0] | null>(null);
   const [showPartnerForm, setShowPartnerForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { toast } = useToast();
 
   const [partnerForm, setPartnerForm] = useState({
@@ -109,6 +110,27 @@ const Collaborations = () => {
     address: "",
     message: ""
   });
+
+  // Fetch collaborators for selected category
+  useEffect(() => {
+    const fetchCollaborators = async () => {
+      if (!selectedCategory) return;
+      
+      try {
+        const q = query(collection(db, "collaborators"), where("category", "==", selectedCategory));
+        const querySnapshot = await getDocs(q);
+        const collabData: Collaborator[] = [];
+        querySnapshot.forEach((doc) => {
+          collabData.push({ id: doc.id, ...doc.data() } as Collaborator);
+        });
+        setCollaborators(collabData);
+      } catch (error) {
+        console.error("Error fetching collaborators:", error);
+      }
+    };
+
+    fetchCollaborators();
+  }, [selectedCategory]);
 
   const handleBookNow = (collab: typeof collaborations[0]) => {
     const message = `Hi! I'm interested in booking your ${collab.title} service. Please provide more details.`;
@@ -229,9 +251,12 @@ const Collaborations = () => {
                     <div className="flex gap-2">
                       <Button 
                         className="flex-1"
-                        onClick={() => setSelectedCollab(collab)}
+                        onClick={() => {
+                          setSelectedCategory(collab.title);
+                          setSelectedCollab(null);
+                        }}
                       >
-                        View Details
+                        View Collaborators
                       </Button>
                       <Button 
                         variant="outline"
@@ -283,68 +308,97 @@ const Collaborations = () => {
         `}</style>
       </section>
 
-      {/* Collaboration Details Modal */}
-      {selectedCollab && (
+      {/* Collaborators List Modal */}
+      {selectedCategory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <Card className="max-w-lg w-full animate-scale-in overflow-hidden rounded-xl">
+          <Card className="max-w-5xl w-full max-h-[90vh] overflow-y-auto animate-scale-in rounded-xl">
             <CardContent className="p-0">
-              {/* Header with matching border radius */}
-              <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="relative">
-                  <div className="inline-flex p-4 rounded-xl bg-white/20 backdrop-blur-sm mb-4">
-                    <selectedCollab.icon className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-2">{selectedCollab.title}</h3>
-                  <p className="text-white/90">{selectedCollab.description}</p>
-                </div>
+              {/* Header */}
+              <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl sticky top-0 z-10">
+                <button
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setCollaborators([]);
+                  }}
+                  className="absolute top-4 right-4 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <h3 className="text-3xl font-bold mb-2">{selectedCategory}</h3>
+                <p className="text-white/90">Available Collaborators in this category</p>
               </div>
 
-              {/* Content */}
+              {/* Collaborators Grid */}
               <div className="p-8">
-                <h4 className="font-semibold mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  Services Offered
-                </h4>
-                <ul className="space-y-3 mb-6">
-                  {selectedCollab.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
-                      <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                {collaborators.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No collaborators available in this category yet.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {collaborators.map((collaborator) => (
+                      <Card key={collaborator.id} className="group hover-lift overflow-hidden">
+                        <CardContent className="p-0">
+                          {/* Image */}
+                          <div className="aspect-video relative overflow-hidden bg-muted">
+                            <img 
+                              src={collaborator.imageUrl} 
+                              alt={collaborator.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="p-6">
+                            <h4 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                              {collaborator.name}
+                            </h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              {collaborator.description}
+                            </p>
 
-                <div className="space-y-3 mb-6 p-4 rounded-lg bg-accent/5">
-                  <div className="flex items-center gap-3 text-sm">
-                    <Phone className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{selectedCollab.contact}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <Mail className="w-4 h-4 text-primary" />
-                    <span>info@nivinstudio.com</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <span>Trivandrum, Kerala</span>
-                  </div>
-                </div>
+                            <div className="space-y-2 mb-4">
+                              <div className="flex items-center gap-2 text-sm">
+                                <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
+                                <span className="truncate">{collaborator.location}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <Phone className="w-4 h-4 text-primary flex-shrink-0" />
+                                <span>{collaborator.contactNumber}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <Mail className="w-4 h-4 text-primary flex-shrink-0" />
+                                <span className="truncate">{collaborator.email}</span>
+                              </div>
+                            </div>
 
-                <div className="flex gap-3">
-                  <Button 
-                    className="flex-1"
-                    onClick={() => handleBookNow(selectedCollab)}
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Book via WhatsApp
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={() => setSelectedCollab(null)}
-                  >
-                    Close
-                  </Button>
-                </div>
+                            <div className="flex gap-2">
+                              <Button
+                                className="flex-1"
+                                onClick={() => {
+                                  const message = `Hi! I found you through Mark Studio. I'm interested in your ${selectedCategory} services.`;
+                                  const whatsappUrl = `https://wa.me/${collaborator.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                                  window.open(whatsappUrl, '_blank');
+                                }}
+                              >
+                                <MessageCircle className="w-4 h-4 mr-2" />
+                                WhatsApp
+                              </Button>
+                              {collaborator.website && (
+                                <Button
+                                  variant="outline"
+                                  onClick={() => window.open(collaborator.website, '_blank')}
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
