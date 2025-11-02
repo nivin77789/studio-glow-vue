@@ -121,7 +121,7 @@ const HeroLanding = () => {
         <div className="max-w-2xl animate-fade-in">
           <div className="mb-6">
             <span className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-medium animate-slide-right">
-              Mark Studio
+              Trixietales
             </span>
           </div>
 

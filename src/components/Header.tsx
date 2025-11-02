@@ -86,7 +86,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-2 group">
             <Camera className={`w-8 h-8 transition-all group-hover:scale-110 ${getLogoColor()}`} />
             <span className={`text-2xl font-bold transition-colors ${isHomePage && !isScrolled ? 'text-white' : 'gradient-text'}`}>
-              Mark Studio
+              Trixietales
             </span>
           </Link>
 

@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Building2, Mic2, Music, Palette as PaletteIcon, Sparkles, Users, Phone, Mail, MapPin, X, Camera, ExternalLink, MessageCircle } from "lucide-react";
+import { Building2, Mic2, Music, Palette, Sparkles, Users, Phone, Mail, MapPin, X, Camera, ExternalLink, MessageCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,7 +50,7 @@ const collaborations = [
     contact: "+91 98765 43211"
   },
   {
-    icon: PaletteIcon,
+    icon: Palette,
     title: "Interior Designers",
     description: "Transform your space with creative interior design solutions",
     features: ["Residential design", "Commercial spaces", "3D visualization", "Budget planning"],
@@ -100,6 +100,7 @@ const Collaborations = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isLoadingCollaborators, setIsLoadingCollaborators] = useState(false);
   const { toast } = useToast();
 
   const [partnerForm, setPartnerForm] = useState({
@@ -116,6 +117,7 @@ const Collaborations = () => {
     const fetchCollaborators = async () => {
       if (!selectedCategory) return;
       
+      setIsLoadingCollaborators(true);
       try {
         const q = query(collection(db, "collaborators"), where("category", "==", selectedCategory));
         const querySnapshot = await getDocs(q);
@@ -126,11 +128,18 @@ const Collaborations = () => {
         setCollaborators(collabData);
       } catch (error) {
         console.error("Error fetching collaborators:", error);
+        toast({
+          title: "Error Loading Data",
+          description: "Failed to load collaborators. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingCollaborators(false);
       }
     };
 
     fetchCollaborators();
-  }, [selectedCategory]);
+  }, [selectedCategory, toast]);
 
   const handleBookNow = (collab: typeof collaborations[0]) => {
     const message = `Hi! I'm interested in booking your ${collab.title} service. Please provide more details.`;
@@ -194,8 +203,6 @@ const Collaborations = () => {
         {/* Photography-themed background */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
-
-          
         </div>
 
         <div className="container mx-auto px-4">
@@ -322,8 +329,28 @@ const Collaborations = () => {
 
               {/* Collaborators Grid */}
               <div className="p-8">
-                {collaborators.length === 0 ? (
+                {isLoadingCollaborators ? (
+                  <div className="flex flex-col items-center justify-center py-16">
+                    <div className="relative w-20 h-20 mb-6">
+                      {/* Outer spinning ring */}
+                      <div className="absolute inset-0 border-4 border-primary/20 rounded-full"></div>
+                      <div className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin"></div>
+                      {/* Inner pulsing circle */}
+                      <div className="absolute inset-3 bg-primary/10 rounded-full animate-pulse"></div>
+                      {/* Center dot */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      </div>
+                    </div>
+                    <p className="text-lg font-medium text-muted-foreground animate-pulse">
+                      Loading collaborators...
+                    </p>
+                  </div>
+                ) : collaborators.length === 0 ? (
                   <div className="text-center py-12">
+                    <div className="inline-flex p-4 rounded-full bg-muted mb-4">
+                      <Camera className="w-8 h-8 text-muted-foreground" />
+                    </div>
                     <p className="text-muted-foreground">No collaborators available in this category yet.</p>
                   </div>
                 ) : (
@@ -368,13 +395,22 @@ const Collaborations = () => {
                               <Button
                                 className="flex-1"
                                 onClick={() => {
-                                  const message = `Hi! I found you through Mark Studio. I'm interested in your ${selectedCategory} services.`;
+                                  const message = `Hi! I found you through Trixietales. I'm interested in your ${selectedCategory} services.`;
                                   const whatsappUrl = `https://wa.me/${collaborator.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
                                   window.open(whatsappUrl, '_blank');
                                 }}
                               >
                                 <MessageCircle className="w-4 h-4 mr-2" />
                                 WhatsApp
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  const telUrl = `tel:${collaborator.contactNumber}`;
+                                  window.location.href = telUrl;
+                                }}
+                              >
+                                <Phone className="w-4 h-4" />
                               </Button>
                               {collaborator.website && (
                                 <Button
@@ -404,7 +440,6 @@ const Collaborations = () => {
             <CardContent className="p-0">
               {/* Header */}
               <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl">
-                
                 <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <button
                   onClick={() => setShowPartnerForm(false)}
@@ -422,7 +457,7 @@ const Collaborations = () => {
               </div>
 
               {/* Form */}
-              <form onSubmit={handlePartnerSubmit} className="p-8 space-y-6">
+              <div className="p-8 space-y-6">
                 <div className="space-y-4">
                   {/* Service Type */}
                   <div className="space-y-2">
@@ -522,7 +557,7 @@ const Collaborations = () => {
 
                 {/* Submit Button */}
                 <Button
-                  type="submit"
+                  onClick={handlePartnerSubmit}
                   className="w-full group"
                   size="lg"
                   disabled={isSubmitting}
@@ -544,7 +579,7 @@ const Collaborations = () => {
                   By submitting this form, you agree to our terms and conditions. 
                   We'll contact you within 24-48 hours.
                 </p>
-              </form>
+              </div>
             </CardContent>
           </Card>
         </div>
