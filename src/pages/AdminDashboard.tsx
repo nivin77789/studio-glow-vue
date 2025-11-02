@@ -100,6 +100,7 @@ const AdminDashboard = () => {
   const [collaboratorsList, setCollaboratorsList] = useState<Collaborator[]>([]);
   const [showCollaboratorForm, setShowCollaboratorForm] = useState(false);
   const [editingCollaborator, setEditingCollaborator] = useState<Collaborator | null>(null);
+  const [isSubmittingCollaborator, setIsSubmittingCollaborator] = useState(false);
   const [collaboratorForm, setCollaboratorForm] = useState({
     category: "",
     name: "",
@@ -283,6 +284,7 @@ const AdminDashboard = () => {
 
   const handleAddCollaborator = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmittingCollaborator(true);
     try {
       if (editingCollaborator) {
         await updateDoc(doc(db, "collaborators", editingCollaborator.id), collaboratorForm);
@@ -307,6 +309,8 @@ const AdminDashboard = () => {
       });
     } catch (error) {
       toast.error("Failed to save collaborator");
+    } finally {
+      setIsSubmittingCollaborator(false);
     }
   };
 
@@ -528,7 +532,7 @@ const AdminDashboard = () => {
                     <p className="text-center text-muted-foreground py-8">No collaboration requests yet</p>
                   ) : (
                     collaborationRequests.map((request) => (
-                      <Card key={request.id} className={`p-4 ${request.status !== "contacted" ? "border-primary" : ""}`}>
+                      <Card key={request.id} className={`p-4 ${request.status !== "contacted" ? "shadow-lg ring-2 ring-primary/20" : ""}`}>
                         <div className="space-y-3">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
@@ -621,7 +625,7 @@ const AdminDashboard = () => {
                     <p className="text-center text-muted-foreground py-8">No course enrollments yet</p>
                   ) : (
                     courseEnrollments.map((enrollment) => (
-                      <Card key={enrollment.id} className={`p-4 ${enrollment.status !== "contacted" ? "border-primary" : ""}`}>
+                      <Card key={enrollment.id} className={`p-4 ${enrollment.status !== "contacted" ? "shadow-lg ring-2 ring-primary/20" : ""}`}>
                         <div className="space-y-3">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
@@ -719,7 +723,7 @@ const AdminDashboard = () => {
                     <p className="text-center text-muted-foreground py-8">No contact submissions yet</p>
                   ) : (
                     contactSubmissions.map((submission) => (
-                      <Card key={submission.id} className={`p-4 ${submission.status === "unread" ? "border-primary" : ""}`}>
+                      <Card key={submission.id} className={`p-4 ${submission.status === "unread" ? "shadow-lg ring-2 ring-primary/20" : ""}`}>
                         <div className="space-y-2">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
@@ -957,8 +961,8 @@ const AdminDashboard = () => {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit">
-                    {editingCollaborator ? "Update" : "Add"} Collaborator
+                  <Button type="submit" disabled={isSubmittingCollaborator}>
+                    {isSubmittingCollaborator ? "Saving..." : editingCollaborator ? "Update Collaborator" : "Add Collaborator"}
                   </Button>
                 </div>
               </form>

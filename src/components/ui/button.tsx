@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/50 hover:scale-105 hover:-translate-y-0.5 active:scale-100 active:translate-y-0",
         destructive: "rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 hover:shadow-xl hover:scale-105",
-        outline: "rounded-full border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground shadow-md hover:shadow-lg hover:shadow-primary/30 hover:scale-105",
+        outline: "rounded-full border border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground shadow-md hover:shadow-lg hover:shadow-primary/30 hover:scale-105",
         secondary: "rounded-full bg-secondary text-secondary-foreground shadow-md hover:bg-secondary/80 hover:shadow-lg hover:scale-105",
         ghost: "rounded-full hover:bg-accent/10 hover:text-accent hover:shadow-md",
         link: "text-primary underline-offset-4 hover:underline hover:text-accent",

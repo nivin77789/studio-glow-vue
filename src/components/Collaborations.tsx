@@ -213,7 +213,7 @@ const Collaborations = () => {
             {collaborations.map((collab, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
               <Card
-                className={`group hover-lift border overflow-hidden transition-all duration-500 ${
+                className={`group hover-lift border-0 shadow-lg overflow-hidden transition-all duration-500 ${
                   isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                 }`}
                 style={{ 
@@ -248,23 +248,15 @@ const Collaborations = () => {
                       ))}
                     </ul>
 
-                    <div className="flex gap-2">
-                      <Button 
-                        className="flex-1"
-                        onClick={() => {
-                          setSelectedCategory(collab.title);
-                          setSelectedCollab(null);
-                        }}
-                      >
-                        View Collaborators
-                      </Button>
-                      <Button 
-                        variant="outline"
-                        onClick={() => handleBookNow(collab)}
-                      >
-                        <Phone className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Button 
+                      className="w-full"
+                      onClick={() => {
+                        setSelectedCategory(collab.title);
+                        setSelectedCollab(null);
+                      }}
+                    >
+                      View Collaborators
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -278,7 +270,7 @@ const Collaborations = () => {
 
           {/* CTA Section */}
           <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <Card className="border inline-block">
+            <Card className="border-0 shadow-lg inline-block">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold mb-4">Want to Partner with Us?</h3>
                 <p className="text-muted-foreground mb-6 max-w-md">
@@ -311,7 +303,7 @@ const Collaborations = () => {
       {/* Collaborators List Modal */}
       {selectedCategory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <Card className="max-w-5xl w-full max-h-[90vh] overflow-y-auto animate-scale-in rounded-xl">
+          <Card className="max-w-5xl w-full max-h-[90vh] overflow-y-auto animate-scale-in rounded-xl border-0 shadow-2xl">
             <CardContent className="p-0">
               {/* Header */}
               <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl sticky top-0 z-10">
@@ -337,7 +329,7 @@ const Collaborations = () => {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {collaborators.map((collaborator) => (
-                      <Card key={collaborator.id} className="group hover-lift overflow-hidden">
+                      <Card key={collaborator.id} className="group hover-lift overflow-hidden border-0 shadow-lg">
                         <CardContent className="p-0">
                           {/* Image */}
                           <div className="aspect-video relative overflow-hidden bg-muted">
@@ -408,7 +400,7 @@ const Collaborations = () => {
       {/* Partner Form Modal */}
       {showPartnerForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <Card className="max-w-md w-full animate-scale-in overflow-hidden rounded-xl max-h-[90vh] overflow-y-auto">
+          <Card className="max-w-md w-full animate-scale-in overflow-hidden rounded-xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
             <CardContent className="p-0">
               {/* Header */}
               <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl">
