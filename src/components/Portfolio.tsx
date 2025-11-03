@@ -304,7 +304,7 @@ export default function GalleryPage() {
                     >
                       <div
                         onClick={() => handleCategoryClick(service.category)}
-                        className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-2xl transition-all duration-500 aspect-square w-full"
+                        className="relative cursor-pointer rounded-xl shadow-md overflow-hidden border-0 hover:shadow-2xl transition-all duration-500 aspect-square w-full"
                       >
                         <video
                           ref={(el) => {

@@ -555,7 +555,7 @@ const Prints = () => {
       <div className="container mx-auto px-4">
         {/* Banner */}
         <div className={`mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-          <Card className="border overflow-hidden rounded-xl">
+          <Card className="border-0 shadow-lg overflow-hidden rounded-xl">
             <CardContent className="p-0">
               <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -682,7 +682,7 @@ const Prints = () => {
 
         {/* CTA Section */}
         <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <Card className="border inline-block">
+          <Card className="border-0 shadow-lg inline-block">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-4">Custom Print Solutions</h3>
               <p className="text-muted-foreground mb-6 max-w-md">
@@ -728,7 +728,7 @@ const Prints = () => {
                 }`}
                 style={{ transitionDelay: `${index * 0.1}s` }}
               >
-                <Card className="border overflow-hidden hover-lift">
+                <Card className="border-0 shadow-lg overflow-hidden hover-lift">
                   <CardContent className="p-0">
                     <div className="relative h-48 overflow-hidden">
                       <img 
