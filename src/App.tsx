@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AnimatedCursor from "@/components/AnimatedCursor";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import CoursesPage from "./pages/CoursesPage";
 import PortfolioPage from "./pages/PortfolioPage";
@@ -24,6 +25,7 @@ const App = () => (
       <Sonner />
       <AnimatedCursor />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<CoursesPage />} />
