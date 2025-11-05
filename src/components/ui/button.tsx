@@ -9,13 +9,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/50 hover:scale-105 hover:-translate-y-0.5 active:scale-100 active:translate-y-0",
+        default: "rounded-full bg-gradient-to-r from-primary to-accent text-foreground shadow-lg hover:shadow-xl hover:shadow-primary/50 hover:scale-105 hover:-translate-y-0.5 active:scale-100 active:translate-y-0",
         destructive: "rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 hover:shadow-xl hover:scale-105",
         outline: "rounded-full border border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground shadow-md hover:shadow-lg hover:shadow-primary/30 hover:scale-105",
         secondary: "rounded-full bg-secondary text-secondary-foreground shadow-md hover:bg-secondary/80 hover:shadow-lg hover:scale-105",
         ghost: "rounded-full hover:bg-accent/10 hover:text-accent hover:shadow-md",
         link: "text-primary underline-offset-4 hover:underline hover:text-accent",
-        premium: "rounded-full bg-gradient-to-br from-primary via-accent to-primary text-primary-foreground shadow-2xl hover:shadow-primary/60 hover:shadow-2xl hover:scale-110 hover:-translate-y-1 active:scale-105 active:translate-y-0 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700",
+        premium: "rounded-full bg-gradient-to-br from-primary via-accent to-primary text-foreground shadow-2xl hover:shadow-primary/60 hover:shadow-2xl hover:scale-110 hover:-translate-y-1 active:scale-105 active:translate-y-0 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700",
       },
       size: {
         default: "h-11 px-6 py-2.5",

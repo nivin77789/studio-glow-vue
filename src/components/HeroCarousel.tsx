@@ -138,7 +138,7 @@ const HeroLanding = () => {
           <div className="flex flex-wrap gap-4 justify-center animate-slide-right" style={{ animationDelay: "0.6s" }}>
             <Button
               size="lg"
-              className="px-8 py-6 text-lg font-light bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="px-8 py-6 text-lg font-light bg-gradient-to-r from-primary to-accent text-foreground hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Book a Shoot
             </Button>

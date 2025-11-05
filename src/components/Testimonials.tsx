@@ -153,7 +153,7 @@ const Testimonials = () => {
           </p>
           <a
             href="/contact"
-            className="inline-block px-8 py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:shadow-primary/50"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-primary to-accent text-foreground rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:shadow-primary/50"
           >
             Start Your Journey with Us
           </a>
