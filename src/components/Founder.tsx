@@ -75,30 +75,28 @@ const Founder = () => {
                 <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary rounded-tl-3xl" />
                 <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-accent rounded-br-3xl" />
                 
-                {/* Social Media Links - Inside Image at Bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background/95 via-background/80 to-transparent backdrop-blur-md">
-                  <h4 className="text-lg font-semibold mb-4 text-foreground">Connect with Markhandeya</h4>
-                  <div className="flex gap-4">
-                    {socialLinks.map((social) => {
-                      const Icon = social.icon;
-                      return (
-                        <a
-                          key={social.name}
-                          href={social.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group/social relative"
-                        >
-                          <div className="w-14 h-14 rounded-xl glass border border-primary/20 flex items-center justify-center hover-lift transition-all duration-300 group-hover/social:scale-110 group-hover/social:border-primary/50 bg-background/50">
-                            <Icon className={`w-6 h-6 transition-colors duration-300 ${social.color}`} />
-                          </div>
-                          <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-foreground text-background text-xs rounded-lg opacity-0 group-hover/social:opacity-100 transition-opacity whitespace-nowrap">
-                            {social.name}
-                          </span>
-                        </a>
-                      );
-                    })}
-                  </div>
+                {/* Social Media Links - Half In/Out of Image */}
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+                  {socialLinks.map((social, index) => {
+                    const Icon = social.icon;
+                    return (
+                      <a
+                        key={social.name}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/social relative animate-float"
+                        style={{ animationDelay: `${index * 0.2}s` }}
+                      >
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center hover-lift transition-all duration-300 group-hover/social:scale-110 shadow-2xl group-hover/social:shadow-primary/50 border-4 border-background">
+                          <Icon className="w-7 h-7 text-white transition-transform duration-300 group-hover/social:rotate-12" />
+                        </div>
+                        <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-xs font-medium rounded-lg opacity-0 group-hover/social:opacity-100 transition-all duration-300 whitespace-nowrap shadow-lg">
+                          {social.name}
+                        </span>
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
 
