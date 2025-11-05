@@ -170,13 +170,6 @@ const Founder = () => {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <div className="pt-4">
-              <Button size="lg" className="group text-lg px-8 py-6">
-                <span>Let's Create Your Story</span>
-                <Heart className="ml-2 w-5 h-5 group-hover:scale-125 group-hover:fill-current transition-all duration-300" />
-              </Button>
-            </div>
           </div>
         </div>
 

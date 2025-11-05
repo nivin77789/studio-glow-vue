@@ -116,36 +116,36 @@ const HeroLanding = () => {
         <ChevronRight className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
       </button>
 
-      {/* Main content - Left aligned */}
+      {/* Main content - Centered */}
       <div className="container mx-auto px-6 lg:px-12 z-10">
-        <div className="max-w-2xl animate-fade-in">
+        <div className="max-w-4xl mx-auto text-center animate-fade-in">
           <div className="mb-6">
-            <span className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-medium animate-slide-right">
+            <span className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-light tracking-wider animate-slide-right">
               Trixietales
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight animate-slide-right" style={{ animationDelay: "0.2s" }}>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight mb-4 leading-tight tracking-wide animate-slide-right" style={{ animationDelay: "0.2s" }}>
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-size-200 animate-gradient">
               {bannerImages[currentSlide].title}
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-200 mb-8 font-light animate-slide-right" style={{ animationDelay: "0.4s" }}>
+          <p className="text-xl md:text-2xl text-gray-200 mb-8 font-extralight tracking-wide animate-slide-right" style={{ animationDelay: "0.4s" }}>
             {bannerImages[currentSlide].subtitle}
           </p>
 
-          <div className="flex flex-wrap gap-4 animate-slide-right" style={{ animationDelay: "0.6s" }}>
+          <div className="flex flex-wrap gap-4 justify-center animate-slide-right" style={{ animationDelay: "0.6s" }}>
             <Button
               size="lg"
-              className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="px-8 py-6 text-lg font-light bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Book a Shoot
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="px-8 py-6 text-lg font-semibold border-2 border-white/50 text-white bg-white/10 backdrop-blur-md transition-all transform hover:scale-105"
+              className="px-8 py-6 text-lg font-light border-2 border-white/50 text-white bg-white/10 backdrop-blur-md transition-all transform hover:scale-105"
             >
               View Portfolio
             </Button>
