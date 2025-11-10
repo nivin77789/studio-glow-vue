@@ -74,30 +74,30 @@ const Founder = () => {
                 {/* Decorative corner accents */}
                 <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary rounded-tl-3xl" />
                 <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-accent rounded-br-3xl" />
-                
-                {/* Social Media Links - Half In/Out of Image */}
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-10">
-                  {socialLinks.map((social, index) => {
-                    const Icon = social.icon;
-                    return (
-                      <a
-                        key={social.name}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/social relative animate-float"
-                        style={{ animationDelay: `${index * 0.2}s` }}
-                      >
-                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 backdrop-blur-xl flex items-center justify-center hover-lift transition-all duration-500 group-hover/social:scale-110 shadow-2xl group-hover/social:shadow-primary/60 border-2 border-white/30 group-hover/social:border-white/60 group-hover/social:from-primary/50 group-hover/social:to-accent/50">
-                          <Icon className="w-8 h-8 text-white/80 group-hover/social:text-white transition-all duration-300 group-hover/social:rotate-12 drop-shadow-lg" />
-                        </div>
-                        <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gradient-to-r from-primary to-accent text-white text-xs font-medium rounded-lg opacity-0 group-hover/social:opacity-100 transition-all duration-300 whitespace-nowrap shadow-xl">
-                          {social.name}
-                        </span>
-                      </a>
-                    );
-                  })}
-                </div>
+              </div>
+
+              {/* Social Media Links - Below Image */}
+              <div className="flex justify-center gap-4 mt-8">
+                {socialLinks.map((social, index) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/social relative animate-float"
+                      style={{ animationDelay: `${index * 0.2}s` }}
+                    >
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 backdrop-blur-xl flex items-center justify-center hover-lift transition-all duration-500 group-hover/social:scale-110 shadow-2xl group-hover/social:shadow-primary/60 border-2 border-white/30 group-hover/social:border-white/60 group-hover/social:from-primary/50 group-hover/social:to-accent/50">
+                        <Icon className="w-7 h-7 text-white/80 group-hover/social:text-white transition-all duration-300 group-hover/social:rotate-12 drop-shadow-lg" />
+                      </div>
+                      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gradient-to-r from-primary to-accent text-white text-xs font-medium rounded-lg opacity-0 group-hover/social:opacity-100 transition-all duration-300 whitespace-nowrap shadow-xl">
+                        {social.name}
+                      </span>
+                    </a>
+                  );
+                })}
               </div>
 
               {/* Floating achievement badges */}
