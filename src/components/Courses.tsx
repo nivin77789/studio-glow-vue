@@ -397,11 +397,15 @@ const Courses = () => {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
             font-weight: 600;
-            color: hsl(var(--foreground));
+            color: hsl(0, 0%, 10%);
             background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
+          }
+          
+          .dark .gradient-btn {
+            color: hsl(0, 0%, 10%);
           }
           
           .gradient-btn::before {
