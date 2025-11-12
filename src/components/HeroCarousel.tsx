@@ -4,17 +4,17 @@ import { Button } from "@/components/ui/button";
 
 const bannerImages = [
   {
-    url: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1920&q=80",
+    url: "/banner/1.webp",
     title: "Wedding Photography",
     subtitle: "Capturing Your Perfect Day",
   },
   {
-    url: "https://images.unsplash.com/photo-1660307777355-f08bced145d3?w=1920&q=80",
+    url: "/banner/2.webp",
     title: "Cinematic Videography",
     subtitle: "Stories That Move You",
   },
   {
-    url: "https://images.unsplash.com/photo-1637338907536-83a6f6a8aa84?w=1920&q=80",
+    url: "/banner/3.webp",
     title: "Event Coverage",
     subtitle: "Every Celebration Deserves Magic",
   },
@@ -117,14 +117,9 @@ const HeroLanding = () => {
       </button>
 
       {/* Main content - Centered */}
-      <div className="container mx-auto px-6 lg:px-12 z-10">
+      <div className="container mx-auto px-6 lg:px-12 z-10 mt-48 md:mt-56">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <div className="mb-6">
-            <span className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-light tracking-wider animate-slide-right">
-              Trixietales
-            </span>
-          </div>
-
+         
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight mb-4 leading-tight tracking-wide animate-slide-right" style={{ animationDelay: "0.2s" }}>
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-size-200 animate-gradient">
               {bannerImages[currentSlide].title}
