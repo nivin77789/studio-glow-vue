@@ -4,17 +4,17 @@ import { Button } from "@/components/ui/button";
 
 const bannerImages = [
   {
-    url: "/banner/1.webp",
+    url: "/banner/1.jpeg",
     title: "Wedding Photography",
     subtitle: "Capturing Your Perfect Day",
   },
   {
-    url: "/banner/2.webp",
+    url: "/banner/2.jpeg",
     title: "Cinematic Videography",
     subtitle: "Stories That Move You",
   },
   {
-    url: "/banner/3.webp",
+    url: "/banner/3.jpeg",
     title: "Event Coverage",
     subtitle: "Every Celebration Deserves Magic",
   },
