@@ -1,5 +1,6 @@
+import React, { useState, useRef, useEffect } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { Instagram, Facebook, Linkedin, Twitter, Award, Heart, Camera, Film, Zap, TrendingUp } from "lucide-react";
+import { Instagram, Facebook, Linkedin, Twitter, Award, Heart, Camera, Film, Zap, TrendingUp, X, ZoomIn, ZoomOut, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -18,6 +19,63 @@ const Founder = () => {
     { icon: Film, label: "800+ Events", color: "from-purple-500 to-indigo-500" },
     { icon: Award, label: "Award Winner", color: "from-amber-500 to-orange-500" }
   ];
+
+  // Zoom modal state and handlers
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const [zoomScale, setZoomScale] = useState(1);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const draggingRef = useRef(false);
+  const lastPosRef = useRef({ x: 0, y: 0 });
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setZoomOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const openZoom = () => {
+    setZoomOpen(true);
+    setZoomScale(1);
+    setTranslate({ x: 0, y: 0 });
+  };
+
+  const closeZoom = () => setZoomOpen(false);
+
+  const clamp = (v: number, a = 0.5, b = 4) => Math.max(a, Math.min(b, v));
+
+  const handleWheelZoom = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.12 : -0.12;
+    setZoomScale((prev) => +clamp(+(prev + delta).toFixed(2), 0.5, 4));
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoomScale <= 1) return;
+    draggingRef.current = true;
+    lastPosRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!draggingRef.current) return;
+    const dx = e.clientX - lastPosRef.current.x;
+    const dy = e.clientY - lastPosRef.current.y;
+    lastPosRef.current = { x: e.clientX, y: e.clientY };
+    setTranslate((p) => ({ x: p.x + dx, y: p.y + dy }));
+  };
+
+  const handleMouseUp = () => {
+    draggingRef.current = false;
+  };
+
+  const zoomIn = () => setZoomScale((s) => clamp(+(s + 0.25).toFixed(2), 0.5, 4));
+  const zoomOut = () => setZoomScale((s) => clamp(+(s - 0.25).toFixed(2), 0.5, 4));
+  const resetZoom = () => {
+    setZoomScale(1);
+    setTranslate({ x: 0, y: 0 });
+  };
 
   
   return (
@@ -64,9 +122,11 @@ const Founder = () => {
               {/* Main image container */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1755104572227-904d7a0758fb?w=600&q=80" 
+                  src="images/founder.png" 
                   alt="Markhandeya - Founder" 
-                  className="aspect-[3/4] w-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-700"
+                  ref={imgRef}
+                  onClick={openZoom}
+                  className="aspect-[3/4] w-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-700 cursor-zoom-in"
                 />
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
@@ -199,6 +259,51 @@ const Founder = () => {
           animation-delay: 1s;
         }
       `}</style>
+
+      {zoomOpen && (
+        <div
+          className="fixed inset-0 z-[20000] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onWheel={handleWheelZoom}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
+          <div className="absolute top-6 right-6 flex items-center gap-2">
+            <button onClick={zoomOut} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+              <ZoomOut className="w-5 h-5" />
+            </button>
+            <button onClick={resetZoom} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+              <RefreshCw className="w-5 h-5" />
+            </button>
+            <button onClick={zoomIn} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+              <ZoomIn className="w-5 h-5" />
+            </button>
+            <button onClick={closeZoom} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div
+            className="max-w-[92vw] max-h-[92vh] overflow-hidden rounded-lg"
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+          >
+            <img
+              src="images/founder.png"
+              alt="Markhandeya - Founder Large"
+              className="block select-none touch-none"
+              style={{
+                transform: `translate(${translate.x}px, ${translate.y}px) scale(${zoomScale})`,
+                transition: draggingRef.current ? "none" : "transform 160ms ease-out",
+                maxHeight: "90vh",
+                maxWidth: "90vw",
+                cursor: zoomScale > 1 ? "grab" : "zoom-out"
+              }}
+              draggable={false}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

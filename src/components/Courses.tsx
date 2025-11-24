@@ -311,8 +311,8 @@ const Courses = () => {
   return (
     <>
       <section id="courses" className="py-24 relative overflow-hidden">
-        {/* Photography-themed background */}
-        <div className="absolute inset-0 -z-10">
+        {/* Photography-themed background (flipped upside down) */}
+        <div className="absolute inset-0 -z-10 rotate-180 transform">
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
         </div>
 

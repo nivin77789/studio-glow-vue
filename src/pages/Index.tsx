@@ -26,30 +26,7 @@ const Index = () => {
     >
       {/* Enhanced Photography-inspired background with animations */}
       <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
-        {/* Larger animated grid overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, currentColor 1.5px, transparent 1.5px),
-              linear-gradient(to bottom, currentColor 1.5px, transparent 1.5px)
-            `,
-            backgroundSize: '120px 120px',
-            animation: 'gridMove 25s linear infinite'
-          }}
-        />
-
-        {/* Diagonal grid overlay - less dense */}
-        <div 
-          className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]"
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(45deg, transparent, transparent 70px, currentColor 70px, currentColor 71px),
-              repeating-linear-gradient(-45deg, transparent, transparent 70px, currentColor 70px, currentColor 71px)
-            `,
-            animation: 'gridMoveDiagonal 30s linear infinite reverse'
-          }}
-        />
+        {/* Grid overlays removed for a cleaner main background */}
         
         {/* Large gradient orbs with more movement */}
         <div className="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-gradient-to-br from-primary/15 to-accent/15 dark:from-primary/20 dark:to-accent/20 rounded-full blur-3xl animate-floatLarge" />
@@ -105,14 +82,7 @@ const Index = () => {
           />
         ))}
 
-        {/* Scanning lines effect */}
-        <div 
-          className="absolute inset-0 opacity-[0.025] dark:opacity-[0.035] pointer-events-none"
-          style={{
-            background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, currentColor 3px, currentColor 5px)',
-            animation: 'scanlines 12s linear infinite'
-          }}
-        />
+        {/* Scanlines removed to avoid stripe effect */}
 
         {/* Corner lens flares with pulse */}
         <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-radial from-primary/10 via-transparent to-transparent dark:from-primary/15 blur-2xl animate-pulse" style={{ animationDuration: '4s' }} />

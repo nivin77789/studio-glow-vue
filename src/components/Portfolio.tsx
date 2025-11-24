@@ -348,10 +348,6 @@ export default function GalleryPage() {
   if (!selectedCategory) {
     return (
       <section className="py-24 relative overflow-hidden">
-        {/* Photography-themed background */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
-        </div>
 
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16 animate-fade-in">
@@ -447,9 +443,6 @@ export default function GalleryPage() {
                             <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
                               <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
                                 <img src={img} loading="lazy" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
-                                <div className="p-2">
-                                  <div className="text-xs text-muted-foreground">{modalCategory} • Photo {idx + 1}</div>
-                                </div>
                               </button>
                             </div>
                           ))}
@@ -486,13 +479,13 @@ export default function GalleryPage() {
 
             {/* Modal Lightbox for images/videos opened from category modal */}
             {modalLightboxItem && modalCategory && (
-              <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/95 p-4">
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 p-4">
                 <div className="relative w-full max-w-6xl">
-                  <button onClick={() => setModalLightboxItem(null)} className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full z-10">
+                  <button onClick={() => setModalLightboxItem(null)} className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full z-[10000]">
                     <X className="w-6 h-6" />
                   </button>
 
-                  <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
+                  <div className="bg-black rounded-2xl overflow-hidden shadow-2xl z-[10001]">
                     {modalLightboxItem === 'image' ? (
                       <img src={(modalGallery?.images || [])[modalLightboxIndex]} className="w-full max-h-[80vh] object-contain mx-auto" />
                     ) : (
@@ -530,10 +523,7 @@ export default function GalleryPage() {
   // Gallery View with Slidable Carousels
   return (
     <section className="py-12 relative overflow-hidden">
-      {/* Photography-themed background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
-      </div>
+        {/* background removed for cleaner look */}
 
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header with Back Button */}
@@ -692,7 +682,7 @@ export default function GalleryPage() {
       {/* Lightbox Modal */}
       {lightboxItem && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-lg p-4 animate-fade-in"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-lg p-4 animate-fade-in"
           onClick={closeLightbox}
         >
           <div
@@ -702,7 +692,7 @@ export default function GalleryPage() {
             {/* Close Button */}
             <button
               onClick={closeLightbox}
-              className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:rotate-90 duration-300 group z-10"
+              className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:rotate-90 duration-300 group z-[10000]"
               aria-label="Close"
             >
               <X className="w-6 h-6 group-hover:scale-110 transition-transform" />
@@ -710,19 +700,14 @@ export default function GalleryPage() {
 
             {/* Title */}
             <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-white mb-1">
-                {selectedCategory} - {lightboxItem === "image" ? "Photo" : "Video"}
-              </h3>
+              <h3 className="text-2xl font-bold text-white mb-1">{selectedCategory}</h3>
               <p className="text-white/70">
-                {lightboxIndex + 1} of{" "}
-                {lightboxItem === "image"
-                  ? currentGallery.images.length
-                  : getCombinedVideos(selectedCategory).length}
+                {lightboxIndex + 1} of {lightboxItem === "image" ? currentGallery.images.length : getCombinedVideos(selectedCategory).length}
               </p>
             </div>
 
             {/* Content */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black z-[10001]">
               {(() => {
                 if (lightboxItem === "image") {
                   return (
