@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Menu, X, Moon, Sun, Sparkles, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Music, Mic2, Plus, Edit, ExternalLink, MapPin, MessageSquare, Mail, Inbox, Trash2, CheckCircle } from "lucide-react";
+import { Menu, X, Moon, Sun, Sparkles, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Music, Mic2, Plus, Edit, ExternalLink, MapPin, MessageSquare, Mail, Inbox, Trash2, CheckCircle, Star, Film } from "lucide-react";
 import { toast } from "sonner";
 import AdminTestimonials from "@/components/AdminTestimonials";
 import { db } from "@/lib/firebase";
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, addDoc, serverTimestamp } from "firebase/firestore";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -91,14 +91,41 @@ const collaboratorCategories = [
   "DJ Services",
 ];
 
+const galleryCategories = [
+  "Wedding",
+  "Engagement",
+  "Maternity",
+  "House Warming",
+  "Birthday",
+  "Stories",
+  "NamingCeremony",
+  "Concert",
+  "Haldi",
+  "Reception",
+  "Annaprashna",
+  "BabyShoot",
+];
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem("darkMode");
+    const isDark = saved === "true";
+    if (isDark) document.documentElement.classList.add("dark");
+    return isDark;
+  });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
   const [newsletterSubscribers, setNewsletterSubscribers] = useState<NewsletterSubscriber[]>([]);
   const [courseEnrollments, setCourseEnrollments] = useState<CourseEnrollment[]>([]);
   const [collaborationRequests, setCollaborationRequests] = useState<CollaborationRequest[]>([]);
   const [collaboratorsList, setCollaboratorsList] = useState<Collaborator[]>([]);
+  const [ratingsList, setRatingsList] = useState<any[]>([]);
+  const [youtubeVideos, setYoutubeVideos] = useState<any[]>([]);
+  const [newVideoCategory, setNewVideoCategory] = useState("");
+  const [newVideoUrl, setNewVideoUrl] = useState("");
+  const [newVideoTitle, setNewVideoTitle] = useState("");
+  const [isAddingVideo, setIsAddingVideo] = useState(false);
   const [showCollaboratorForm, setShowCollaboratorForm] = useState(false);
   const [editingCollaborator, setEditingCollaborator] = useState<Collaborator | null>(null);
   const [isSubmittingCollaborator, setIsSubmittingCollaborator] = useState(false);
@@ -124,6 +151,12 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    localStorage.setItem("darkMode", isDarkMode.toString());
+    if (isDarkMode) document.documentElement.classList.add("dark");
+    else document.documentElement.classList.remove("dark");
+  }, [isDarkMode]);
+
   // Fetch contact submissions
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -135,6 +168,22 @@ const AdminDashboard = () => {
         submissions.push({ id: doc.id, ...doc.data() } as ContactSubmission);
       });
       setContactSubmissions(submissions);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
+  // Fetch youtube videos for gallery
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "youtube_videos"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const items: any[] = [];
+      snapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      setYoutubeVideos(items);
     });
 
     return () => unsubscribe();
@@ -199,6 +248,22 @@ const AdminDashboard = () => {
         collabs.push({ id: doc.id, ...doc.data() } as Collaborator);
       });
       setCollaboratorsList(collabs);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
+  // Fetch ratings
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const q = query(collection(db, "ratings"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const items: any[] = [];
+      snapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      setRatingsList(items);
     });
 
     return () => unsubscribe();
@@ -355,22 +420,34 @@ const AdminDashboard = () => {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Header */}
-      <header className="glass border-b sticky top-0 z-50">
+      <header className="glass border-b sticky top-0 z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Camera className="w-8 h-8 text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="p-0.5 rounded-lg bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-500 shadow-md">
+                <div className="bg-white dark:bg-slate-800 rounded-md p-1">
+                  <img src="/logo.png" alt="Trixietales" className="h-10 w-auto object-contain rounded-sm" />
+                </div>
+              </div>
               <div>
-                <h1 className="text-2xl font-bold gradient-text">Admin Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Manage your studio content</p>
+                <h1 className="text-2xl font-extrabold tracking-tight text-foreground">Trixietales</h1>
+                <div className="flex items-center gap-3 mt-1">
+                  <span className="inline-flex items-center text-xs font-semibold uppercase bg-gradient-to-r from-amber-100 to-amber-200 text-amber-800 px-2 py-1 rounded-full">Studio Admin</span>
+                  <p className="text-sm text-muted-foreground">Manage content, gallery & collaborators</p>
+                </div>
               </div>
             </div>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => setIsDarkMode(!isDarkMode)} aria-label="Toggle theme">
+                {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+              </Button>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -378,51 +455,65 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="collaborators" className="space-y-6">
-          <TabsList className="grid grid-cols-6 gap-2">
-            <TabsTrigger value="collaborators" className="relative">
-              <Users className="w-4 h-4 mr-2" />
-              Collaborators
+          <TabsList className="flex flex-wrap gap-2 bg-white/50 dark:bg-slate-800/60 p-2 rounded-lg shadow-sm overflow-x-auto">
+            <TabsTrigger value="collaborators" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <Users className="w-4 h-4" />
+              <span>Collaborators</span>
               <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
                 {collaboratorsList.length}
               </span>
             </TabsTrigger>
-            <TabsTrigger value="collaborations" className="relative">
-              <Building2 className="w-4 h-4 mr-2" />
-              Collaborations
+            <TabsTrigger value="collaborations" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <Building2 className="w-4 h-4" />
+              <span>Collaborations</span>
               {collaborationRequests.filter(c => c.status !== "contacted").length > 0 && (
                 <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-destructive text-destructive-foreground px-2 py-0.5 text-xs font-semibold">
                   {collaborationRequests.filter(c => c.status !== "contacted").length}
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="enrollments" className="relative">
-              <GraduationCap className="w-4 h-4 mr-2" />
-              Enrollments
+            <TabsTrigger value="enrollments" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <GraduationCap className="w-4 h-4" />
+              <span>Enrollments</span>
               {courseEnrollments.filter(e => e.status !== "contacted").length > 0 && (
                 <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-destructive text-destructive-foreground px-2 py-0.5 text-xs font-semibold">
                   {courseEnrollments.filter(e => e.status !== "contacted").length}
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="contacts" className="relative">
-              <Inbox className="w-4 h-4 mr-2" />
-              Contacts
+            <TabsTrigger value="contacts" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <Inbox className="w-4 h-4" />
+              <span>Contacts</span>
               {contactSubmissions.filter(c => c.status === "unread").length > 0 && (
                 <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-destructive text-destructive-foreground px-2 py-0.5 text-xs font-semibold">
                   {contactSubmissions.filter(c => c.status === "unread").length}
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="newsletter" className="relative">
-              <Mail className="w-4 h-4 mr-2" />
-              Newsletter
+            <TabsTrigger value="newsletter" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <Mail className="w-4 h-4" />
+              <span>Newsletter</span>
               <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
                 {newsletterSubscribers.length} subscribers
               </span>
             </TabsTrigger>
-            <TabsTrigger value="testimonials" className="relative">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Testimonials
+            <TabsTrigger value="ratings" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <Star className="w-4 h-4" />
+              <span>Ratings</span>
+              <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                {ratingsList.length}
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="gallery-videos" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <Film className="w-4 h-4" />
+              <span>Gallery Videos</span>
+              <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                {youtubeVideos.length}
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="testimonials" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-sm">
+              <MessageSquare className="w-4 h-4" />
+              <span>Testimonials</span>
             </TabsTrigger>
           </TabsList>
 
@@ -819,13 +910,127 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+            {/* Ratings Section */}
+            <TabsContent value="ratings">
+              <Card className="animate-scale-in">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="w-5 h-5" />
+                    Customer Ratings
+                    <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                      {ratingsList.length} total
+                    </span>
+                  </CardTitle>
+                  <CardDescription>View ratings left by customers</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {ratingsList.length === 0 ? (
+                      <p className="text-center text-muted-foreground py-8">No ratings yet</p>
+                    ) : (
+                      ratingsList.map((r) => (
+                        <Card key={r.id} className="p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <h4 className="font-semibold">{r.customerName || 'Anonymous'}</h4>
+                                <div className="inline-flex items-center gap-1">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star key={i} className={`w-4 h-4 ${i < (r.rating || 0) ? 'text-amber-500' : 'text-gray-300'}`} />
+                                  ))}
+                                </div>
+                                <span className="text-xs text-muted-foreground ml-3">{r.page}</span>
+                              </div>
+                              {r.comment && (
+                                <p className="text-sm text-muted-foreground mb-2">{r.comment}</p>
+                              )}
+                              <p className="text-xs text-muted-foreground">Submitted: {formatDate(r.createdAt)}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="destructive" onClick={async () => { try { await deleteDoc(doc(db, 'ratings', r.id)); toast.success('Rating deleted'); } catch { toast.error('Failed to delete rating'); } }}>
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </Card>
+                      ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+          {/* Gallery Videos Section */}
+          <TabsContent value="gallery-videos">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Film className="w-5 h-5" />
+                  Gallery YouTube Videos
+                  <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                    {youtubeVideos.length} total
+                  </span>
+                </CardTitle>
+                <CardDescription>Add YouTube videos mapped to gallery categories</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <form onSubmit={async (e) => { e.preventDefault(); setIsAddingVideo(true); try { await addDoc(collection(db, 'youtube_videos'), { category: newVideoCategory, url: newVideoUrl, title: newVideoTitle || null, createdAt: serverTimestamp(), }); setNewVideoCategory(''); setNewVideoUrl(''); setNewVideoTitle(''); toast.success('Video added'); } catch (err) { toast.error('Failed to add video'); } finally { setIsAddingVideo(false); } }} className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div>
+                      <Label>Category</Label>
+                      <select required value={newVideoCategory} onChange={(e) => setNewVideoCategory(e.target.value)} className="w-full px-3 py-2 border rounded">
+                        <option value="">Select category</option>
+                        {galleryCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <Label>YouTube URL</Label>
+                      <Input required value={newVideoUrl} onChange={(e) => setNewVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                    </div>
+                    <div>
+                      <Label>Title (optional)</Label>
+                      <Input value={newVideoTitle} onChange={(e) => setNewVideoTitle(e.target.value)} placeholder="Video title" />
+                    </div>
+                    <div className="md:col-span-3 text-right">
+                      <Button type="submit" disabled={isAddingVideo || !newVideoCategory || !newVideoUrl}>{isAddingVideo ? 'Adding...' : 'Add Video'}</Button>
+                    </div>
+                  </form>
+
+                  {youtubeVideos.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No gallery videos added yet</p>
+                  ) : (
+                    youtubeVideos.map((v) => (
+                      <Card key={v.id} className="p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h4 className="font-semibold">{v.title || 'YouTube Video'}</h4>
+                              <span className="text-xs text-muted-foreground">{v.category}</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2"><a href={v.url} target="_blank" rel="noreferrer" className="underline">Open on YouTube</a></p>
+                            <p className="text-xs text-muted-foreground">Added: {formatDate(v.createdAt)}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="destructive" onClick={async () => { try { await deleteDoc(doc(db, 'youtube_videos', v.id)); toast.success('Video deleted'); } catch { toast.error('Failed to delete video'); } }}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
       {/* Collaborator Form Modal */}
       {showCollaboratorForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
             <CardHeader>
               <CardTitle>{editingCollaborator ? "Edit" : "Add"} Collaborator</CardTitle>
               <CardDescription>

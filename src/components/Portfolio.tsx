@@ -24,12 +24,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
+import { db } from "@/lib/firebase";
+import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 
 // Gallery data with images and videos
 const galleryData = {
   Wedding: {
     images: ["/images/wed/Wedding/1.jpeg", "/images/wed/Wedding/2.jpeg", "/images/wed/Wedding/3.jpeg", "/images/wed/Wedding/4.jpeg", "/images/wed/Wedding/5.jpeg"],
-    videos: ["/videos/wedding1.mp4", "/videos/wedding2.mp4"],
+    videos: [],
   },
   Engagement: {
     images: [
@@ -52,7 +54,7 @@ const galleryData = {
       "/images/wed/Pre-Wedding/17.jpeg",
       "/images/wed/Pre-Wedding/18.jpeg",
     ],
-    videos: ["/videos/engagement1.mp4"],
+    videos: [],
   },
   Maternity: {
     images: [
@@ -109,7 +111,7 @@ const galleryData = {
       "/images/wed/Sangeeth/5.jpeg",
       "/images/wed/Sangeeth/6.jpeg",
     ],
-    videos: ["/videos/stories1.mp4"],
+    videos: [],
   },
   NamingCeremony: {
     images: [
@@ -120,7 +122,7 @@ const galleryData = {
       "/images/wed/namecer/5.jpeg",
       "/images/wed/namecer/6.jpeg",
     ],
-    videos: ["/videos/naming1.mp4"],
+    videos: [],
   },
   Concert: {
     images: [
@@ -131,7 +133,7 @@ const galleryData = {
       "/images/wed/Sangeeth/5.jpeg",
       "/images/wed/Sangeeth/6.jpeg",
     ],
-    videos: ["/videos/concert1.mp4", "/videos/concert2.mp4"],
+    videos: [],
   },
   
   Haldi: {
@@ -150,7 +152,7 @@ const galleryData = {
       "/images/wed/Haldi/12.jpeg",
       "/images/wed/Haldi/13.jpeg",
     ],
-    videos: ["/videos/haldi1.mp4"],
+    videos: [],
   },
   Reception: {
     images: [
@@ -173,7 +175,7 @@ const galleryData = {
       "/images/wed/Pre-Wedding/17.jpeg",
       "/images/wed/Pre-Wedding/18.jpeg",
     ],
-    videos: ["/videos/reception1.mp4"],
+    videos: [],
   },
   Annaprashna: {
     images: [
@@ -196,7 +198,7 @@ const galleryData = {
       "/images/Annaprashna/17.jpeg",
       "/images/Annaprashna/18.jpeg",
     ],
-    videos: ["/videos/annaprashna1.mp4"],
+    videos: [],
   },
   BabyShoot: {
     images: [
@@ -207,7 +209,7 @@ const galleryData = {
       "/images/wed/babyshoot/5.jpeg",
       "/images/wed/babyshoot/6.jpeg",
     ],
-    videos: ["/videos/babyshoot1.mp4"],
+    videos: [],
   },
 };
 
@@ -226,11 +228,16 @@ const services = [
 
 export default function GalleryPage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [modalCategory, setModalCategory] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalLightboxItem, setModalLightboxItem] = useState<"image" | "video" | null>(null);
+  const [modalLightboxIndex, setModalLightboxIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("images");
   const [lightboxItem, setLightboxItem] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [youtubeByCategory, setYoutubeByCategory] = useState<Record<string, any[]>>({});
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -240,7 +247,9 @@ export default function GalleryPage() {
   }, []);
 
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+    // open modal for this category
+    setModalCategory(category);
+    setModalOpen(true);
     setActiveTab("images");
   };
 
@@ -259,23 +268,86 @@ export default function GalleryPage() {
   const nextItem = () => {
     const items = lightboxItem === "image" 
       ? galleryData[selectedCategory].images 
-      : galleryData[selectedCategory].videos;
+      : getCombinedVideos(selectedCategory);
     setLightboxIndex((prev) => (prev + 1) % items.length);
   };
 
   const prevItem = () => {
     const items = lightboxItem === "image" 
       ? galleryData[selectedCategory].images 
-      : galleryData[selectedCategory].videos;
+      : getCombinedVideos(selectedCategory);
     setLightboxIndex((prev) => (prev - 1 + items.length) % items.length);
   };
 
   const currentGallery = selectedCategory ? galleryData[selectedCategory] : null;
+  const modalGallery = modalCategory ? galleryData[modalCategory] : null;
+
+  useEffect(() => {
+    // listen for youtube videos added in admin
+    const q = query(collection(db, "youtube_videos"), orderBy("createdAt", "desc"));
+    const unsub = onSnapshot(q, (snapshot) => {
+      const map: Record<string, any[]> = {};
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const cat = data.category || "Uncategorized";
+        if (!map[cat]) map[cat] = [];
+        map[cat].push({ id: doc.id, ...data });
+      });
+      setYoutubeByCategory(map);
+    });
+    return () => unsub();
+  }, []);
+
+  // close modal on ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (modalLightboxItem) {
+          setModalLightboxItem(null);
+        } else if (modalOpen) {
+          setModalOpen(false);
+        } else if (lightboxItem) {
+          setLightboxItem(null);
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [modalOpen, modalLightboxItem, lightboxItem]);
+
+  const getCombinedVideos = (category) => {
+    const base = (galleryData[category] && galleryData[category].videos) || [];
+    const yt = youtubeByCategory[category] ? youtubeByCategory[category].map(v => v.url) : [];
+    return [...base, ...yt];
+  };
+
+  const isYouTubeUrl = (url: string) => /(?:youtube\.com|youtu\.be)/.test(url);
+  const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    // common patterns: watch?v=, youtu.be/, embed/
+    const patterns = [/(?:v=|embed\/|be\/)([a-zA-Z0-9_-]{11})/, /youtu\.be\/([a-zA-Z0-9_-]{11})/, /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/];
+    for (const p of patterns) {
+      const m = url.match(p as RegExp);
+      if (m && m[1]) return m[1];
+    }
+    try {
+      const u = new URL(url);
+      const v = u.searchParams.get('v');
+      if (v) return v;
+    } catch (e) {
+      // ignore
+    }
+    return null;
+  };
+  const getYouTubeThumbnail = (url: string) => {
+    const id = getYouTubeId(url);
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+  };
 
   // Service Selection View
   if (!selectedCategory) {
     return (
-      <section className="min-h-screen py-24 relative overflow-hidden">
+      <section className="py-24 relative overflow-hidden">
         {/* Photography-themed background */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
@@ -339,18 +411,125 @@ export default function GalleryPage() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="-left-6 md:-left-10" />
-              <CarouselNext className="-right-6 md:-right-10" />
-            </Carousel>
+                <CarouselPrevious className="-left-6 md:-left-10" />
+                <CarouselNext className="-right-6 md:-right-10" />
+              </Carousel>
+            </div>
+
+            {/* Category modal opened from the service cards */}
+            {modalOpen && modalCategory && (
+              <div className="fixed inset-0 z-50 bg-black/70">
+                <div className="fixed inset-6 md:inset-12 overflow-hidden">
+                  <div className="h-full w-full rounded-2xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden">
+                    <div className="px-6 py-4 flex items-center justify-between border-b sticky top-0 bg-white dark:bg-slate-900 z-20">
+                      <div>
+                        <h3 className="text-xl font-semibold">{modalCategory}</h3>
+                        <div className="text-sm text-muted-foreground">{(modalGallery?.images || []).length} photos • {getCombinedVideos(modalCategory).length} videos</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="hidden md:flex items-center gap-2">
+                          <button onClick={() => setActiveTab('images')} className={`px-3 py-1 rounded ${activeTab==='images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
+                          <button onClick={() => setActiveTab('videos')} className={`px-3 py-1 rounded ${activeTab==='videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
+                        </div>
+                        <button onClick={() => setModalOpen(false)} className="px-3 py-2 rounded-md text-sm border">Close</button>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                      <div className="md:hidden flex gap-2">
+                        <button onClick={() => setActiveTab('images')} className={`flex-1 px-3 py-2 rounded ${activeTab==='images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
+                        <button onClick={() => setActiveTab('videos')} className={`flex-1 px-3 py-2 rounded ${activeTab==='videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
+                      </div>
+
+                      {activeTab === 'images' && (
+                        <div className="masonry columns-2 sm:columns-3 md:columns-4 gap-4">
+                          {(modalGallery?.images || []).map((img, idx) => (
+                            <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
+                              <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
+                                <img src={img} loading="lazy" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
+                                <div className="p-2">
+                                  <div className="text-xs text-muted-foreground">{modalCategory} • Photo {idx + 1}</div>
+                                </div>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {activeTab === 'videos' && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                          {getCombinedVideos(modalCategory).map((videoUrl, idx) => (
+                            <div key={idx} className="relative rounded-lg overflow-hidden bg-black text-white shadow-sm">
+                              {isYouTubeUrl(videoUrl) ? (
+                                <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }} className="block w-full h-full">
+                                  <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" className="w-full h-56 object-cover" />
+                                  <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
+                                      <Play className="w-8 h-8 text-primary" />
+                                    </div>
+                                  </div>
+                                </button>
+                              ) : (
+                                <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }}>
+                                  <video src={videoUrl} className="w-full h-56 object-cover" preload="metadata" />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Modal Lightbox for images/videos opened from category modal */}
+            {modalLightboxItem && modalCategory && (
+              <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/95 p-4">
+                <div className="relative w-full max-w-6xl">
+                  <button onClick={() => setModalLightboxItem(null)} className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full z-10">
+                    <X className="w-6 h-6" />
+                  </button>
+
+                  <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
+                    {modalLightboxItem === 'image' ? (
+                      <img src={(modalGallery?.images || [])[modalLightboxIndex]} className="w-full max-h-[80vh] object-contain mx-auto" />
+                    ) : (
+                      (() => {
+                        const items = getCombinedVideos(modalCategory);
+                        const url = items[modalLightboxIndex];
+                        if (isYouTubeUrl(url)) {
+                          const id = getYouTubeId(url);
+                          const embed = id ? `https://www.youtube.com/embed/${id}?rel=0&autoplay=1` : url;
+                          return (
+                            <iframe
+                              src={embed}
+                              className="w-full h-[75vh]"
+                              title="YouTube video"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                              loading="lazy"
+                            />
+                          );
+                        }
+                        return <video src={url} controls autoPlay className="w-full h-[75vh] object-contain" />;
+                      })()
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
-        </div>
-      </section>
-    );
-  }
+        </section>
+      );
+    }
 
   // Gallery View with Slidable Carousels
   return (
-    <section className="min-h-screen py-12 relative overflow-hidden">
+    <section className="py-12 relative overflow-hidden">
       {/* Photography-themed background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
@@ -382,7 +561,7 @@ export default function GalleryPage() {
             <span className="text-gray-300 dark:text-gray-600">•</span>
             <span className="flex items-center gap-2">
               <Video className="w-4 h-4" />
-              {currentGallery.videos.length} Videos
+              {getCombinedVideos(selectedCategory).length} Videos
             </span>
           </p>
         </div>
@@ -412,71 +591,69 @@ export default function GalleryPage() {
             }`}
           >
             <Video className="w-4 h-4" />
-            Videos ({currentGallery.videos.length})
+            Videos ({getCombinedVideos(selectedCategory).length})
             {activeTab === "videos" && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600" />
             )}
           </button>
         </div>
 
-        {/* Images Carousel */}
+        {/* Images Grid with featured hero */}
         {activeTab === "images" && (
           <div className="animate-fade-in">
-            <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {currentGallery.images.map((img, idx) => (
-                  <CarouselItem key={idx} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                    <div
-                      onClick={() => openLightbox("image", idx)}
-                      className="relative aspect-square rounded-xl overflow-hidden cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700"
-                    >
-                      <img
-                        src={img}
-                        alt={`${selectedCategory} ${idx + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      
-                      {/* View Badge */}
-                      <div className="absolute bottom-3 right-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                        <span className="flex items-center gap-1.5">
-                          <Image className="w-3.5 h-3.5" />
-                          View
-                        </span>
-                      </div>
-
-                      {/* Image Number */}
-                      <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full text-white text-xs font-medium">
-                        {idx + 1}
-                      </div>
-                    </div>
-                  </CarouselItem>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-2 rounded-xl overflow-hidden shadow-lg">
+                {currentGallery.images[0] ? (
+                  <button onClick={() => openLightbox("image", 0)} className="block w-full h-full">
+                    <img src={currentGallery.images[0]} className="w-full h-96 object-cover rounded-xl" loading="lazy" />
+                  </button>
+                ) : (
+                  <div className="w-full h-96 bg-gray-100 dark:bg-slate-800 rounded-xl" />
+                )}
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
+                {currentGallery.images.slice(1, 5).map((img, idx) => (
+                  <button key={idx} onClick={() => openLightbox("image", idx + 1)} className="rounded-lg overflow-hidden group shadow-sm">
+                    <img src={img} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                  </button>
                 ))}
-              </CarouselContent>
-              <CarouselPrevious className="-left-6 md:-left-10" />
-              <CarouselNext className="-right-6 md:-right-10" />
-            </Carousel>
+              </div>
+            </div>
+
+            {/* Full masonry below */}
+            <div className="mt-6 masonry columns-2 sm:columns-3 md:columns-4 gap-4">
+              {currentGallery.images.map((img, idx) => (
+                <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm">
+                  <button onClick={() => openLightbox("image", idx)} className="block w-full h-full">
+                    <img src={img} alt={`${selectedCategory} ${idx + 1}`} className="w-full object-cover rounded-lg" loading="lazy" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Videos Carousel */}
         {activeTab === "videos" && (
           <div className="animate-fade-in">
-            {currentGallery.videos.length > 0 ? (
+            {getCombinedVideos(selectedCategory).length > 0 ? (
               <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
                 <CarouselContent className="-ml-2 md:-ml-4">
-                  {currentGallery.videos.map((video, idx) => (
+                  {getCombinedVideos(selectedCategory).map((video, idx) => (
                     <CarouselItem key={idx} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                       <div
                         onClick={() => openLightbox("video", idx)}
                         className="relative aspect-video rounded-xl overflow-hidden cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700"
                       >
-                        <video
-                          src={video}
-                          className="w-full h-full object-cover"
-                          muted
-                        />
+                        {isYouTubeUrl(video) ? (
+                          <img src={getYouTubeThumbnail(video)} className="w-full h-full object-cover" />
+                        ) : (
+                          <video
+                            src={video}
+                            className="w-full h-full object-cover"
+                            muted
+                          />
+                        )}
                         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                           <div className="w-20 h-20 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-xl">
                             <Play className="w-10 h-10 text-primary ml-1" fill="currentColor" />
@@ -540,30 +717,52 @@ export default function GalleryPage() {
                 {lightboxIndex + 1} of{" "}
                 {lightboxItem === "image"
                   ? currentGallery.images.length
-                  : currentGallery.videos.length}
+                  : getCombinedVideos(selectedCategory).length}
               </p>
             </div>
 
             {/* Content */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black">
-              {lightboxItem === "image" ? (
-                <img
-                  src={currentGallery.images[lightboxIndex]}
-                  alt={`${selectedCategory} ${lightboxIndex + 1}`}
-                  className="w-full max-h-[75vh] object-contain mx-auto"
-                />
-              ) : (
-                <video
-                  src={currentGallery.videos[lightboxIndex]}
-                  controls
-                  autoPlay
-                  className="w-full max-h-[75vh] object-contain mx-auto"
-                />
-              )}
+              {(() => {
+                if (lightboxItem === "image") {
+                  return (
+                    <img
+                      src={currentGallery.images[lightboxIndex]}
+                      alt={`${selectedCategory} ${lightboxIndex + 1}`}
+                      className="w-full max-h-[75vh] object-contain mx-auto"
+                    />
+                  );
+                }
+                const items = getCombinedVideos(selectedCategory);
+                const src = items[lightboxIndex];
+                if (isYouTubeUrl(src)) {
+                  const id = getYouTubeId(src);
+                  const embed = id ? `https://www.youtube.com/embed/${id}?rel=0&autoplay=1` : src;
+                  return (
+                    <iframe
+                      src={embed}
+                      className="w-full max-h-[75vh]"
+                      title="YouTube video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  );
+                }
+                return (
+                  <video
+                    src={src}
+                    controls
+                    autoPlay
+                    className="w-full max-h-[75vh] object-contain mx-auto"
+                  />
+                );
+              })()}
 
               {/* Navigation Arrows */}
               {((lightboxItem === "image" && currentGallery.images.length > 1) ||
-                (lightboxItem === "video" && currentGallery.videos.length > 1)) && (
+                (lightboxItem === "video" && getCombinedVideos(selectedCategory).length > 1)) && (
                 <>
                   <button
                     onClick={prevItem}
@@ -609,6 +808,8 @@ export default function GalleryPage() {
         </div>
       )}
 
+      
+
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; }
@@ -649,6 +850,18 @@ export default function GalleryPage() {
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        .masonry {
+          column-gap: 1rem;
+        }
+        .break-inside-avoid {
+          break-inside: avoid-column;
+          -webkit-column-break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        .masonry img {
+          width: 100%;
+          display: block;
         }
       `}</style>
     </section>

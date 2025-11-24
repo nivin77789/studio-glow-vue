@@ -2,6 +2,47 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+export const faqSections = [
+  {
+    title: "General Questions",
+    questions: [
+      { q: "What type of photography services do you offer?", a: "We offer Wedding, Portrait, Landscape, Candid, and Commercial Photography." },
+      { q: "Do you have a studio?", a: "Yes, located at No 3/4, near Hanuman Temple, Maruthi Layout, Belathur, Bengaluru." },
+      { q: "What areas do you serve?", a: "We serve across India and abroad for pre-wedding and destination weddings." },
+    ],
+  },
+  {
+    title: "Booking & Pricing",
+    questions: [
+      { q: "How do I book a session?", a: "Contact us via our website, email, or phone." },
+      { q: "What are your pricing packages?", a: "Pricing depends on the type of session. Contact us for a custom quote." },
+      { q: "Do you offer discounts or promotions?", a: "Yes, we occasionally run promotions. Follow us on social media." },
+    ],
+  },
+  {
+    title: "Photography Process",
+    questions: [
+      { q: "What can I expect during a session?", a: "We'll capture your best moments with guidance. Soft copies included." },
+      { q: "How long does a session take?", a: "4–5 hrs for traditional sessions, 5–6 hrs for candid/cinematography." },
+      { q: "How will I receive photos?", a: "Via online gallery, USB, or hard drive depending on your preference." },
+    ],
+  },
+  {
+    title: "Image Usage & Rights",
+    questions: [
+      { q: "Do I own the rights to my photos?", a: "Yes, we provide a usage license as agreed." },
+      { q: "Can I use photos commercially?", a: "Contact us to discuss licensing and fees." },
+    ],
+  },
+  {
+    title: "Miscellaneous",
+    questions: [
+      { q: "Do you have backup equipment?", a: "Yes, we always carry backup gear." },
+      { q: "What if I'm not happy with my photos?", a: "We work with you until you’re satisfied." },
+    ],
+  },
+];
+
 const FAQ = () => {
   const { ref, isVisible } = useScrollReveal();
 
@@ -16,47 +57,6 @@ const FAQ = () => {
   const handleQuestionToggle = (question: string) => {
     setOpenQuestion(openQuestion === question ? null : question);
   };
-
-  const faqSections = [
-    {
-      title: "General Questions",
-      questions: [
-        { q: "What type of photography services do you offer?", a: "We offer Wedding, Portrait, Landscape, Candid, and Commercial Photography." },
-        { q: "Do you have a studio?", a: "Yes, located at No 3/4, near Hanuman Temple, Maruthi Layout, Belathur, Bengaluru." },
-        { q: "What areas do you serve?", a: "We serve across India and abroad for pre-wedding and destination weddings." },
-      ],
-    },
-    {
-      title: "Booking & Pricing",
-      questions: [
-        { q: "How do I book a session?", a: "Contact us via our website, email, or phone." },
-        { q: "What are your pricing packages?", a: "Pricing depends on the type of session. Contact us for a custom quote." },
-        { q: "Do you offer discounts or promotions?", a: "Yes, we occasionally run promotions. Follow us on social media." },
-      ],
-    },
-    {
-      title: "Photography Process",
-      questions: [
-        { q: "What can I expect during a session?", a: "We'll capture your best moments with guidance. Soft copies included." },
-        { q: "How long does a session take?", a: "4–5 hrs for traditional sessions, 5–6 hrs for candid/cinematography." },
-        { q: "How will I receive photos?", a: "Via online gallery, USB, or hard drive depending on your preference." },
-      ],
-    },
-    {
-      title: "Image Usage & Rights",
-      questions: [
-        { q: "Do I own the rights to my photos?", a: "Yes, we provide a usage license as agreed." },
-        { q: "Can I use photos commercially?", a: "Contact us to discuss licensing and fees." },
-      ],
-    },
-    {
-      title: "Miscellaneous",
-      questions: [
-        { q: "Do you have backup equipment?", a: "Yes, we always carry backup gear." },
-        { q: "What if I'm not happy with my photos?", a: "We work with you until you’re satisfied." },
-      ],
-    },
-  ];
 
   return (
     <section ref={ref} className="py-14 relative overflow-hidden">

@@ -14,6 +14,8 @@ import PrintsPage from "./pages/PrintsPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
+import FAQChatbot from "@/components/FAQChatbot";
+import RatingWidget from "@/components/RatingWidget";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <FAQChatbot />
+        <RatingWidget />
       <BrowserRouter>
         <ScrollToTop />
         <Routes>

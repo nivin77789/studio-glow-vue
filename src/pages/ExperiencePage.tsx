@@ -31,7 +31,7 @@ const workshops = [
     date: "March 15, 2025",
     time: "10:00 AM - 4:00 PM",
     location: "Studio Center, Mumbai",
-    image: "/images/1.jpeg",
+    image: "/images/wed/Pre-Wedding/1.jpeg",
     category: "Workshop",
     spots: 12
   },
@@ -41,7 +41,7 @@ const workshops = [
     date: "March 22, 2025",
     time: "9:00 AM - 5:00 PM",
     location: "Convention Hall, Bangalore",
-    image: "/images/2.jpeg",
+    image: "/images/wed/Pre-Wedding/2.jpeg",
     category: "Workshop",
     spots: 20
   },
@@ -51,7 +51,7 @@ const workshops = [
     date: "March 28, 2025",
     time: "6:00 AM - 10:00 AM",
     location: "Old City, Delhi",
-    image: "/images/3.jpeg",
+    image: "/images/wed/Pre-Wedding/3.jpeg",
     category: "Workshop",
     spots: 15
   },
@@ -61,7 +61,7 @@ const workshops = [
     date: "April 5, 2025",
     time: "11:00 AM - 3:00 PM",
     location: "Photography Hub, Pune",
-    image: "/images/4.jpeg",
+    image: "/images/wed/Pre-Wedding/4.jpeg",
     category: "Workshop",
     spots: 10
   },
@@ -73,7 +73,7 @@ const competitions = [
     title: "Best Portrait 2025",
     deadline: "April 30, 2025",
     prize: "₹50,000",
-    image: "/images/5.jpeg",
+    image: "/images/wed/Pre-Wedding/5.jpeg",
     category: "Competition"
   },
   {
@@ -81,7 +81,7 @@ const competitions = [
     title: "Wedding Moments Challenge",
     deadline: "May 15, 2025",
     prize: "₹75,000",
-    image: "/images/6.jpeg",
+    image: "/images/wed/Pre-Wedding/6.jpeg",
     category: "Competition"
   },
   {
@@ -89,7 +89,7 @@ const competitions = [
     title: "Nature Photography Contest",
     deadline: "June 1, 2025",
     prize: "₹40,000",
-    image: "/images/7.jpeg",
+    image: "/images/wed/Pre-Wedding/7.jpeg",
     category: "Competition"
   },
   {
@@ -97,7 +97,7 @@ const competitions = [
     title: "Street Life Photo Challenge",
     deadline: "June 20, 2025",
     prize: "₹30,000",
-    image: "/images/8.jpeg",
+    image: "/images/wed/Pre-Wedding/8.jpeg",
     category: "Competition"
   },
 ];
