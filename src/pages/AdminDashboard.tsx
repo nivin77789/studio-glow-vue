@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Inbox, Trash2, CheckCircle, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Sparkles, Music, Mic2, Plus, Edit, ExternalLink, MapPin } from "lucide-react";
+import { Menu, X, Moon, Sun, Sparkles, Camera, LogOut, GraduationCap, Phone, User, Building2, Users, Palette, Music, Mic2, Plus, Edit, ExternalLink, MapPin, MessageSquare, Mail, Inbox, Trash2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import AdminTestimonials from "@/components/AdminTestimonials";
 import { db } from "@/lib/firebase";
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from "firebase/firestore";
 import { Input } from "@/components/ui/input";
@@ -377,11 +378,11 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="collaborators" className="space-y-6">
-          <TabsList className="grid grid-cols-5 gap-2">
+          <TabsList className="grid grid-cols-6 gap-2">
             <TabsTrigger value="collaborators" className="relative">
               <Users className="w-4 h-4 mr-2" />
               Collaborators
-              <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-semibold">
+              <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
                 {collaboratorsList.length}
               </span>
             </TabsTrigger>
@@ -412,9 +413,16 @@ const AdminDashboard = () => {
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="newsletter">
+            <TabsTrigger value="newsletter" className="relative">
               <Mail className="w-4 h-4 mr-2" />
               Newsletter
+              <span className="ml-2 inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                {newsletterSubscribers.length} subscribers
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="testimonials" className="relative">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Testimonials
             </TabsTrigger>
           </TabsList>
 
@@ -512,7 +520,9 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
-
+          <TabsContent value="testimonials">
+            <AdminTestimonials />
+          </TabsContent>
           {/* Collaborations Section */}
           <TabsContent value="collaborations">
             <Card className="animate-scale-in">
@@ -544,7 +554,7 @@ const AdminDashboard = () => {
                                   </span>
                                 )}
                               </div>
-                              
+
                               <div className="space-y-1.5 text-sm">
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   {getServiceIcon(request.serviceName)}
@@ -563,12 +573,12 @@ const AdminDashboard = () => {
                                   <span className="text-xs">{request.address}</span>
                                 </div>
                               </div>
-                              
+
                               <p className="text-xs text-muted-foreground mt-2">
                                 Submitted: {formatDate(request.timestamp)}
                               </p>
                             </div>
-                            
+
                             <div className="flex gap-2">
                               {request.status !== "contacted" && (
                                 <Button
@@ -590,7 +600,7 @@ const AdminDashboard = () => {
                               </Button>
                             </div>
                           </div>
-                          
+
                           {request.message && (
                             <div className="mt-3 p-3 bg-muted rounded-lg">
                               <p className="text-xs font-semibold text-muted-foreground mb-1">Additional Message:</p>
@@ -637,7 +647,7 @@ const AdminDashboard = () => {
                                   </span>
                                 )}
                               </div>
-                              
+
                               <div className="space-y-1.5 text-sm">
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <Mail className="w-4 h-4" />
@@ -652,7 +662,7 @@ const AdminDashboard = () => {
                                   <span className="font-medium text-foreground">{enrollment.courseTitle}</span>
                                 </div>
                               </div>
-                              
+
                               <div className="flex gap-2 mt-2">
                                 <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs">
                                   {enrollment.courseDuration}
@@ -661,12 +671,12 @@ const AdminDashboard = () => {
                                   {enrollment.courseLevel}
                                 </span>
                               </div>
-                              
+
                               <p className="text-xs text-muted-foreground mt-2">
                                 Enrolled: {formatDate(enrollment.timestamp)}
                               </p>
                             </div>
-                            
+
                             <div className="flex gap-2">
                               {enrollment.status !== "contacted" && (
                                 <Button
@@ -688,7 +698,7 @@ const AdminDashboard = () => {
                               </Button>
                             </div>
                           </div>
-                          
+
                           {enrollment.about && (
                             <div className="mt-3 p-3 bg-muted rounded-lg">
                               <p className="text-xs font-semibold text-muted-foreground mb-1">About Student:</p>
@@ -799,7 +809,7 @@ const AdminDashboard = () => {
                             variant="destructive"
                             onClick={() => handleDeleteSubscriber(subscriber.id)}
                           >
-                            <Trash2 className="w-4 h-4" />
+                            Delete
                           </Button>
                         </div>
                       </Card>

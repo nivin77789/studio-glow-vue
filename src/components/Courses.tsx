@@ -313,7 +313,7 @@ const Courses = () => {
       <section id="courses" className="py-24 relative overflow-hidden">
         {/* Photography-themed background */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
         </div>
 
         <div className="container mx-auto px-4">

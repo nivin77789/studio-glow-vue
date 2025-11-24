@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Moon, Sun, Sparkles } from "lucide-react";
+import { Menu, X, Moon, Sun, Sparkles, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -75,13 +75,18 @@ const Header = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
+          {/* Logo and Studio Name */}
           <Link to="/" className="flex items-center gap-2 group">
             <img
               src="/logo.png"
               alt="Trixietales"
               className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
             />
+            <span className="ml-2 text-2xl font-semibold gradient-text relative inline-block">
+              Trixietales
+              <Camera className="orbit-camera text-primary" />
+              <Camera className="orbit-camera text-accent" style={{ animationDelay: '2s' }} />
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

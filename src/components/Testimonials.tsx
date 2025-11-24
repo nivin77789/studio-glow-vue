@@ -5,65 +5,41 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 interface Testimonial {
-  id: number;
-  name: string;
-  role: string;
-  content: string;
+  id: string;
+  clientName: string;
+  category: string;
+  description: string;
   rating: number;
-  avatar?: string;
+  youtubeLink?: string;
+  avatarUrl?: string;
 }
-
-const testimonials: Testimonial[] = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    role: "Bride",
-    content: "Nivin Studio captured our wedding day perfectly! Every moment was beautifully documented. The team was professional, creative, and made us feel comfortable throughout. We couldn't be happier with the results!",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    role: "Corporate Client",
-    content: "Exceptional quality and professionalism. The portfolio shots they created for our company exceeded all expectations. Highly recommend their services for any professional photography needs.",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Priya Sharma",
-    role: "Maternity Photoshoot",
-    content: "The maternity photoshoot was an amazing experience. The team made me feel beautiful and comfortable. The photos are absolutely stunning and capture this special time perfectly!",
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: "David Williams",
-    role: "Birthday Event",
-    content: "They made our daughter's birthday party memorable! The candid shots and video coverage were fantastic. Great attention to detail and wonderful to work with.",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Anita Patel",
-    role: "Engagement Photoshoot",
-    content: "Our engagement photos are like a dream! The creative concepts and locations suggested by the team were perfect. We received so many compliments from family and friends!",
-    rating: 5,
-  },
-  {
-    id: 6,
-    name: "Robert Martinez",
-    role: "Concert Documentation",
-    content: "As a musician, finding a photographer who understands live music is crucial. Nivin Studio delivered outstanding concert photos that captured the energy and emotion of our performance perfectly!",
-    rating: 5,
-  },
-];
 
 const Testimonials = () => {
   const { ref, isVisible } = useScrollReveal();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = query(collection(db, "testimonials"), orderBy("createdAt", "desc"));
+    const unsub = onSnapshot(q, (snapshot) => {
+      const data: Testimonial[] = [];
+      snapshot.forEach((doc) => {
+        const d = doc.data() as Omit<Testimonial, "id">;
+        data.push({ id: doc.id, ...d });
+      });
+      setTestimonials(data);
+    });
+    return () => unsub();
+  }, []);
 
   return (
     <section ref={ref} className="py-20 relative overflow-hidden bg-muted/30">
@@ -83,78 +59,105 @@ const Testimonials = () => {
 
         <div className={`max-w-7xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            plugins={[
-              Autoplay({
-                delay: 4000,
-              }),
-            ]}
+            opts={{ align: "start", loop: true }}
+            plugins={[Autoplay({ delay: 4000 })]}
             className="w-full"
           >
             <CarouselContent className="-ml-2 md:-ml-4">
               {testimonials.map((testimonial) => (
                 <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                   <div className="group relative h-full">
-                    <div className="glass rounded-2xl p-8 h-full hover-lift relative overflow-hidden">
-                      {/* Animated gradient overlay on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                      {/* Quote icon */}
-                      <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Quote className="w-16 h-16 text-primary" />
-                      </div>
-
-                      <div className="relative z-10">
-                        {/* Rating */}
-                        <div className="flex gap-1 mb-4">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="w-5 h-5 fill-accent text-accent group-hover:scale-110 transition-transform"
-                              style={{ transitionDelay: `${i * 50}ms` }}
+                    <div className="glass rounded-2xl h-[500px] md:h-[600px] relative overflow-hidden border-0 p-0">
+                      {/* Video Background / Thumbnail */}
+                      {testimonial.youtubeLink && extractYTId(testimonial.youtubeLink) ? (
+                        <div className="absolute inset-0 z-0 bg-black">
+                          {playingId === testimonial.id ? (
+                            <iframe
+                              src={`https://www.youtube.com/embed/${extractYTId(testimonial.youtubeLink)}?autoplay=1&playsinline=1&controls=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0`}
+                              title="YouTube video"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              className="w-full h-full object-cover"
                             />
-                          ))}
+                          ) : (
+                            <div
+                              className="w-full h-full relative cursor-pointer group/video"
+                              onClick={() => setPlayingId(testimonial.id)}
+                            >
+                              <img
+                                src={`https://img.youtube.com/vi/${extractYTId(testimonial.youtubeLink)}/maxresdefault.jpg`}
+                                alt="Video thumbnail"
+                                className="w-full h-full object-cover opacity-80 group-hover/video:opacity-60 transition-opacity"
+                                onError={(e) => {
+                                  // Fallback to hqdefault if maxresdefault doesn't exist
+                                  (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${extractYTId(testimonial.youtubeLink)}/hqdefault.jpg`;
+                                }}
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover/video:scale-110 transition-transform">
+                                  <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[20px] border-l-white border-b-[10px] border-b-transparent ml-1" />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {/* Dark Overlay for readability - only show when not playing */}
+                          {playingId !== testimonial.id && (
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/90 z-10 pointer-events-none" />
+                          )}
                         </div>
+                      ) : (
+                        /* Fallback background if no video */
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black z-0" />
+                      )}
 
-                        {/* Content */}
-                        <p className="text-foreground/80 mb-6 leading-relaxed">
-                          "{testimonial.content}"
-                        </p>
+                      {/* Content Overlay - Hide when playing */}
+                      {playingId !== testimonial.id && (
+                        <div className="relative z-20 h-full flex flex-col justify-end p-6 text-white pointer-events-none">
 
-                        {/* Author */}
-                        <div className="flex items-center gap-3 pt-4 border-t border-border/50">
-                          <Avatar className="w-12 h-12 ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold">
-                              {testimonial.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-semibold text-foreground">{testimonial.name}</p>
-                            <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                          {/* Quote Icon */}
+                          <div className="absolute top-6 right-6 opacity-50">
+                            <Quote className="w-8 h-8 text-white/80" />
+                          </div>
+
+                          {/* Rating */}
+                          <div className="flex gap-1 mb-3">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400 drop-shadow-md" />
+                            ))}
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-white/90 mb-4 text-sm md:text-base leading-relaxed line-clamp-4 drop-shadow-sm font-medium">
+                            "{testimonial.description}"
+                          </p>
+
+                          {/* User Info */}
+                          <div className="flex items-center gap-3 pt-4 border-t border-white/20">
+                            <Avatar className="w-10 h-10 ring-2 ring-white/30">
+                              {testimonial.avatarUrl ? <AvatarImage src={testimonial.avatarUrl} alt={testimonial.clientName} /> : null}
+                              <AvatarFallback className="bg-white/10 text-white font-semibold backdrop-blur-sm">
+                                {testimonial.clientName.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-bold text-white text-sm drop-shadow-md">{testimonial.clientName}</p>
+                              <p className="text-xs text-white/70">{testimonial.category}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
+            <CarouselPrevious className="hidden md:flex -left-12 bg-white/10 hover:bg-white/20 border-white/20 text-white" />
+            <CarouselNext className="hidden md:flex -right-12 bg-white/10 hover:bg-white/20 border-white/20 text-white" />
           </Carousel>
         </div>
 
-        {/* CTA */}
         <div className={`text-center mt-16 transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <p className="text-lg text-muted-foreground mb-4">
-            Ready to create your own success story?
-          </p>
-          <a
-            href="/contact"
-            className="inline-block px-8 py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:shadow-primary/50"
-          >
+          <p className="text-lg text-muted-foreground mb-4">Ready to create your own success story?</p>
+          <a href="/contact" className="inline-block px-8 py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:shadow-primary/50">
             Start Your Journey with Us
           </a>
         </div>
@@ -162,5 +165,12 @@ const Testimonials = () => {
     </section>
   );
 };
+
+function extractYTId(url: string): string {
+  if (!url) return "";
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = url.match(regExp);
+  return match ? match[1] : "";
+}
 
 export default Testimonials;
