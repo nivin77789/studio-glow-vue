@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Moon, Sun, Camera, Sparkles } from "lucide-react";
+import { Menu, X, Moon, Sun, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ const Header = () => {
     }
     return isDark;
   });
-  
+
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
@@ -50,20 +50,13 @@ const Header = () => {
   const getTextColor = () => {
     if (isHomePage) {
       // On home page: white until scrolled, then theme color
-      return isScrolled 
-        ? 'text-foreground/80 hover:text-primary' 
+      return isScrolled
+        ? 'text-foreground/80 hover:text-primary'
         : 'text-white hover:text-white/80';
     } else {
       // On other pages: always use theme color
       return 'text-foreground/80 hover:text-primary';
     }
-  };
-
-  const getLogoColor = () => {
-    if (isHomePage && !isScrolled) {
-      return 'text-white';
-    }
-    return 'text-primary';
   };
 
   const getMobileMenuColor = () => {
@@ -84,10 +77,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <Camera className={`w-8 h-8 transition-all group-hover:scale-110 ${getLogoColor()}`} />
-            <span className={`text-2xl font-bold transition-colors ${isHomePage && !isScrolled ? 'text-white' : 'gradient-text'}`}>
-              Trixietales
-            </span>
+            <img
+              src="/logo.png"
+              alt="Trixietales"
+              className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -96,9 +90,8 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`transition-colors font-medium relative group ${
-                  link.special ? 'animate-pulse' : ''
-                } ${getTextColor()}`}
+                className={`transition-colors font-medium relative group ${link.special ? 'animate-pulse' : ''
+                  } ${getTextColor()}`}
                 style={link.special && isHomePage && !isScrolled ? {
                   textShadow: '0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6)',
                   fontWeight: 'bold'

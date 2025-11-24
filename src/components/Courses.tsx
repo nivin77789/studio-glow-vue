@@ -327,63 +327,210 @@ const Courses = () => {
           <div className="relative">
             <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
               <CarouselContent className="-ml-2 md:-ml-4">
-            {courses.map((course, index) => (
-              <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
-              <Card
-                className="group hover-lift border-0 shadow-lg bg-card overflow-hidden flex flex-col h-full py-4"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <CardContent className="p-0 flex flex-col h-full">
-                  <div className="p-6 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
-                    <div className="relative">
-                      <div className="mb-4 inline-flex p-4 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                        <course.icon className="w-8 h-8" />
-                      </div>
-                      <div className="flex gap-2 mb-2">
-                        <Badge variant="secondary">{course.duration}</Badge>
-                        <Badge variant="outline">{course.level}</Badge>
-                      </div>
-                      <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
-                        {course.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex flex-col flex-grow">
-                    <p className="text-muted-foreground mb-4 line-clamp-3">{course.description}</p>
-                    
-                    <ul className="space-y-2 mb-6 flex-grow">
-                      {course.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <button 
-                      className="gradient-btn w-full group/btn relative overflow-hidden"
-                      onClick={() => setSelectedCourse(course)}
+                {courses.map((course, index) => (
+                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
+                    <Card
+                      className="course-card group border-0 shadow-xl bg-card overflow-hidden flex flex-col h-full relative"
+                      style={{
+                        animationDelay: `${index * 0.1}s`,
+                        animation: 'fadeInUp 0.6s ease-out forwards',
+                        opacity: 0
+                      }}
                     >
-                      <span className="relative z-10 flex items-center justify-center">
-                        Read More
-                        <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                      </span>
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
-              </CarouselItem>
-            ))}
+                      {/* Shimmer effect overlay */}
+                      <div className="shimmer-overlay" />
+
+                      {/* Gradient border effect */}
+                      <div className="gradient-border" />
+
+                      <CardContent className="p-0 flex flex-col h-full relative z-10">
+                        {/* Header section with icon and badges */}
+                        <div className="p-6 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 relative overflow-hidden">
+                          {/* Animated background circles */}
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700 ease-out" />
+                          <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 rounded-full translate-y-1/2 -translate-x-1/2 group-hover:scale-150 transition-transform duration-700 ease-out" />
+
+                          <div className="relative">
+                            {/* Icon with hover effect */}
+                            <div className="mb-4 inline-flex p-4 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary group-hover:from-primary group-hover:to-accent group-hover:text-primary-foreground transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
+                              <course.icon className="w-8 h-8 transition-transform duration-500 group-hover:scale-110" />
+                            </div>
+
+                            {/* Badges */}
+                            <div className="flex gap-2 mb-3 flex-wrap">
+                              <Badge
+                                variant="secondary"
+                                className="backdrop-blur-sm bg-background/60 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-105"
+                              >
+                                <Clock className="w-3 h-3 mr-1" />
+                                {course.duration}
+                              </Badge>
+                              <Badge
+                                variant="outline"
+                                className="backdrop-blur-sm group-hover:border-primary/50 transition-all duration-300 group-hover:scale-105"
+                              >
+                                <Award className="w-3 h-3 mr-1" />
+                                {course.level}
+                              </Badge>
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-all duration-300 group-hover:translate-x-1">
+                              {course.title}
+                            </h3>
+                          </div>
+                        </div>
+
+                        {/* Content section */}
+                        <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-primary/5 group-hover:to-primary/10 transition-all duration-500">
+                          <p className="text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                            {course.description}
+                          </p>
+
+                          {/* Features list with staggered animation */}
+                          <ul className="space-y-2 mb-6 flex-grow">
+                            {course.features.map((feature, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-center gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-300"
+                                style={{
+                                  animation: `slideInLeft 0.4s ease-out forwards ${0.1 + idx * 0.1}s`,
+                                  opacity: 0
+                                }}
+                              >
+                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-primary to-accent flex-shrink-0 group-hover/item:scale-150 transition-transform duration-300" />
+                                <span className="group-hover/item:text-foreground transition-colors duration-300">
+                                  {feature}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+
+                          {/* CTA Button */}
+                          <button
+                            className="gradient-btn w-full group/btn relative overflow-hidden transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                            onClick={() => setSelectedCourse(course)}
+                          >
+                            <span className="relative z-10 flex items-center justify-center font-semibold">
+                              Read More
+                              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-2 duration-300" />
+                            </span>
+                          </button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
-              <CarouselPrevious className="-left-6 md:-left-10" />
-              <CarouselNext className="-right-6 md:-right-10" />
+              <CarouselPrevious className="-left-6 md:-left-10 hover:scale-110 transition-transform duration-300" />
+              <CarouselNext className="-right-6 md:-right-10 hover:scale-110 transition-transform duration-300" />
             </Carousel>
           </div>
         </div>
 
         <style>{`
+          /* Card Animations */
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          @keyframes slideInLeft {
+            from {
+              opacity: 0;
+              transform: translateX(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          
+          @keyframes shimmer {
+            0% {
+              transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+              transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+          }
+          
+          @keyframes gradientRotate {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+          
+          /* Course Card Styles */
+          .course-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1rem;
+            position: relative;
+          }
+          
+          .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 
+                        0 0 0 1px rgba(var(--primary), 0.1);
+          }
+          
+          /* Shimmer Overlay Effect */
+          .shimmer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+              90deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.1) 50%,
+              transparent 100%
+            );
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            pointer-events: none;
+            z-index: 20;
+          }
+          
+          .course-card:hover .shimmer-overlay {
+            animation: shimmer 1.5s ease-in-out;
+          }
+          
+          /* Gradient Border Effect */
+          .gradient-border {
+            position: absolute;
+            inset: -2px;
+            border-radius: 1rem;
+            padding: 2px;
+            background: linear-gradient(
+              135deg,
+              hsl(var(--primary)) 0%,
+              hsl(var(--accent)) 50%,
+              hsl(var(--primary)) 100%
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 0;
+          }
+          
+          .course-card:hover .gradient-border {
+            opacity: 0.6;
+            animation: gradientRotate 3s linear infinite;
+          }
+          
           @keyframes spin-slow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -392,16 +539,18 @@ const Courses = () => {
             animation: spin-slow 30s linear infinite;
           }
           
+          /* Enhanced Gradient Button */
           .gradient-btn {
             position: relative;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
             font-weight: 600;
             color: hsl(0, 0%, 10%);
             background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           }
           
           .dark .gradient-btn {
@@ -412,10 +561,15 @@ const Courses = () => {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
+          }
+          
+          .gradient-btn:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2),
+                        0 0 20px hsla(var(--primary), 0.3);
           }
           
           .gradient-btn:hover::before {
@@ -426,7 +580,7 @@ const Courses = () => {
             content: '';
             position: absolute;
             inset: -2px;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
             background-size: 200% 200%;
             z-index: -1;
@@ -444,16 +598,17 @@ const Courses = () => {
             100% { background-position: 0% 50%; }
           }
           
+          /* Secondary Gradient Button */
           .gradient-btn-secondary {
             position: relative;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
             font-weight: 600;
             color: hsl(var(--foreground));
             background: transparent;
             border: 2px solid transparent;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background-clip: padding-box;
           }
           
@@ -461,7 +616,7 @@ const Courses = () => {
             content: '';
             position: absolute;
             inset: -2px;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             padding: 2px;
             background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -472,23 +627,37 @@ const Courses = () => {
           
           .gradient-btn-secondary:hover {
             background: linear-gradient(135deg, hsl(var(--primary))/0.1 0%, hsl(var(--accent))/0.1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           }
           
+          /* Pulse Button */
           .pulse-btn {
             position: relative;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
             font-weight: 600;
             color: white;
             background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
             border: none;
             cursor: pointer;
             animation: pulse 2s ease-in-out infinite;
+            transition: transform 0.2s ease;
+          }
+          
+          .pulse-btn:hover {
+            transform: scale(1.05);
           }
           
           @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 hsla(var(--primary), 0.7); }
-            50% { box-shadow: 0 0 0 10px hsla(var(--primary), 0); }
+            0%, 100% { 
+              box-shadow: 0 0 0 0 hsla(var(--primary), 0.7),
+                          0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            50% { 
+              box-shadow: 0 0 0 15px hsla(var(--primary), 0),
+                          0 8px 24px rgba(0, 0, 0, 0.2);
+            }
           }
         `}</style>
       </section>

@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye, Maximize2, Phone } from "lucide-react";
+import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye, Maximize2, Phone, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -206,11 +206,11 @@ const ThreeDViewer = ({ productType, userImage }) => {
     let animationId;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-      
+
       if (frameRef.current) {
         frameRef.current.rotation.y += 0.005;
       }
-      
+
       renderer.render(scene, camera);
     };
     animate();
@@ -287,7 +287,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
 
     const photoGeometry = new THREE.PlaneGeometry(2.2, 3.2);
     let photoMaterial;
-    
+
     if (userImage) {
       const textureLoader = new THREE.TextureLoader();
       const texture = textureLoader.load(userImage);
@@ -298,7 +298,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
         roughness: 0.5
       });
     }
-    
+
     const photoMesh = new THREE.Mesh(photoGeometry, photoMaterial);
     photoMesh.position.z = 0.16;
     group.add(photoMesh);
@@ -331,7 +331,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
 
     const imageGeometry = new THREE.PlaneGeometry(2.4, 2.8);
     let imageMaterial;
-    
+
     if (userImage) {
       const textureLoader = new THREE.TextureLoader();
       const texture = textureLoader.load(userImage);
@@ -342,7 +342,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
         roughness: 0.4
       });
     }
-    
+
     const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
     imageMesh.position.set(0, 0.35, 0.026);
     group.add(imageMesh);
@@ -380,7 +380,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
 
     const photoGeometry = new THREE.PlaneGeometry(2.8, 2);
     let photoMaterial;
-    
+
     if (userImage) {
       const textureLoader = new THREE.TextureLoader();
       const texture = textureLoader.load(userImage);
@@ -391,7 +391,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
         roughness: 0.4
       });
     }
-    
+
     const photoMesh = new THREE.Mesh(photoGeometry, photoMaterial);
     photoMesh.position.set(0, 0.7, 0.051);
     group.add(photoMesh);
@@ -450,7 +450,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
 
     const photoGeometry = new THREE.PlaneGeometry(2, 2.5);
     let photoMaterial;
-    
+
     if (userImage) {
       const textureLoader = new THREE.TextureLoader();
       const texture = textureLoader.load(userImage);
@@ -461,7 +461,7 @@ const ThreeDViewer = ({ productType, userImage }) => {
         roughness: 0.5
       });
     }
-    
+
     const photoMesh = new THREE.Mesh(photoGeometry, photoMaterial);
     photoMesh.position.set(0, 0.3, 0.087);
     group.add(photoMesh);
@@ -507,13 +507,15 @@ const Prints = () => {
   const [selectedPrint, setSelectedPrint] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [show3DViewer, setShow3DViewer] = useState(false);
+  const [show3DPopup, setShow3DPopup] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState("frame");
   const [selected3DProduct, setSelected3DProduct] = useState(null);
   const fileInputRef = useRef(null);
+  const popupFileInputRef = useRef(null);
 
   const handleOrder = (printType, variant) => {
-    const message = variant 
+    const message = variant
       ? `Hi! I'd like to order ${variant} from ${printType}`
       : `Hi! I'd like to know more about ${printType}`;
     window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
@@ -527,7 +529,7 @@ const Prints = () => {
         toast.error("Image size should be less than 5MB");
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreviewImage(e.target?.result);
@@ -555,47 +557,51 @@ const Prints = () => {
       <div className="container mx-auto px-4">
         {/* Banner */}
         <div className={`mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-          <Card className="border-0 shadow-lg overflow-hidden rounded-xl">
-            <CardContent className="p-0">
-              <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="inline-flex p-4 rounded-xl bg-primary/10 text-primary">
-                      <Sparkles className="w-8 h-8" />
+          <Card className="border-0 shadow-2xl overflow-hidden rounded-2xl relative group">
+            {/* Animated gradient border */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-gradient-shift opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ padding: '2px', borderRadius: '1rem' }}>
+              <div className="w-full h-full bg-background rounded-2xl" />
+            </div>
+
+            <CardContent className="p-0 relative z-10">
+              <div className="p-8 md:p-12 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 relative overflow-hidden">
+                {/* Animated background elements */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse-slow" />
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+
+                <div className="relative flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="flex items-start gap-6 flex-1">
+                    {/* Icon with glow effect */}
+                    <div className="inline-flex p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary shadow-lg group-hover:scale-110 transition-transform duration-500 relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-0 group-hover:opacity-20 rounded-2xl transition-opacity duration-500" />
+                      <Sparkles className="w-10 h-10 relative z-10" />
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold mb-2">Try Our New 3D Preview!</h3>
-                      <p className="text-muted-foreground">Upload your photo and see how it looks in realistic 3D</p>
+
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                          Try Our New 3D Preview!
+                        </h3>
+                        <Badge variant="secondary" className="animate-bounce">New</Badge>
+                      </div>
+                      <p className="text-muted-foreground text-lg leading-relaxed max-w-xl">
+                        Upload your photo and see how it looks in realistic 3D. Rotate, zoom, and explore your memories in stunning detail before ordering.
+                      </p>
                     </div>
                   </div>
-                  
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageUpload}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <Button 
-                      onClick={triggerFileInput}
-                      className="gap-2"
+
+                  {/* CTA Button */}
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                      onClick={() => setShow3DPopup(true)}
+                      className="try-now-btn group/btn relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95"
                     >
-                      <Upload className="w-4 h-4" />
-                      Upload Photo
-                    </Button>
-                    
-                    <select 
-                      value={selectedProduct}
-                      onChange={(e) => setSelectedProduct(e.target.value)}
-                      className="px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                    >
-                      <option value="frame">Frame</option>
-                      <option value="magazine">Magazine</option>
-                      <option value="calendar">Calendar</option>
-                      <option value="album">Album</option>
-                    </select>
+                      <span className="relative z-10 flex items-center justify-center gap-3 text-white">
+                        <Eye className="w-6 h-6 group-hover/btn:scale-110 transition-transform duration-300" />
+                        Try Now
+                        <Sparkles className="w-5 h-5 group-hover/btn:rotate-12 transition-transform duration-300" />
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -621,10 +627,9 @@ const Prints = () => {
                 return (
                   <CarouselItem key={print.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
                     <Card
-                      className={`group hover-lift border overflow-hidden transition-all duration-500 ${
-                        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                      }`}
-                      style={{ 
+                      className={`group hover-lift border overflow-hidden transition-all duration-500 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                        }`}
+                      style={{
                         animationDelay: `${index * 0.1}s`,
                         transitionDelay: `${index * 0.05}s`
                       }}
@@ -644,7 +649,7 @@ const Prints = () => {
 
                         <div className="p-6">
                           <p className="text-muted-foreground mb-4">{print.description}</p>
-                          
+
                           <ul className="space-y-2 mb-6">
                             {print.features?.map((feature, idx) => (
                               <li key={idx} className="flex items-center gap-2 text-sm">
@@ -655,13 +660,13 @@ const Prints = () => {
                           </ul>
 
                           <div className="flex gap-2">
-                            <Button 
+                            <Button
                               className="flex-1"
                               onClick={() => setSelectedPrint(print)}
                             >
                               View Options
                             </Button>
-                            <Button 
+                            <Button
                               variant="outline"
                               onClick={() => handleOrder(print.name, null)}
                             >
@@ -688,8 +693,8 @@ const Prints = () => {
               <p className="text-muted-foreground mb-6 max-w-md">
                 Can't find what you're looking for? We offer custom printing solutions tailored to your needs.
               </p>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="group"
                 onClick={() => handleOrder("Custom Print Solutions", null)}
               >
@@ -718,33 +723,32 @@ const Prints = () => {
               </div>
             </div>
           </DialogHeader>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6">
             {selectedPrint?.variants?.map((variant, index) => (
               <div
                 key={variant.name}
-                className={`group transition-all duration-500 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
+                className={`group transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                  }`}
                 style={{ transitionDelay: `${index * 0.1}s` }}
               >
                 <Card className="border-0 shadow-lg overflow-hidden hover-lift">
                   <CardContent className="p-0">
                     <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={variant.image} 
+                      <img
+                        src={variant.image}
                         alt={variant.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                     </div>
-                    
+
                     <div className="p-6">
                       <h4 className="font-semibold text-lg mb-2">{variant.name}</h4>
                       <p className="text-sm text-muted-foreground mb-4">
                         Premium quality {variant.name.toLowerCase()} with professional finishing
                       </p>
-                      
+
                       <div className="flex gap-2">
                         <Button
                           onClick={() => handle3DView(variant)}
@@ -796,18 +800,18 @@ const Prints = () => {
               </div>
             </div>
           </DialogHeader>
-          
+
           <div className="p-6">
-            <ThreeDViewer 
-              productType={selectedProduct} 
+            <ThreeDViewer
+              productType={selectedProduct}
               userImage={previewImage}
             />
-            
+
             <div className="flex flex-col sm:flex-row gap-3 justify-end mt-6">
               <Button variant="outline" onClick={() => setShow3DViewer(false)}>
                 Close
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   handleOrder(selected3DProduct?.name || selectedProduct, null);
                   setShow3DViewer(false);
@@ -845,18 +849,18 @@ const Prints = () => {
               </div>
             </div>
           </DialogHeader>
-          
+
           <div className="p-6">
-            <ThreeDViewer 
-              productType={selectedProduct} 
+            <ThreeDViewer
+              productType={selectedProduct}
               userImage={previewImage}
             />
-            
+
             <div className="flex flex-col sm:flex-row gap-3 justify-end mt-6">
               <Button variant="outline" onClick={() => setShowPreview(false)}>
                 Close
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   handleOrder(`${selectedProduct.charAt(0).toUpperCase() + selectedProduct.slice(1)} Print`, null);
                   setShowPreview(false);
@@ -866,6 +870,227 @@ const Prints = () => {
                 Order This Product
                 <Sparkles className="ml-2 w-4 h-4 group-hover:rotate-12 transition-transform" />
               </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* New 3D Preview Popup Modal */}
+      <Dialog open={show3DPopup} onOpenChange={setShow3DPopup}>
+        <DialogContent className="max-w-6xl max-h-[95vh] rounded-2xl p-0 overflow-hidden border-0 shadow-2xl">
+          {/* Header with gradient */}
+          <div className="relative bg-gradient-to-br from-primary via-accent to-primary bg-[length:200%_200%] animate-gradient-shift p-8 text-white overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse-slow" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
+
+            {/* Close button */}
+            <button
+              onClick={() => setShow3DPopup(false)}
+              className="absolute top-4 right-4 p-3 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:rotate-90 z-20"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header content */}
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
+                  <Sparkles className="w-10 h-10" />
+                </div>
+                <div>
+                  <h2 className="text-4xl font-bold mb-2 flex items-center gap-3">
+                    3D Product Preview
+                    <Badge variant="secondary" className="bg-white/20 text-white border-0 animate-pulse">
+                      Interactive
+                    </Badge>
+                  </h2>
+                  <p className="text-white/90 text-lg">
+                    Upload your image and visualize it in stunning 3D • Drag to rotate • Scroll to zoom
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-8 max-h-[calc(95vh-200px)] overflow-y-auto">
+            <div className="grid lg:grid-cols-12 gap-6">
+              {/* Left Column: 3D Viewer (Takes up 7/12 columns) */}
+              <div className="lg:col-span-8 flex flex-col gap-4">
+                <Card className="border-2 border-primary/30 overflow-hidden shadow-xl flex-1 min-h-[500px] relative">
+                  <CardContent className="p-0 h-full">
+                    <div className="absolute top-4 left-4 z-10">
+                      <h3 className="text-2xl font-bold mb-1 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-lg inline-block">3D Preview</h3>
+                      <p className="text-sm text-muted-foreground bg-white/80 backdrop-blur-sm px-3 py-1 rounded-lg inline-block mt-1">
+                        Drag to rotate • Scroll to zoom
+                      </p>
+                    </div>
+                    {previewImage && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <Badge variant="secondary" className="animate-pulse shadow-lg">
+                          <Eye className="w-3 h-3 mr-1" />
+                          Live Preview
+                        </Badge>
+                      </div>
+                    )}
+                    <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100">
+                      <ThreeDViewer
+                        productType={selectedProduct}
+                        userImage={previewImage}
+                      />
+                      {!previewImage && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/5 backdrop-blur-sm pointer-events-none">
+                          <div className="text-center p-8 bg-background/90 rounded-xl shadow-lg">
+                            <Upload className="w-16 h-16 mx-auto mb-4 text-muted-foreground animate-bounce" />
+                            <p className="text-lg font-semibold mb-2">Upload an image to preview</p>
+                            <p className="text-sm text-muted-foreground">
+                              Your photo will appear here in 3D
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Right Column: Controls (Takes up 5/12 columns) */}
+              <div className="lg:col-span-4 space-y-6">
+                {/* Image Upload Card */}
+                <Card className="border-2 border-dashed border-primary/30 hover:border-primary/60 transition-all duration-300 overflow-hidden group">
+                  <CardContent className="p-6">
+                    <div className="text-center space-y-4">
+                      <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 group-hover:from-primary/20 group-hover:to-accent/20 transition-all duration-300">
+                        <Upload className="w-8 h-8 text-primary group-hover:scale-110 transition-transform duration-300" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold mb-1">Upload Your Photo</h3>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          Choose an image to preview
+                        </p>
+                      </div>
+                      <input
+                        type="file"
+                        ref={popupFileInputRef}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 5 * 1024 * 1024) {
+                              toast.error("Image size should be less than 5MB");
+                              return;
+                            }
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setPreviewImage(event.target?.result);
+                              toast.success("Image uploaded successfully!");
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        accept="image/*"
+                        className="hidden"
+                      />
+                      <Button
+                        onClick={() => popupFileInputRef.current?.click()}
+                        className="w-full group/upload"
+                      >
+                        <Upload className="w-4 h-4 mr-2 group-hover/upload:scale-110 transition-transform" />
+                        {previewImage ? 'Change Image' : 'Select Image'}
+                      </Button>
+                      {previewImage && (
+                        <div className="mt-2 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+                          <p className="text-xs text-green-600 dark:text-green-400 flex items-center justify-center gap-2">
+                            <CheckCircle className="w-3 h-3" />
+                            Image loaded!
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Product Selector Card */}
+                <Card className="border-2 border-primary/30 overflow-hidden flex-1">
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-xl bg-gradient-to-br from-accent/10 to-primary/10">
+                          <Frame className="w-6 h-6 text-accent" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold">Product Type</h3>
+                          <p className="text-xs text-muted-foreground">
+                            Select display style
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                        {[
+                          { value: 'frame', label: 'Photo Frame', icon: Frame, desc: 'Classic framed print' },
+                          { value: 'magazine', label: 'Magazine', icon: BookOpen, desc: 'Magazine-style book' },
+                          { value: 'calendar', label: 'Calendar', icon: Calendar, desc: 'Custom calendar' },
+                          { value: 'album', label: 'Album', icon: Image, desc: 'Photo album' }
+                        ].map((product) => (
+                          <button
+                            key={product.value}
+                            onClick={() => setSelectedProduct(product.value)}
+                            className={`w-full p-3 rounded-xl border-2 transition-all duration-300 text-left group/product ${selectedProduct === product.value
+                                ? 'border-primary bg-primary/10 shadow-md scale-[1.02]'
+                                : 'border-border hover:border-primary/50 hover:bg-primary/5'
+                              }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`p-2 rounded-lg transition-colors ${selectedProduct === product.value
+                                  ? 'bg-primary text-primary-foreground'
+                                  : 'bg-muted group-hover/product:bg-primary/20'
+                                }`}>
+                                <product.icon className="w-4 h-4" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-semibold text-sm">{product.label}</div>
+                                <div className="text-[10px] text-muted-foreground">{product.desc}</div>
+                              </div>
+                              {selectedProduct === product.value && (
+                                <CheckCircle className="w-4 h-4 text-primary animate-scale-in" />
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-3 pt-2">
+                  <Button
+                    size="lg"
+                    onClick={() => {
+                      if (!previewImage) {
+                        toast.error("Please upload an image first!");
+                        return;
+                      }
+                      handleOrder(`${selectedProduct.charAt(0).toUpperCase() + selectedProduct.slice(1)} Print`, null);
+                      setShow3DPopup(false);
+                    }}
+                    className="w-full group/order shadow-lg hover:shadow-xl transition-all"
+                    disabled={!previewImage}
+                  >
+                    <Phone className="w-5 h-5 mr-2 group-hover/order:scale-110 transition-transform" />
+                    Order This Product
+                    <Sparkles className="ml-2 w-5 h-5 group-hover/order:rotate-12 transition-transform" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShow3DPopup(false)}
+                    className="w-full"
+                  >
+                    Close Preview
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </DialogContent>
@@ -885,6 +1110,83 @@ const Prints = () => {
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
+        
+        /* Try Now Button */
+        .try-now-btn {
+          background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+          position: relative;
+        }
+        
+        .try-now-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 0.75rem;
+          background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 100%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .try-now-btn:hover::before {
+          opacity: 1;
+        }
+        
+        .try-now-btn::after {
+          content: '';
+          position: absolute;
+          inset: -3px;
+          border-radius: 0.75rem;
+          background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
+          background-size: 200% 200%;
+          z-index: -1;
+          animation: gradientShift 3s ease infinite;
+          opacity: 0.6;
+          filter: blur(8px);
+        }
+        
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        /* Gradient Shift Animation */
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        .animate-gradient-shift {
+          animation: gradient-shift 5s ease infinite;
+        }
+        
+        /* Pulse Slow Animation */
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 4s ease-in-out infinite;
+        }
+        
+        /* Scale In Animation */
+        @keyframes scale-in {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out;
+        }
+        
         @keyframes fade-in {
           from {
             opacity: 0;
