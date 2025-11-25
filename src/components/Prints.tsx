@@ -165,10 +165,44 @@ const Prints = () => {
   };
 
   const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const videoRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [initialTime, setInitialTime] = useState(0);
+
+  const handleVideoDragStart = (e) => {
+    setIsDragging(true);
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    setStartX(clientX);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setInitialTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleVideoDragMove = (e) => {
+    if (!isDragging || !videoRef.current) return;
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const delta = clientX - startX;
+    const sensitivity = 0.01;
+    videoRef.current.currentTime = initialTime + (delta * sensitivity);
+  };
+
+  const handleVideoDragEnd = () => {
+    setIsDragging(false);
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
 
   const handle3DView = (variant) => {
     if (variant.name === "Modern Photo Magazine") {
       setShowPdfViewer(true);
+      return;
+    }
+    if (variant.name === "Table Calendar") {
+      setShowVideoPopup(true);
       return;
     }
     setSelected3DProduct(variant);
@@ -794,6 +828,41 @@ const Prints = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Video Popup Dialog */}
+      <Dialog open={showVideoPopup} onOpenChange={setShowVideoPopup}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 rounded-xl">
+          <div className="relative w-full aspect-video group">
+            <video
+              ref={videoRef}
+              src="/prints/table_calender.mp4"
+              className="w-full h-full object-contain cursor-grab active:cursor-grabbing"
+              autoPlay
+              loop
+              muted
+              playsInline
+              onMouseDown={handleVideoDragStart}
+              onMouseMove={handleVideoDragMove}
+              onMouseUp={handleVideoDragEnd}
+              onMouseLeave={handleVideoDragEnd}
+              onTouchStart={handleVideoDragStart}
+              onTouchMove={handleVideoDragMove}
+              onTouchEnd={handleVideoDragEnd}
+            />
+
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+              Drag to rotate view
+            </div>
+
+            <button
+              onClick={() => setShowVideoPopup(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </DialogContent>
       </Dialog>

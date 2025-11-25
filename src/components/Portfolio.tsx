@@ -65,7 +65,7 @@ const galleryData = {
       "/images/babyshower/5.jpeg",
       "/images/babyshower/6.jpeg",
     ],
-    videos: ["/videos/maternity1.mp4"],
+    videos: [],
   },
   "House Warming": {
     images: ["/images/wed/Wedding/14.jpeg", "/images/wed/Wedding/15.jpeg", "/images/wed/Wedding/16.jpeg"],
@@ -100,7 +100,7 @@ const galleryData = {
       "/images/birthday/25.jpeg",
       "/images/birthday/26.jpeg",
     ],
-    videos: ["/videos/birthday1.mp4"],
+    videos: [],
   },
   Stories: {
     images: [
@@ -223,7 +223,7 @@ const services = [
   { icon: Home, title: "House Warming", category: "House Warming", video: "/gif/housewarming.mp4" },
   { icon: Cake, title: "Birthday", category: "Birthday", video: "/gif/birthday.mp4" },
   { icon: PartyPopper, title: "Concerts", category: "Concert", video: "/gif/concert.mp4" },
-  { icon: PartyPopper, title: "Annaprashna", category: "Annaprashna", video: "/gif/concert.mp4" },
+  { icon: Baby, title: "Annaprashna", category: "Annaprashna", video: "/gif/anna.mp4" },
 ];
 
 export default function GalleryPage() {
