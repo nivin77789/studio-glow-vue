@@ -69,38 +69,22 @@ const printTypes: PrintType[] = [
     description: "Beautiful custom frames in various styles",
     features: ["Museum-quality materials", "Custom sizing available", "UV protection glass", "Professional mounting"],
     variants: [
-      { name: "Classic Wooden Frame", image: frameClassic },
-      { name: "Modern Metal Frame", image: frameModern },
-      { name: "Vintage Gold Frame", image: frameClassic },
-      { name: "Minimalist Black Frame", image: frameModern },
-      { name: "Rustic Oak Frame", image: frameClassic },
-      { name: "Contemporary White Frame", image: frameModern }
+      { name: "Acrylic Frame", image: "/prints/acr.png" },
+      { name: "Modern White Frame", image: "/prints/white_canvas.png" },
+      { name: "Modern Black Canvas", image: "/prints/blk_canvas.png" },
+      { name: "Fabric Frames", image: "/prints/fabric_frame.png" },
+      { name: "Wooden Frames", image: "/prints/wodden_frame.png" }
     ]
   },
   {
-    id: "portrait-album",
-    name: "Portrait Albums",
+    id: "albums",
+    name: "Premium Albums",
     icon: BookOpen,
-    description: "Elegant portrait orientation photo albums",
-    features: ["Leather bound covers", "Archival quality paper", "Customizable layouts", "Premium finish"],
+    description: "Elegant photo albums to preserve your memories",
+    features: ["Portrait & Landscape options", "Leather bound covers", "Lay-flat binding", "Premium paper quality"],
     variants: [
-      { name: "Leather Bound Portrait", image: albumPortrait },
-      { name: "Classic Portrait Album", image: albumPortrait },
-      { name: "Premium Portrait Collection", image: albumPortrait },
-      { name: "Modern Portrait Book", image: albumPortrait }
-    ]
-  },
-  {
-    id: "landscape-album",
-    name: "Landscape Albums",
-    icon: BookOpen,
-    description: "Stunning landscape orientation albums",
-    features: ["Wide format pages", "Panoramic spreads", "Hardcover binding", "Photo-safe materials"],
-    variants: [
-      { name: "Panoramic Landscape Album", image: albumLandscape },
-      { name: "Wide Format Collection", image: albumLandscape },
-      { name: "Premium Landscape Book", image: albumLandscape },
-      { name: "Modern Landscape Edition", image: albumLandscape }
+      { name: "Portrait Album", image: "/prints/potrate_album.png" },
+      { name: "Landscape Album", image: "/prints/lanscape_album.png" }
     ]
   },
   {
@@ -110,10 +94,8 @@ const printTypes: PrintType[] = [
     description: "Personalized calendars with your memories",
     features: ["12-month layouts", "Custom start date", "High-quality printing", "Spiral or saddle binding"],
     variants: [
-      { name: "Wall Calendar 2024", image: calendarImg },
-      { name: "Desk Calendar", image: calendarImg },
-      { name: "Premium Wall Calendar", image: calendarImg },
-      { name: "Photo Calendar Collection", image: calendarImg }
+      { name: "Wall Calendar", image: "/prints/wall_calender.png" },
+      { name: "Table Calendar", image: "/prints/table_calender.png" }
     ]
   },
   {
@@ -123,23 +105,18 @@ const printTypes: PrintType[] = [
     description: "Professional magazine-style photo books",
     features: ["Glossy or matte finish", "Editorial layouts", "Custom page count", "Professional binding"],
     variants: [
-      { name: "Glossy Magazine Format", image: magazineImg },
-      { name: "Matte Finish Magazine", image: magazineImg },
-      { name: "Premium Photo Journal", image: magazineImg },
-      { name: "Modern Photo Magazine", image: magazineImg }
+      { name: "Modern Photo Magazine", image: "/prints/mag.png" }
     ]
   },
   {
-    id: "canvas",
-    name: "Canvas Prints",
+    id: "engravings",
+    name: "Custom Engravings",
     icon: Sparkles,
-    description: "Museum-quality canvas prints",
-    features: ["Gallery-wrap finish", "Fade-resistant inks", "Ready to hang", "Multiple sizes"],
+    description: "Laser-engraved wooden masterpieces",
+    features: ["Precision laser engraving", "Premium wood selection", "Custom text & designs", "Durable finish"],
     variants: [
-      { name: "Stretched Canvas", image: frameModern },
-      { name: "Framed Canvas Print", image: frameClassic },
-      { name: "Gallery Wrap Canvas", image: frameModern },
-      { name: "Premium Canvas Collection", image: frameClassic }
+      { name: "Wooden Wall Portrait", image: "/prints/wooden_engraving.png" },
+      { name: "Wooden Table Engraving Stand", image: "/prints/wooden_table_engraving.png" }
     ]
   }
 ];
@@ -187,7 +164,13 @@ const Prints = () => {
     fileInputRef.current?.click();
   };
 
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
+
   const handle3DView = (variant) => {
+    if (variant.name === "Modern Photo Magazine") {
+      setShowPdfViewer(true);
+      return;
+    }
     setSelected3DProduct(variant);
     setShow3DViewer(true);
   };
@@ -399,8 +382,17 @@ const Prints = () => {
                           className="flex-1"
                           size="sm"
                         >
-                          <Maximize2 className="w-4 h-4 mr-2" />
-                          3D View
+                          {variant.name === "Modern Photo Magazine" ? (
+                            <>
+                              <Image className="w-4 h-4 mr-2" />
+                              Show Sample
+                            </>
+                          ) : (
+                            <>
+                              <Maximize2 className="w-4 h-4 mr-2" />
+                              3D View
+                            </>
+                          )}
                         </Button>
                         <Button
                           onClick={() => handleOrder(selectedPrint.name, variant.name)}
@@ -466,6 +458,66 @@ const Prints = () => {
               >
                 Order This Product
                 <Sparkles className="ml-2 w-4 h-4 group-hover:rotate-12 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* PDF Viewer Dialog */}
+      <Dialog open={showPdfViewer} onOpenChange={setShowPdfViewer}>
+        <DialogContent className="max-w-6xl h-[90vh] p-0 overflow-hidden rounded-xl bg-slate-900/95 backdrop-blur-xl border-slate-800">
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-black/20">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/20 rounded-lg">
+                  <Image className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Modern Photo Magazine</h3>
+                  <p className="text-sm text-white/60">Sample Preview</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowPdfViewer(false)}
+                  className="text-white/70 hover:text-white hover:bg-white/10"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 bg-slate-900 relative">
+              <iframe
+                src="/pdf/magzin.pdf"
+                className="w-full h-full border-0"
+                title="Magazine Preview"
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-white/10 bg-black/20 flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowPdfViewer(false)}
+                className="border-white/10 text-white hover:bg-white/5 hover:text-white"
+              >
+                Close Preview
+              </Button>
+              <Button
+                onClick={() => {
+                  handleOrder("Modern Photo Magazine", "Sample View");
+                  setShowPdfViewer(false);
+                }}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                Order This Magazine
+                <Sparkles className="ml-2 w-4 h-4" />
               </Button>
             </div>
           </div>

@@ -11,6 +11,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Faq from "@/components/faq";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import OurTeam from "@/components/OurTeam";
 
 const Index = () => {
   const [shutter, setShutter] = useState(false);
@@ -282,6 +283,7 @@ const Index = () => {
       <Collaborations />
       <Prints />
       <Testimonials />
+      <OurTeam />
       <Faq />
       <Contact />
       <MobileBottomNav />
