@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const ContactPage = () => {
   return (
@@ -24,6 +25,7 @@ const ContactPage = () => {
       <div className="pt-20">
         <Contact />
       </div>
+      <MobileBottomNav />
       <Footer />
     </div>
   );

@@ -123,13 +123,18 @@ const Header = () => {
             </Button>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile Theme Toggle */}
+          <div className="md:hidden">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="text-primary hover:text-accent hover:bg-primary/10 transition-all duration-300"
+              className={cn(
+                "transition-all duration-300",
+                isHomePage && !isScrolled
+                  ? "text-white hover:text-white/80 hover:bg-white/10"
+                  : "text-primary hover:text-accent hover:bg-primary/10"
+              )}
             >
               {isDarkMode ? (
                 <Sun className="w-5 h-5" />
@@ -137,36 +142,9 @@ const Header = () => {
                 <Moon className="w-5 h-5" />
               )}
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={getMobileMenuColor()}
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </Button>
           </div>
-        </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <nav className="md:hidden py-4 animate-fade-in">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className={`block py-3 transition-colors font-medium ${getTextColor()}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
-        )}
+        </div>
       </div>
     </header>
   );

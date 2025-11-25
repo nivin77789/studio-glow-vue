@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Portfolio from "@/components/Portfolio";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const PortfolioPage = () => {
   return (
@@ -10,6 +11,7 @@ const PortfolioPage = () => {
       <div className="pt-20">
         <Portfolio />
       </div>
+      <MobileBottomNav />
       <Footer />
     </div>
   );

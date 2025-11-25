@@ -15,26 +15,28 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       await addDoc(collection(db, "contactSubmissions"), {
         name: formData.name,
         email: formData.email,
+        phone: formData.phone,
         message: formData.message,
         timestamp: serverTimestamp(),
         status: "unread"
       });
-      
+
       toast({
         title: "Message Sent!",
         description: "We'll get back to you as soon as possible.",
       });
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
       toast({
         title: "Error",
@@ -100,6 +102,18 @@ const Contact = () => {
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Phone Number</label>
+                  <Input
+                    type="tel"
+                    placeholder="Your phone number"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
                     }
                     required
                   />

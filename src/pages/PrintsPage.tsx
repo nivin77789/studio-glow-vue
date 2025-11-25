@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Prints from "@/components/Prints";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const PrintsPage = () => {
   return (
@@ -15,6 +16,7 @@ const PrintsPage = () => {
       <div className="pt-20">
         <Prints />
       </div>
+      <MobileBottomNav />
       <Footer />
     </div>
   );

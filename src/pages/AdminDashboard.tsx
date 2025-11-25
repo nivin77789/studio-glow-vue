@@ -16,6 +16,7 @@ interface ContactSubmission {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   message: string;
   timestamp: any;
   status: string;
@@ -837,6 +838,12 @@ const AdminDashboard = () => {
                                 )}
                               </div>
                               <p className="text-sm text-muted-foreground">{submission.email}</p>
+                              {submission.phone && (
+                                <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                                  <Phone className="w-3 h-3" />
+                                  {submission.phone}
+                                </p>
+                              )}
                               <p className="text-xs text-muted-foreground mt-1">{formatDate(submission.timestamp)}</p>
                             </div>
                             <div className="flex gap-2">
@@ -911,55 +918,55 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
-            {/* Ratings Section */}
-            <TabsContent value="ratings">
-              <Card className="animate-scale-in">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Star className="w-5 h-5" />
-                    Customer Ratings
-                    <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
-                      {ratingsList.length} total
-                    </span>
-                  </CardTitle>
-                  <CardDescription>View ratings left by customers</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {ratingsList.length === 0 ? (
-                      <p className="text-center text-muted-foreground py-8">No ratings yet</p>
-                    ) : (
-                      ratingsList.map((r) => (
-                        <Card key={r.id} className="p-4">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h4 className="font-semibold">{r.customerName || 'Anonymous'}</h4>
-                                <div className="inline-flex items-center gap-1">
-                                  {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star key={i} className={`w-4 h-4 ${i < (r.rating || 0) ? 'text-amber-500' : 'text-gray-300'}`} />
-                                  ))}
-                                </div>
-                                <span className="text-xs text-muted-foreground ml-3">{r.page}</span>
+          {/* Ratings Section */}
+          <TabsContent value="ratings">
+            <Card className="animate-scale-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5" />
+                  Customer Ratings
+                  <span className="inline-flex items-center rounded-full border-transparent bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                    {ratingsList.length} total
+                  </span>
+                </CardTitle>
+                <CardDescription>View ratings left by customers</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {ratingsList.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No ratings yet</p>
+                  ) : (
+                    ratingsList.map((r) => (
+                      <Card key={r.id} className="p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h4 className="font-semibold">{r.customerName || 'Anonymous'}</h4>
+                              <div className="inline-flex items-center gap-1">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star key={i} className={`w-4 h-4 ${i < (r.rating || 0) ? 'text-amber-500' : 'text-gray-300'}`} />
+                                ))}
                               </div>
-                              {r.comment && (
-                                <p className="text-sm text-muted-foreground mb-2">{r.comment}</p>
-                              )}
-                              <p className="text-xs text-muted-foreground">Submitted: {formatDate(r.createdAt)}</p>
+                              <span className="text-xs text-muted-foreground ml-3">{r.page}</span>
                             </div>
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="destructive" onClick={async () => { try { await deleteDoc(doc(db, 'ratings', r.id)); toast.success('Rating deleted'); } catch { toast.error('Failed to delete rating'); } }}>
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
+                            {r.comment && (
+                              <p className="text-sm text-muted-foreground mb-2">{r.comment}</p>
+                            )}
+                            <p className="text-xs text-muted-foreground">Submitted: {formatDate(r.createdAt)}</p>
                           </div>
-                        </Card>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="destructive" onClick={async () => { try { await deleteDoc(doc(db, 'ratings', r.id)); toast.success('Rating deleted'); } catch { toast.error('Failed to delete rating'); } }}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Gallery Videos Section */}
           <TabsContent value="gallery-videos">

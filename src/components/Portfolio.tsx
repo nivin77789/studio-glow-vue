@@ -135,7 +135,7 @@ const galleryData = {
     ],
     videos: [],
   },
-  
+
   Haldi: {
     images: [
       "/images/wed/Haldi/1.jpeg",
@@ -266,15 +266,15 @@ export default function GalleryPage() {
   const closeLightbox = () => setLightboxItem(null);
 
   const nextItem = () => {
-    const items = lightboxItem === "image" 
-      ? galleryData[selectedCategory].images 
+    const items = lightboxItem === "image"
+      ? galleryData[selectedCategory].images
       : getCombinedVideos(selectedCategory);
     setLightboxIndex((prev) => (prev + 1) % items.length);
   };
 
   const prevItem = () => {
-    const items = lightboxItem === "image" 
-      ? galleryData[selectedCategory].images 
+    const items = lightboxItem === "image"
+      ? galleryData[selectedCategory].images
       : getCombinedVideos(selectedCategory);
     setLightboxIndex((prev) => (prev - 1 + items.length) % items.length);
   };
@@ -362,9 +362,9 @@ export default function GalleryPage() {
 
           <div className="relative">
             <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
-              <CarouselContent className="-ml-2 md:-ml-4">
+              <CarouselContent className="-ml-4 md:-ml-6">
                 {services.map((service, index) => (
-                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 sm:basis-1/2 lg:basis-1/4">
+                  <CarouselItem key={index} className="pl-4 md:pl-6 basis-3/4 sm:basis-1/2 lg:basis-1/4">
                     <div
                       className="group hover-lift"
                       onMouseEnter={() => setHoveredIndex(index)}
@@ -393,7 +393,7 @@ export default function GalleryPage() {
                           <source src={service.video} type="video/mp4" />
                         </video>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/40 transition-all duration-500"></div>
-                        
+
                         {/* Icon Badge */}
                         <div className="absolute top-4 right-4 p-3 rounded-xl bg-white/20 backdrop-blur-md group-hover:bg-white/30 transition-all">
                           <service.icon className="w-5 h-5 text-white" />
@@ -407,123 +407,123 @@ export default function GalleryPage() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-                <CarouselPrevious className="-left-6 md:-left-10" />
-                <CarouselNext className="-right-6 md:-right-10" />
-              </Carousel>
-            </div>
+              <CarouselPrevious className="-left-6 md:-left-10" />
+              <CarouselNext className="-right-6 md:-right-10" />
+            </Carousel>
+          </div>
 
-            {/* Category modal opened from the service cards */}
-            {modalOpen && modalCategory && (
-              <div className="fixed inset-0 z-50 bg-black/70">
-                <div className="fixed inset-6 md:inset-12 overflow-hidden">
-                  <div className="h-full w-full rounded-2xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden">
-                    <div className="px-6 py-4 flex items-center justify-between border-b sticky top-0 bg-white dark:bg-slate-900 z-20">
-                      <div>
-                        <h3 className="text-xl font-semibold">{modalCategory}</h3>
-                        <div className="text-sm text-muted-foreground">{(modalGallery?.images || []).length} photos • {getCombinedVideos(modalCategory).length} videos</div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="hidden md:flex items-center gap-2">
-                          <button onClick={() => setActiveTab('images')} className={`px-3 py-1 rounded ${activeTab==='images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
-                          <button onClick={() => setActiveTab('videos')} className={`px-3 py-1 rounded ${activeTab==='videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
-                        </div>
-                        <button onClick={() => setModalOpen(false)} className="px-3 py-2 rounded-md text-sm border">Close</button>
-                      </div>
+          {/* Category modal opened from the service cards */}
+          {modalOpen && modalCategory && (
+            <div className="fixed inset-0 z-50 bg-black/70">
+              <div className="fixed inset-6 md:inset-12 overflow-hidden">
+                <div className="h-full w-full rounded-2xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden">
+                  <div className="px-6 py-4 flex items-center justify-between border-b sticky top-0 bg-white dark:bg-slate-900 z-20">
+                    <div>
+                      <h3 className="text-xl font-semibold">{modalCategory}</h3>
+                      <div className="text-sm text-muted-foreground">{(modalGallery?.images || []).length} photos • {getCombinedVideos(modalCategory).length} videos</div>
                     </div>
-
-                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                      <div className="md:hidden flex gap-2">
-                        <button onClick={() => setActiveTab('images')} className={`flex-1 px-3 py-2 rounded ${activeTab==='images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
-                        <button onClick={() => setActiveTab('videos')} className={`flex-1 px-3 py-2 rounded ${activeTab==='videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
+                    <div className="flex items-center gap-3">
+                      <div className="hidden md:flex items-center gap-2">
+                        <button onClick={() => setActiveTab('images')} className={`px-3 py-1 rounded ${activeTab === 'images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
+                        <button onClick={() => setActiveTab('videos')} className={`px-3 py-1 rounded ${activeTab === 'videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
                       </div>
-
-                      {activeTab === 'images' && (
-                        <div className="masonry columns-2 sm:columns-3 md:columns-4 gap-4">
-                          {(modalGallery?.images || []).map((img, idx) => (
-                            <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
-                              <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
-                                <img src={img} loading="lazy" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {activeTab === 'videos' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                          {getCombinedVideos(modalCategory).map((videoUrl, idx) => (
-                            <div key={idx} className="relative rounded-lg overflow-hidden bg-black text-white shadow-sm">
-                              {isYouTubeUrl(videoUrl) ? (
-                                <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }} className="block w-full h-full">
-                                  <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" className="w-full h-56 object-cover" />
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
-                                      <Play className="w-8 h-8 text-primary" />
-                                    </div>
-                                  </div>
-                                </button>
-                              ) : (
-                                <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }}>
-                                  <video src={videoUrl} className="w-full h-56 object-cover" preload="metadata" />
-                                </button>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      <button onClick={() => setModalOpen(false)} className="px-3 py-2 rounded-md text-sm border">Close</button>
                     </div>
                   </div>
-                </div>
-              </div>
-            )}
 
-            {/* Modal Lightbox for images/videos opened from category modal */}
-            {modalLightboxItem && modalCategory && (
-              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 p-4">
-                <div className="relative w-full max-w-6xl">
-                  <button onClick={() => setModalLightboxItem(null)} className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full z-[10000]">
-                    <X className="w-6 h-6" />
-                  </button>
+                  <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    <div className="md:hidden flex gap-2">
+                      <button onClick={() => setActiveTab('images')} className={`flex-1 px-3 py-2 rounded ${activeTab === 'images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
+                      <button onClick={() => setActiveTab('videos')} className={`flex-1 px-3 py-2 rounded ${activeTab === 'videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
+                    </div>
 
-                  <div className="bg-black rounded-2xl overflow-hidden shadow-2xl z-[10001]">
-                    {modalLightboxItem === 'image' ? (
-                      <img src={(modalGallery?.images || [])[modalLightboxIndex]} className="w-full max-h-[80vh] object-contain mx-auto" />
-                    ) : (
-                      (() => {
-                        const items = getCombinedVideos(modalCategory);
-                        const url = items[modalLightboxIndex];
-                        if (isYouTubeUrl(url)) {
-                          const id = getYouTubeId(url);
-                          const embed = id ? `https://www.youtube.com/embed/${id}?rel=0&autoplay=1` : url;
-                          return (
-                            <iframe
-                              src={embed}
-                              className="w-full h-[75vh]"
-                              title="YouTube video"
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                              loading="lazy"
-                            />
-                          );
-                        }
-                        return <video src={url} controls autoPlay className="w-full h-[75vh] object-contain" />;
-                      })()
+                    {activeTab === 'images' && (
+                      <div className="masonry columns-2 sm:columns-3 md:columns-4 gap-4">
+                        {(modalGallery?.images || []).map((img, idx) => (
+                          <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
+                            <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
+                              <img src={img} loading="lazy" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {activeTab === 'videos' && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {getCombinedVideos(modalCategory).map((videoUrl, idx) => (
+                          <div key={idx} className="relative rounded-lg overflow-hidden bg-black text-white shadow-sm">
+                            {isYouTubeUrl(videoUrl) ? (
+                              <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }} className="block w-full h-full">
+                                <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" className="w-full h-56 object-cover" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
+                                    <Play className="w-8 h-8 text-primary" />
+                                  </div>
+                                </div>
+                              </button>
+                            ) : (
+                              <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }}>
+                                <video src={videoUrl} className="w-full h-56 object-cover" preload="metadata" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-          </div>
-        </section>
-      );
-    }
+          {/* Modal Lightbox for images/videos opened from category modal */}
+          {modalLightboxItem && modalCategory && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 p-4">
+              <div className="relative w-full max-w-6xl">
+                <button onClick={() => setModalLightboxItem(null)} className="absolute -top-2 right-0 md:-right-2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full z-[10000]">
+                  <X className="w-6 h-6" />
+                </button>
+
+                <div className="bg-black rounded-2xl overflow-hidden shadow-2xl z-[10001]">
+                  {modalLightboxItem === 'image' ? (
+                    <img src={(modalGallery?.images || [])[modalLightboxIndex]} className="w-full max-h-[80vh] object-contain mx-auto" />
+                  ) : (
+                    (() => {
+                      const items = getCombinedVideos(modalCategory);
+                      const url = items[modalLightboxIndex];
+                      if (isYouTubeUrl(url)) {
+                        const id = getYouTubeId(url);
+                        const embed = id ? `https://www.youtube.com/embed/${id}?rel=0&autoplay=1` : url;
+                        return (
+                          <iframe
+                            src={embed}
+                            className="w-full h-[75vh]"
+                            title="YouTube video"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                            loading="lazy"
+                          />
+                        );
+                      }
+                      return <video src={url} controls autoPlay className="w-full h-[75vh] object-contain" />;
+                    })()
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </section>
+    );
+  }
 
   // Gallery View with Slidable Carousels
   return (
     <section className="py-12 relative overflow-hidden">
-        {/* background removed for cleaner look */}
+      {/* background removed for cleaner look */}
 
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header with Back Button */}
@@ -537,7 +537,7 @@ export default function GalleryPage() {
             </div>
             <span className="font-medium">Back to Categories</span>
           </button>
-          
+
           <div className="flex items-center gap-4 mb-2">
             <h2 className="text-3xl md:text-4xl font-bold gradient-text">
               {selectedCategory} Gallery
@@ -560,11 +560,10 @@ export default function GalleryPage() {
         <div className="flex gap-4 mb-8 border-b border-gray-200 dark:border-slate-700">
           <button
             onClick={() => setActiveTab("images")}
-            className={`pb-3 px-4 font-semibold transition-all flex items-center gap-2 relative ${
-              activeTab === "images"
+            className={`pb-3 px-4 font-semibold transition-all flex items-center gap-2 relative ${activeTab === "images"
                 ? "text-primary"
                 : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
+              }`}
           >
             <Image className="w-4 h-4" />
             Images ({currentGallery.images.length})
@@ -574,11 +573,10 @@ export default function GalleryPage() {
           </button>
           <button
             onClick={() => setActiveTab("videos")}
-            className={`pb-3 px-4 font-semibold transition-all flex items-center gap-2 relative ${
-              activeTab === "videos"
+            className={`pb-3 px-4 font-semibold transition-all flex items-center gap-2 relative ${activeTab === "videos"
                 ? "text-primary"
                 : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
+              }`}
           >
             <Video className="w-4 h-4" />
             Videos ({getCombinedVideos(selectedCategory).length})
@@ -628,9 +626,9 @@ export default function GalleryPage() {
           <div className="animate-fade-in">
             {getCombinedVideos(selectedCategory).length > 0 ? (
               <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
-                <CarouselContent className="-ml-2 md:-ml-4">
+                <CarouselContent className="-ml-4 md:-ml-6">
                   {getCombinedVideos(selectedCategory).map((video, idx) => (
-                    <CarouselItem key={idx} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={idx} className="pl-4 md:pl-6 basis-full sm:basis-1/2 lg:basis-1/3">
                       <div
                         onClick={() => openLightbox("video", idx)}
                         className="relative aspect-video rounded-xl overflow-hidden cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700"
@@ -649,7 +647,7 @@ export default function GalleryPage() {
                             <Play className="w-10 h-10 text-primary ml-1" fill="currentColor" />
                           </div>
                         </div>
-                        
+
                         {/* Video Badge */}
                         <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full text-white text-xs font-medium flex items-center gap-1.5">
                           <Video className="w-3.5 h-3.5" />
@@ -748,23 +746,23 @@ export default function GalleryPage() {
               {/* Navigation Arrows */}
               {((lightboxItem === "image" && currentGallery.images.length > 1) ||
                 (lightboxItem === "video" && getCombinedVideos(selectedCategory).length > 1)) && (
-                <>
-                  <button
-                    onClick={prevItem}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:scale-110 group"
-                    aria-label="Previous"
-                  >
-                    <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                  </button>
-                  <button
-                    onClick={nextItem}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:scale-110 group"
-                    aria-label="Next"
-                  >
-                    <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                  </button>
-                </>
-              )}
+                  <>
+                    <button
+                      onClick={prevItem}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:scale-110 group"
+                      aria-label="Previous"
+                    >
+                      <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    </button>
+                    <button
+                      onClick={nextItem}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all hover:scale-110 group"
+                      aria-label="Next"
+                    >
+                      <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    </button>
+                  </>
+                )}
             </div>
 
             {/* Thumbnails */}
@@ -774,11 +772,10 @@ export default function GalleryPage() {
                   <button
                     key={idx}
                     onClick={() => setLightboxIndex(idx)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      idx === lightboxIndex
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${idx === lightboxIndex
                         ? "border-primary ring-2 ring-primary/60 scale-105"
                         : "border-white/20 hover:border-white/50"
-                    }`}
+                      }`}
                   >
                     <img
                       src={img}
@@ -793,7 +790,7 @@ export default function GalleryPage() {
         </div>
       )}
 
-      
+
 
       <style>{`
         @keyframes fadeIn {

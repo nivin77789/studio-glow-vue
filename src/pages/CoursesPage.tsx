@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Courses from "@/components/Courses";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const CoursesPage = () => {
   return (
@@ -10,6 +11,7 @@ const CoursesPage = () => {
       <div className="pt-20">
         <Courses />
       </div>
+      <MobileBottomNav />
       <Footer />
     </div>
   );

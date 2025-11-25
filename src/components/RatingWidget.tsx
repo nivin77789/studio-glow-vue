@@ -37,26 +37,26 @@ export default function RatingWidget() {
 
   return (
     <div>
-      {/* Floating button */}
-      <div className="fixed bottom-6 left-6 z-50">
+      {/* Floating button - positioned above chatbot on mobile/tablet */}
+      <div className="fixed bottom-36 md:bottom-6 right-4 md:left-6 z-50">
         <div className="relative">
           <button
             aria-label="Rate our service"
-            className="w-12 h-12 rounded-full bg-amber-500 text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-500/70 md:bg-amber-500 dark:bg-amber-500/60 text-white shadow-lg flex items-center justify-center hover:scale-105 transition-all hover:bg-amber-500 dark:hover:bg-amber-500/80 backdrop-blur-sm"
             onClick={() => setOpen((v) => !v)}
             title={submitted ? "Thanks for rating" : "Rate our service"}
           >
             {submitted ? (
-              <Star className="w-5 h-5 text-white" />
+              <Star className="w-4 h-4 md:w-5 md:h-5 text-white fill-white" />
             ) : (
-              <span className="text-sm font-semibold">★</span>
+              <Star className="w-4 h-4 md:w-5 md:h-5" />
             )}
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="fixed bottom-20 left-6 z-50 w-[320px] max-w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-700">
+        <div className="fixed bottom-20 left-6 z-50 w-[320px] max-w-full bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
             <div className="font-medium">Rate Our Service</div>
             <div className="flex items-center gap-2">
@@ -86,13 +86,13 @@ export default function RatingWidget() {
 
                 <div className="mb-3 text-sm text-muted-foreground">How would you rate your experience?</div>
                 <div className="flex items-center gap-2 mb-3">
-                  {[1,2,3,4,5].map((n) => (
+                  {[1, 2, 3, 4, 5].map((n) => (
                     <button
                       key={n}
                       onClick={() => setRating(n)}
                       onMouseEnter={() => setHover(n)}
                       onMouseLeave={() => setHover(null)}
-                      className={`p-2 rounded-md transition-colors ${ (hover ?? rating ?? 0) >= n ? 'bg-amber-500 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300' }`}
+                      className={`p-2 rounded-md transition-colors ${(hover ?? rating ?? 0) >= n ? 'bg-amber-500 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'}`}
                       aria-label={`Rate ${n}`}
                     >
                       <Star className="w-5 h-5" />

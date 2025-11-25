@@ -9,14 +9,15 @@ import {
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Camera, 
-  Trophy, 
-  Calendar, 
-  Users, 
-  Sparkles, 
+import {
+  Camera,
+  Trophy,
+  Calendar,
+  Users,
+  Sparkles,
   Award,
   MapPin,
   Clock,
@@ -111,7 +112,7 @@ const ExperiencePage = () => {
       {/* Animated Photography Background */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-accent/5" />
-        
+
         {/* Floating camera elements */}
         <div className="absolute top-20 left-10 w-20 h-20 opacity-20 animate-float">
           <Camera className="w-full h-full text-primary" />
@@ -125,14 +126,14 @@ const ExperiencePage = () => {
         <div className="absolute bottom-20 right-1/3 w-20 h-20 opacity-20 animate-float" style={{ animationDelay: '1.5s' }}>
           <Award className="w-full h-full text-accent" />
         </div>
-        
+
         {/* Light effects */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-tl from-accent/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
       </div>
 
       <Header />
-      
+
       <main className="pt-20">
         {/* Hero Banner */}
         <section className="relative py-32 overflow-hidden">
@@ -145,7 +146,7 @@ const ExperiencePage = () => {
               opacity: 0.3
             }} />
           </div>
-          
+
           <div className="container mx-auto px-4 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -157,16 +158,16 @@ const ExperiencePage = () => {
                 <Sparkles className="w-5 h-5 text-white animate-pulse" />
                 <span className="text-white font-semibold">Upcoming Event Alert!</span>
               </div>
-              
+
               <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
                 Photography Competition 2025
               </h1>
-              
+
               <p className="text-xl md:text-2xl text-white/90 mb-8 drop-shadow-lg">
-                Join India's biggest photography competition with prizes worth ₹2 Lakhs! 
+                Join India's biggest photography competition with prizes worth ₹2 Lakhs!
                 Registration closes on March 31st, 2025
               </p>
-              
+
               <div className="flex flex-wrap gap-4 justify-center">
                 <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 shadow-2xl">
                   <Trophy className="w-5 h-5 mr-2" />
@@ -179,7 +180,7 @@ const ExperiencePage = () => {
               </div>
             </motion.div>
           </div>
-          
+
           {/* Floating elements */}
           <div className="absolute top-10 left-10 w-32 h-32 opacity-30 animate-float">
             <Camera className="w-full h-full text-white" />
@@ -206,57 +207,57 @@ const ExperiencePage = () => {
             <div className="relative mb-8">
               <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
                 <CarouselContent className="-ml-2 md:-ml-4">
-              {workshops.map((workshop, index) => (
-                <CarouselItem key={workshop.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isVisible ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="group overflow-hidden hover-lift border-0 shadow-lg h-full">
-                    <div className="relative overflow-hidden h-48">
-                      <img 
-                        src={workshop.image} 
-                        alt={workshop.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <div className="absolute bottom-3 left-3 right-3">
-                        <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs rounded-full mb-2">
-                          {workshop.category}
-                        </span>
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-sm mb-3 group-hover:text-primary transition-colors">
-                        {workshop.title}
-                      </h3>
-                      <div className="space-y-2 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-primary" />
-                          {workshop.date}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-primary" />
-                          {workshop.time}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-primary" />
-                          {workshop.location}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4 text-primary" />
-                          {workshop.spots} spots left
-                        </div>
-                      </div>
-                      <Button className="w-full mt-4" size="sm">
-                        Book Now
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-                </CarouselItem>
-              ))}
+                  {workshops.map((workshop, index) => (
+                    <CarouselItem key={workshop.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isVisible ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Card className="group overflow-hidden hover-lift border-0 shadow-lg h-full">
+                          <div className="relative overflow-hidden h-48">
+                            <img
+                              src={workshop.image}
+                              alt={workshop.title}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                            <div className="absolute bottom-3 left-3 right-3">
+                              <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs rounded-full mb-2">
+                                {workshop.category}
+                              </span>
+                            </div>
+                          </div>
+                          <CardContent className="p-4">
+                            <h3 className="font-semibold text-sm mb-3 group-hover:text-primary transition-colors">
+                              {workshop.title}
+                            </h3>
+                            <div className="space-y-2 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4 text-primary" />
+                                {workshop.date}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-primary" />
+                                {workshop.time}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-primary" />
+                                {workshop.location}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Users className="w-4 h-4 text-primary" />
+                                {workshop.spots} spots left
+                              </div>
+                            </div>
+                            <Button className="w-full mt-4" size="sm">
+                              Book Now
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </CarouselItem>
+                  ))}
                 </CarouselContent>
                 <CarouselPrevious className="-left-6 md:-left-10" />
                 <CarouselNext className="-right-6 md:-right-10" />
@@ -282,55 +283,55 @@ const ExperiencePage = () => {
             <div className="relative mb-8">
               <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
                 <CarouselContent className="-ml-2 md:-ml-4">
-              {competitions.map((competition, index) => (
-                <CarouselItem key={competition.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="group overflow-hidden hover-lift border-0 shadow-lg h-full">
-                    <div className="relative overflow-hidden h-48">
-                      <img 
-                        src={competition.image} 
-                        alt={competition.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <div className="absolute top-3 right-3">
-                        <div className="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm font-bold">
-                          {competition.prize}
-                        </div>
-                      </div>
-                      <div className="absolute bottom-3 left-3">
-                        <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs rounded-full">
-                          {competition.category}
-                        </span>
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg mb-3 group-hover:text-primary transition-colors">
-                        {competition.title}
-                      </h3>
-                      <div className="space-y-2 text-sm text-muted-foreground mb-4">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-accent" />
-                          Deadline: {competition.deadline}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Trophy className="w-4 h-4 text-accent" />
-                          Prize: {competition.prize}
-                        </div>
-                      </div>
-                      <Button className="w-full" variant="outline" size="sm">
-                        Submit Entry
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-                </CarouselItem>
-              ))}
+                  {competitions.map((competition, index) => (
+                    <CarouselItem key={competition.id} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                      >
+                        <Card className="group overflow-hidden hover-lift border-0 shadow-lg h-full">
+                          <div className="relative overflow-hidden h-48">
+                            <img
+                              src={competition.image}
+                              alt={competition.title}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                            <div className="absolute top-3 right-3">
+                              <div className="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm font-bold">
+                                {competition.prize}
+                              </div>
+                            </div>
+                            <div className="absolute bottom-3 left-3">
+                              <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs rounded-full">
+                                {competition.category}
+                              </span>
+                            </div>
+                          </div>
+                          <CardContent className="p-4">
+                            <h3 className="font-semibold text-lg mb-3 group-hover:text-primary transition-colors">
+                              {competition.title}
+                            </h3>
+                            <div className="space-y-2 text-sm text-muted-foreground mb-4">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4 text-accent" />
+                                Deadline: {competition.deadline}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Trophy className="w-4 h-4 text-accent" />
+                                Prize: {competition.prize}
+                              </div>
+                            </div>
+                            <Button className="w-full" variant="outline" size="sm">
+                              Submit Entry
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </CarouselItem>
+                  ))}
                 </CarouselContent>
                 <CarouselPrevious className="-left-6 md:-left-10" />
                 <CarouselNext className="-right-6 md:-right-10" />
@@ -340,6 +341,7 @@ const ExperiencePage = () => {
         </section>
       </main>
 
+      <MobileBottomNav />
       <Footer />
     </div>
   );

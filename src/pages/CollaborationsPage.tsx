@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Collaborations from "@/components/Collaborations";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const CollaborationsPage = () => {
   return (
@@ -16,6 +17,7 @@ const CollaborationsPage = () => {
       <div className="pt-20">
         <Collaborations />
       </div>
+      <MobileBottomNav />
       <Footer />
     </div>
   );

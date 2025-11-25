@@ -10,6 +10,7 @@ import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Faq from "@/components/faq";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const Index = () => {
   const [shutter, setShutter] = useState(false);
@@ -27,34 +28,34 @@ const Index = () => {
       {/* Enhanced Photography-inspired background with animations */}
       <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
         {/* Grid overlays removed for a cleaner main background */}
-        
+
         {/* Large gradient orbs with more movement */}
         <div className="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-gradient-to-br from-primary/15 to-accent/15 dark:from-primary/20 dark:to-accent/20 rounded-full blur-3xl animate-floatLarge" />
         <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-accent/12 to-primary/12 dark:from-accent/18 dark:to-primary/18 rounded-full blur-3xl animate-floatLarge" style={{ animationDelay: '2s', animationDuration: '15s' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/15 dark:to-accent/15 rounded-full blur-3xl animate-breathe" />
-        
-        {/* Medium orbs with rotation */}
+
+        {/* Medium orbs with rotation - reduced on mobile/tablet */}
         <div className="absolute top-20 right-20 w-48 h-48 bg-primary/10 dark:bg-primary/15 rounded-full blur-2xl animate-orbit" style={{ animationDuration: '20s' }} />
-        <div className="absolute bottom-40 left-40 w-40 h-40 bg-accent/10 dark:bg-accent/15 rounded-full blur-xl animate-orbit" style={{ animationDelay: '2s', animationDuration: '18s' }} />
-        <div className="absolute top-1/2 right-10 w-44 h-44 bg-primary/8 dark:bg-primary/12 rounded-full blur-2xl animate-floatLarge" style={{ animationDelay: '4s' }} />
-        <div className="absolute top-10 left-1/3 w-36 h-36 bg-accent/8 dark:bg-accent/12 rounded-full blur-2xl animate-orbit" style={{ animationDelay: '1s', animationDuration: '22s' }} />
-        
-        {/* Pulsing rings with scale animation */}
+        <div className="hidden md:block absolute bottom-40 left-40 w-40 h-40 bg-accent/10 dark:bg-accent/15 rounded-full blur-xl animate-orbit" style={{ animationDelay: '2s', animationDuration: '18s' }} />
+        <div className="hidden md:block absolute top-1/2 right-10 w-44 h-44 bg-primary/8 dark:bg-primary/12 rounded-full blur-2xl animate-floatLarge" style={{ animationDelay: '4s' }} />
+        <div className="absolute bottom-10 left-1/3 w-36 h-36 bg-accent/8 dark:bg-accent/12 rounded-full blur-2xl animate-orbit" style={{ animationDelay: '1s', animationDuration: '22s' }} />
+
+        {/* Pulsing rings with scale animation - reduced on mobile/tablet */}
         <div className="absolute top-1/3 right-1/3 w-72 h-72 border-2 border-primary/15 dark:border-primary/25 rounded-full animate-pulseRing" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-1/3 left-1/3 w-56 h-56 border border-accent/15 dark:border-accent/25 rounded-full animate-pulseRing" style={{ animationDuration: '5s', animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 border-2 border-primary/10 dark:border-primary/20 rounded-full animate-pulseRing" style={{ animationDuration: '6s', animationDelay: '3s' }} />
-        
+        <div className="hidden md:block absolute bottom-1/3 left-1/3 w-56 h-56 border border-accent/15 dark:border-accent/25 rounded-full animate-pulseRing" style={{ animationDuration: '5s', animationDelay: '1.5s' }} />
+        <div className="hidden md:block absolute top-1/2 left-1/4 w-64 h-64 border-2 border-primary/10 dark:border-primary/20 rounded-full animate-pulseRing" style={{ animationDuration: '6s', animationDelay: '3s' }} />
+
         {/* Film grain overlay */}
         <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03] mix-blend-overlay bg-repeat animate-grain" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
           backgroundSize: '200px 200px'
         }} />
-        
-        {/* Floating particles with varied animations */}
+
+        {/* Floating particles with varied animations - reduced on mobile/tablet */}
         {[...Array(35)].map((_, i) => (
           <div
             key={`particle-${i}`}
-            className={`absolute rounded-full ${i % 3 === 0 ? 'animate-floatSlow' : i % 3 === 1 ? 'animate-floatMedium' : 'animate-floatFast'}`}
+            className={`absolute rounded-full ${i < 15 ? '' : 'hidden md:block'} ${i % 3 === 0 ? 'animate-floatSlow' : i % 3 === 1 ? 'animate-floatMedium' : 'animate-floatFast'}`}
             style={{
               width: `${2 + (i % 4)}px`,
               height: `${2 + (i % 4)}px`,
@@ -66,11 +67,11 @@ const Index = () => {
           />
         ))}
 
-        {/* Moving camera focus squares with rotation */}
+        {/* Moving camera focus squares with rotation - reduced on mobile/tablet */}
         {[...Array(7)].map((_, i) => (
           <div
             key={`focus-${i}`}
-            className="absolute border-2 border-primary/25 dark:border-primary/35 animate-rotateFloat"
+            className={`${i < 3 ? '' : 'hidden md:block'} absolute border-2 border-primary/25 dark:border-primary/35 animate-rotateFloat`}
             style={{
               width: `${60 + i * 10}px`,
               height: `${60 + i * 10}px`,
@@ -84,23 +85,23 @@ const Index = () => {
 
         {/* Scanlines removed to avoid stripe effect */}
 
-        {/* Corner lens flares with pulse */}
+        {/* Corner lens flares with pulse - reduced on mobile/tablet */}
         <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-radial from-primary/10 via-transparent to-transparent dark:from-primary/15 blur-2xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-radial from-accent/10 via-transparent to-transparent dark:from-accent/15 blur-2xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-0 w-72 h-72 bg-gradient-radial from-primary/8 via-transparent to-transparent dark:from-primary/12 blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
-        
+        <div className="hidden md:block absolute bottom-0 right-0 w-80 h-80 bg-gradient-radial from-accent/10 via-transparent to-transparent dark:from-accent/15 blur-2xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
+        <div className="hidden md:block absolute top-1/2 left-0 w-72 h-72 bg-gradient-radial from-primary/8 via-transparent to-transparent dark:from-primary/12 blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
+
         {/* Vignette effect for dark theme */}
-        <div className="absolute inset-0 pointer-events-none dark:block hidden" 
+        <div className="absolute inset-0 pointer-events-none dark:block hidden"
           style={{
             background: 'radial-gradient(circle at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0.6) 100%)'
-          }} 
+          }}
         />
 
-        {/* Radial light beams */}
+        {/* Radial light beams - hidden on mobile/tablet */}
         {[...Array(12)].map((_, i) => (
           <div
             key={`beam-${i}`}
-            className="absolute top-1/2 left-1/2 origin-left opacity-5 dark:opacity-10 animate-rotate"
+            className="hidden md:block absolute top-1/2 left-1/2 origin-left opacity-5 dark:opacity-10 animate-rotate"
             style={{
               width: '50%',
               height: '2px',
@@ -113,11 +114,11 @@ const Index = () => {
           />
         ))}
 
-        {/* Floating rectangles */}
+        {/* Floating rectangles - reduced on mobile/tablet */}
         {[...Array(6)].map((_, i) => (
           <div
             key={`rect-${i}`}
-            className="absolute border border-accent/20 dark:border-accent/30 animate-floatRotate"
+            className={`${i < 2 ? '' : 'hidden md:block'} absolute border border-accent/20 dark:border-accent/30 animate-floatRotate`}
             style={{
               width: `${80 + i * 15}px`,
               height: `${50 + i * 10}px`,
@@ -129,11 +130,11 @@ const Index = () => {
           />
         ))}
 
-        {/* Crosshair elements */}
+        {/* Crosshair elements - hidden on mobile/tablet */}
         {[...Array(4)].map((_, i) => (
           <div
             key={`cross-${i}`}
-            className="absolute animate-crosshair"
+            className="hidden md:block absolute animate-crosshair"
             style={{
               width: '40px',
               height: '40px',
@@ -283,6 +284,7 @@ const Index = () => {
       <Testimonials />
       <Faq />
       <Contact />
+      <MobileBottomNav />
       <Footer />
     </div>
   );
