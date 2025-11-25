@@ -69,11 +69,11 @@ const printTypes: PrintType[] = [
     description: "Beautiful custom frames in various styles",
     features: ["Museum-quality materials", "Custom sizing available", "UV protection glass", "Professional mounting"],
     variants: [
-      { name: "Acrylic Frame", image: "/prints/acr.png" },
-      { name: "Modern White Frame", image: "/prints/white_canvas.png" },
-      { name: "Modern Black Canvas", image: "/prints/blk_canvas.png" },
-      { name: "Fabric Frames", image: "/prints/fabric_frame.png" },
-      { name: "Wooden Frames", image: "/prints/wodden_frame.png" }
+      { name: "Acrylic Frame", image: "/prints/acr.jpeg" },
+      { name: "Modern White Frame", image: "/prints/white_canvas.jpeg" },
+      { name: "Modern Black Canvas", image: "/prints/blk_canvas.jpeg" },
+      { name: "Fabric Frames", image: "/prints/fabric_frame.jpeg" },
+      { name: "Wooden Frames", image: "/prints/wodden_frame.jpeg" }
     ]
   },
   {
@@ -83,8 +83,8 @@ const printTypes: PrintType[] = [
     description: "Elegant photo albums to preserve your memories",
     features: ["Portrait & Landscape options", "Leather bound covers", "Lay-flat binding", "Premium paper quality"],
     variants: [
-      { name: "Portrait Album", image: "/prints/potrate_album.png" },
-      { name: "Landscape Album", image: "/prints/lanscape_album.png" }
+      { name: "Portrait Album", image: "/prints/potrate_album.jpeg" },
+      { name: "Landscape Album", image: "/prints/lanscape_album.jpeg" }
     ]
   },
   {
@@ -94,8 +94,8 @@ const printTypes: PrintType[] = [
     description: "Personalized calendars with your memories",
     features: ["12-month layouts", "Custom start date", "High-quality printing", "Spiral or saddle binding"],
     variants: [
-      { name: "Wall Calendar", image: "/prints/wall_calender.png" },
-      { name: "Table Calendar", image: "/prints/table_calender.png" }
+      { name: "Wall Calendar", image: "/prints/wall_calender.jpeg" },
+      { name: "Table Calendar", image: "/prints/table_calender.jpeg" }
     ]
   },
   {
@@ -105,7 +105,7 @@ const printTypes: PrintType[] = [
     description: "Professional magazine-style photo books",
     features: ["Glossy or matte finish", "Editorial layouts", "Custom page count", "Professional binding"],
     variants: [
-      { name: "Modern Photo Magazine", image: "/prints/mag.png" }
+      { name: "Modern Photo Magazine", image: "/prints/mag.jpeg" }
     ]
   },
   {
@@ -115,8 +115,8 @@ const printTypes: PrintType[] = [
     description: "Laser-engraved wooden masterpieces",
     features: ["Precision laser engraving", "Premium wood selection", "Custom text & designs", "Durable finish"],
     variants: [
-      { name: "Wooden Wall Portrait", image: "/prints/wooden_engraving.png" },
-      { name: "Wooden Table Engraving Stand", image: "/prints/wooden_table_engraving.png" }
+      { name: "Wooden Wall Portrait", image: "/prints/wooden_engraving.jpeg" },
+      { name: "Wooden Table Engraving Stand", image: "/prints/wooden_table_engraving.jpeg" }
     ]
   }
 ];
