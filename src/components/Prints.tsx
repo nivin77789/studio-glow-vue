@@ -79,7 +79,7 @@ const printTypes: PrintType[] = [
     id: "canvas",
     name: "Premium Canvas",
     icon: Palette,
-    description: "Artistic canvas prints for your home",
+    description: "Artistic canvas prints for your home and office",
     features: ["High-quality canvas", "Gallery wrap options", "Durable archival inks", "Ready to hang"],
     variants: [
       { name: "Fabric Canvas", image: "/prints/fabric_frame.jpeg", video: "/prints/fabric_frame.mp4" }

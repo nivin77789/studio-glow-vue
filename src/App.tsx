@@ -5,8 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
-import FAQChatbot from "@/components/FAQChatbot";
-import RatingWidget from "@/components/RatingWidget";
+const FAQChatbot = lazy(() => import("@/components/FAQChatbot"));
+const RatingWidget = lazy(() => import("@/components/RatingWidget"));
 
 // Lazy load pages
 const Index = lazy(() => import("./pages/Index"));
@@ -33,8 +33,10 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <FAQChatbot />
-      <RatingWidget />
+      <Suspense fallback={null}>
+        <FAQChatbot />
+        <RatingWidget />
+      </Suspense>
       <BrowserRouter>
         <ScrollToTop />
         <Suspense fallback={<LoadingFallback />}>
