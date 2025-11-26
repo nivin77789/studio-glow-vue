@@ -18,7 +18,7 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     setTimeout(() => {
-      if (username === "admin" && password === "1234") {
+      if (username === "admin" && password === "Admin@1234") {
         localStorage.setItem("isAdminAuthenticated", "true");
         toast.success("Login successful!");
         navigate("/admin/dashboard");
