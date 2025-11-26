@@ -150,7 +150,7 @@ const Prints = () => {
     const message = variant
       ? `Hi! I'd like to order ${variant} from ${printType}`
       : `Hi! I'd like to know more about ${printType}`;
-    window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/918618223659?text=${encodeURIComponent(message)}`, '_blank');
     toast.success("Redirecting to WhatsApp...");
   };
 

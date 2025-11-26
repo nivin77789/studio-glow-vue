@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Camera, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Camera, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from "sonner";
@@ -15,10 +15,10 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Youtube, href: "#", label: "YouTube" },
+    { icon: Facebook, href: "https://www.facebook.com/MARKHANDEYA/?locale=hi_IN&_rdr", label: "Facebook" },
+    { icon: Instagram, href: "https://www.instagram.com/markyoureventz/", label: "Instagram" },
+    { icon: Twitter, href: "https://x.com/Callme_Krack", label: "Twitter" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/markhandeya-m-v-09a110192/?originalSubdomain=in", label: "LinkedIn" },
   ];
 
   return (
@@ -28,7 +28,7 @@ const Footer = () => {
           {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
             <a href="#home" className="flex items-center gap-2 mb-4 group">
-              <Camera className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
+              <img src="/logo.png" alt="Trixietales Logo" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
               <span className="text-2xl font-bold gradient-text">Trixietales</span>
             </a>
             <p className="text-muted-foreground mb-6 max-w-sm">
@@ -38,35 +38,38 @@ const Footer = () => {
             {/* Newsletter Section */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-2">Stay Updated</h3>
-              <p className="text-muted-foreground text-sm mb-3">
+              <p className="text-muted-foreground text-sm mb-4">
                 Subscribe to our newsletter for the latest updates and exclusive offers
               </p>
-              <form className="flex gap-2" onSubmit={async (e) => {
-                e.preventDefault();
-                try {
-                  await addDoc(collection(db, "newsletterSubscribers"), {
-                    email: email,
-                    timestamp: serverTimestamp(),
-                    status: "active"
-                  });
-                  toast.success("Successfully subscribed to newsletter!");
-                  setEmail("");
-                } catch (error) {
-                  toast.error("Failed to subscribe. Please try again.");
-                  console.error("Error subscribing:", error);
-                }
-              }}>
+              <form
+                className="relative flex items-center max-w-sm"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  try {
+                    await addDoc(collection(db, "newsletterSubscribers"), {
+                      email: email,
+                      timestamp: serverTimestamp(),
+                      status: "active"
+                    });
+                    toast.success("Successfully subscribed to newsletter!");
+                    setEmail("");
+                  } catch (error) {
+                    toast.error("Failed to subscribe. Please try again.");
+                    console.error("Error subscribing:", error);
+                  }
+                }}
+              >
                 <input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-3 pr-32 rounded-xl border border-border bg-background/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm placeholder:text-muted-foreground"
                   required
                 />
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                  className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-300 font-medium text-sm shadow-md hover:shadow-lg flex items-center gap-2"
                 >
                   Subscribe
                 </button>
@@ -109,7 +112,17 @@ const Footer = () => {
         </div>
 
         <div className="pt-8 text-center text-muted-foreground">
-          <p>&copy; {currentYear} Trixietales. All rights reserved.</p>
+          <p>
+            &copy; {currentYear} Trixietales. All rights reserved. | Designed by{" "}
+            <a
+              href="https://nivinmathew.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-primary hover:text-primary/80 transition-colors"
+            >
+              Nivin Mathew S
+            </a>
+          </p>
         </div>
       </div>
     </footer>

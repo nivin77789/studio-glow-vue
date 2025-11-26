@@ -8,10 +8,10 @@ const Founder = () => {
   const { ref, isVisible } = useScrollReveal();
 
   const socialLinks = [
-    { name: "Instagram", icon: Instagram, href: "#", color: "hover:text-pink-500" },
-    { name: "Facebook", icon: Facebook, href: "#", color: "hover:text-blue-500" },
-    { name: "LinkedIn", icon: Linkedin, href: "#", color: "hover:text-blue-600" },
-    { name: "Twitter", icon: Twitter, href: "#", color: "hover:text-sky-400" }
+    { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/markyoureventz/", color: "hover:text-pink-500" },
+    { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/MARKHANDEYA/?locale=hi_IN&_rdr", color: "hover:text-blue-500" },
+    { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/markhandeya-m-v-09a110192/?originalSubdomain=in", color: "hover:text-blue-600" },
+    { name: "Twitter", icon: Twitter, href: "https://x.com/Callme_Krack", color: "hover:text-sky-400" }
   ];
 
   const achievements = [
@@ -77,13 +77,13 @@ const Founder = () => {
     setTranslate({ x: 0, y: 0 });
   };
 
-  
+
   return (
     <section ref={ref} className="py-24 relative overflow-hidden">
       {/* Photography-themed background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
-        
+
         {/* Animated gradient orbs */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -113,7 +113,7 @@ const Founder = () => {
         </div>
 
         {/* What Sets Us Apart - Centered Between Columns */}
-        
+
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
           {/* Left Column - Image Section */}
@@ -121,16 +121,16 @@ const Founder = () => {
             <div className="relative group">
               {/* Main image container */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <img 
-                  src="images/founder.png" 
-                  alt="Markhandeya - Founder" 
+                <img
+                  src="images/founder.png"
+                  alt="Markhandeya - Founder"
                   ref={imgRef}
                   onClick={openZoom}
                   className="aspect-[3/4] w-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-700 cursor-zoom-in"
                 />
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
-                
+
                 {/* Decorative corner accents */}
                 <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary rounded-tl-3xl" />
                 <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-accent rounded-br-3xl" />
@@ -205,16 +205,16 @@ const Founder = () => {
               <div className="p-5 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20">
                 <p className="font-semibold text-primary mb-2">The Beginning</p>
                 <p>
-                  It all started at age 17 with a camera and a dream. Markhandeya shot his first short film 
-                  with friends, igniting a passion that would define his future. His creative storytelling 
+                  It all started at age 17 with a camera and a dream. Markhandeya shot his first short film
+                  with friends, igniting a passion that would define his future. His creative storytelling
                   earned him awards at inter-college competitions, proving his natural talent.
                 </p>
               </div>
 
               <p>
-                Driven by vision and determination, Markhandeya assembled a team of passionate professionals 
-                to fulfill his dream of leading the creative industry. What began as a teenage experiment 
-                has evolved into <span className="font-bold text-primary">900+ unforgettable stories</span> captured 
+                Driven by vision and determination, Markhandeya assembled a team of passionate professionals
+                to fulfill his dream of leading the creative industry. What began as a teenage experiment
+                has evolved into <span className="font-bold text-primary">900+ unforgettable stories</span> captured
                 across 100+ weddings and 800+ events.
               </p>
             </div>
@@ -222,8 +222,8 @@ const Founder = () => {
             {/* Mission Statement */}
             <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-primary/30">
               <p className="text-lg font-medium text-center leading-relaxed">
-                "In the era of social media and content revolution, we don't just capture moments – 
-                we craft <span className="font-bold text-primary">cinematic experiences</span> and deliver 
+                "In the era of social media and content revolution, we don't just capture moments –
+                we craft <span className="font-bold text-primary">cinematic experiences</span> and deliver
                 them at lightning speed, so you can share your joy instantly."
               </p>
             </div>

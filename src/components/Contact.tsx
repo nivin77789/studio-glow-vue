@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { db } from "@/lib/firebase";
@@ -51,20 +51,20 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone",
-      value: "+1 (555) 123-4567",
-      link: "tel:+15551234567",
+      value: "+91 861 822 3659",
+      link: "tel:+918618223659",
     },
     {
       icon: Mail,
       title: "Email",
-      value: "hello@saycheezz.com",
-      link: "mailto:hello@saycheezz.com",
+      value: "hello@trixietales.com",
+      link: "mailto:hello@trixietales.com",
     },
     {
       icon: MapPin,
       title: "Location",
-      value: "Saycheezz - Photography & Videography, Bengaluru",
-      link: "https://www.google.com/maps/place/Saycheezz+-+Photography+%26+Videography/@13.0045539,77.7572737,17z",
+      value: "Trixietales - Photography & videography, Bangalore",
+      link: "https://www.google.com/maps/search/?api=1&query=Trixietales+Photography+videography+Bangalore",
     },
   ];
 
@@ -134,6 +134,15 @@ const Contact = () => {
                   Send Message
                   <Send className="ml-2 w-4 h-4" />
                 </Button>
+                <Button
+                  type="button"
+                  className="w-full bg-green-500 hover:bg-green-600 text-white"
+                  size="lg"
+                  onClick={() => window.open("https://wa.me/918618223659", "_blank")}
+                >
+                  Chat on WhatsApp
+                  <MessageCircle className="ml-2 w-4 h-4" />
+                </Button>
               </form>
             </CardContent>
           </Card>
@@ -175,6 +184,7 @@ const Contact = () => {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Saycheezz Location"
+                className="dark:invert dark:hue-rotate-180 dark:brightness-90 dark:contrast-125 transition-all duration-500"
               />
             </div>
           </div>
