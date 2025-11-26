@@ -29,6 +29,15 @@ const Index = () => {
     >
       {/* Enhanced Photography-inspired background with animations */}
       <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
+        {/* Floating Logo Background */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <img
+            src="/logo.png"
+            alt="Background Logo"
+            className="w-[80vw] md:w-[40vw] opacity-10 animate-floatSlow object-contain blur-sm"
+          />
+        </div>
+
         {/* Grid overlays removed for a cleaner main background */}
 
         {/* Large gradient orbs with more movement */}
