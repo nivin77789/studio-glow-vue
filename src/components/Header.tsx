@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Moon, Sun, Sparkles, Camera } from "lucide-react";
+import { Moon, Sun, Sparkles, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem("darkMode");
     const isDark = saved === "true";
@@ -145,6 +144,7 @@ const Header = () => {
           </div>
 
         </div>
+
       </div>
     </header>
   );

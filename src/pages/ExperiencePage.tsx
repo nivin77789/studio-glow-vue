@@ -138,16 +138,17 @@ const ExperiencePage = () => {
         {/* Hero Banner */}
         <section className="relative py-32 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-accent/90" />
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'url(/images/hero1.jpeg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              opacity: 0.3
-            }} />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-accent/90 z-10" />
+            <img
+              src="/images/hero1.jpeg"
+              alt="Hero Background"
+              className="absolute inset-0 w-full h-full object-cover opacity-30"
+              loading="eager"
+              decoding="async"
+            />
           </div>
 
-          <div className="container mx-auto px-4 relative z-10">
+          <div className="container mx-auto px-4 relative z-20">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -181,11 +182,11 @@ const ExperiencePage = () => {
             </motion.div>
           </div>
 
-          {/* Floating elements */}
-          <div className="absolute top-10 left-10 w-32 h-32 opacity-30 animate-float">
+          {/* Floating elements - optimized with will-change */}
+          <div className="absolute top-10 left-10 w-32 h-32 opacity-30 animate-float will-change-transform">
             <Camera className="w-full h-full text-white" />
           </div>
-          <div className="absolute bottom-10 right-10 w-24 h-24 opacity-30 animate-float" style={{ animationDelay: '1.5s' }}>
+          <div className="absolute bottom-10 right-10 w-24 h-24 opacity-30 animate-float will-change-transform" style={{ animationDelay: '1.5s' }}>
             <Trophy className="w-full h-full text-white" />
           </div>
         </section>
@@ -219,7 +220,9 @@ const ExperiencePage = () => {
                             <img
                               src={workshop.image}
                               alt={workshop.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              loading="lazy"
+                              decoding="async"
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 will-change-transform"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
 
@@ -316,7 +319,9 @@ const ExperiencePage = () => {
                             <img
                               src={competition.image}
                               alt={competition.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              loading="lazy"
+                              decoding="async"
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 will-change-transform"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
 

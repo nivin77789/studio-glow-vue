@@ -138,7 +138,7 @@ export default function FAQChatbot() {
   return (
     <div>
       {/* Floating button - positioned above mobile navbar */}
-      <div className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-[9999]" style={{ pointerEvents: 'auto' }}>
+      <div className="fixed bottom-6 md:bottom-6 right-4 md:right-6 z-[9999]" style={{ pointerEvents: 'auto' }}>
         <button
           aria-label="Open chat"
           className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-primary text-white shadow-xl flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
@@ -156,7 +156,7 @@ export default function FAQChatbot() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-36 right-4 md:bottom-24 md:right-6 z-[9999] w-[90vw] md:w-[360px] max-w-[360px] bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
+        <div className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-[9999] w-[90vw] md:w-[360px] max-w-[360px] bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <MessageSquare className="w-5 h-5 text-primary" />
