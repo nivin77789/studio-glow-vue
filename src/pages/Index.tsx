@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import Founder from "@/components/Founder";
-import Courses from "@/components/Courses";
-import Portfolio from "@/components/Portfolio";
-import Collaborations from "@/components/Collaborations";
-import Prints from "@/components/Prints";
-import Testimonials from "@/components/Testimonials";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import Faq from "@/components/faq";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import OurTeam from "@/components/OurTeam";
+
+const Courses = lazy(() => import("@/components/Courses"));
+const Portfolio = lazy(() => import("@/components/Portfolio"));
+const Collaborations = lazy(() => import("@/components/Collaborations"));
+const Prints = lazy(() => import("@/components/Prints"));
+const Testimonials = lazy(() => import("@/components/Testimonials"));
+const Contact = lazy(() => import("@/components/Contact"));
+const Footer = lazy(() => import("@/components/Footer"));
+const Faq = lazy(() => import("@/components/faq"));
+const OurTeam = lazy(() => import("@/components/OurTeam"));
 
 const Index = () => {
   const [shutter, setShutter] = useState(false);
@@ -278,16 +279,18 @@ const Index = () => {
       <Header />
       <HeroCarousel />
       <Founder />
-      <Courses />
-      <Portfolio />
-      <Collaborations />
-      <Prints />
-      <Testimonials />
-      <OurTeam />
-      <Faq />
-      <Contact />
+      <Suspense fallback={<div className="h-20" />}>
+        <Courses />
+        <Portfolio />
+        <Collaborations />
+        <Prints />
+        <Testimonials />
+        <OurTeam />
+        <Faq />
+        <Contact />
+        <Footer />
+      </Suspense>
       <MobileBottomNav />
-      <Footer />
     </div>
   );
 };

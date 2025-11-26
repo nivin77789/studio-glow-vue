@@ -30,7 +30,7 @@ import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 // Gallery data with images and videos
 const galleryData = {
   Wedding: {
-    images: ["/images/wed/Wedding/1.jpeg", "/images/wed/Wedding/2.jpeg", "/images/wed/Wedding/3.jpeg", "/images/wed/Wedding/4.jpeg", "/images/wed/Wedding/5.jpeg"],
+    images: Array.from({ length: 50 }, (_, i) => `/images/wed/Wedding/${i + 1}.jpeg`),
     videos: [],
   },
   Engagement: {
@@ -561,8 +561,8 @@ export default function GalleryPage() {
           <button
             onClick={() => setActiveTab("images")}
             className={`pb-3 px-4 font-semibold transition-all flex items-center gap-2 relative ${activeTab === "images"
-                ? "text-primary"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              ? "text-primary"
+              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
               }`}
           >
             <Image className="w-4 h-4" />
@@ -574,8 +574,8 @@ export default function GalleryPage() {
           <button
             onClick={() => setActiveTab("videos")}
             className={`pb-3 px-4 font-semibold transition-all flex items-center gap-2 relative ${activeTab === "videos"
-                ? "text-primary"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              ? "text-primary"
+              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
               }`}
           >
             <Video className="w-4 h-4" />
@@ -593,7 +593,7 @@ export default function GalleryPage() {
               <div className="md:col-span-2 rounded-xl overflow-hidden shadow-lg">
                 {currentGallery.images[0] ? (
                   <button onClick={() => openLightbox("image", 0)} className="block w-full h-full">
-                    <img src={currentGallery.images[0]} className="w-full h-96 object-cover rounded-xl" loading="lazy" />
+                    <img src={currentGallery.images[0]} className="w-full h-96 object-cover rounded-xl" />
                   </button>
                 ) : (
                   <div className="w-full h-96 bg-gray-100 dark:bg-slate-800 rounded-xl" />
@@ -773,8 +773,8 @@ export default function GalleryPage() {
                     key={idx}
                     onClick={() => setLightboxIndex(idx)}
                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${idx === lightboxIndex
-                        ? "border-primary ring-2 ring-primary/60 scale-105"
-                        : "border-white/20 hover:border-white/50"
+                      ? "border-primary ring-2 ring-primary/60 scale-105"
+                      : "border-white/20 hover:border-white/50"
                       }`}
                   >
                     <img

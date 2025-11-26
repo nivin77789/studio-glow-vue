@@ -26,7 +26,7 @@ const HeroLanding = () => {
 
   useEffect(() => {
     if (!isAutoPlaying) return;
-    
+
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % bannerImages.length);
     }, 5000);
@@ -59,14 +59,15 @@ const HeroLanding = () => {
         {bannerImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
           >
             <img
               src={image.url}
               alt={image.title}
               className="w-full h-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
+              {...(index === 0 ? { fetchPriority: "high" } : {})}
             />
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/50" />
@@ -78,7 +79,7 @@ const HeroLanding = () => {
       <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
         {/* Light leaks */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 mix-blend-screen animate-pulse" style={{ animationDuration: "8s" }} />
-        
+
         {/* Floating spheres */}
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-float-rotate" />
         <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
@@ -119,7 +120,7 @@ const HeroLanding = () => {
       {/* Main content - Centered */}
       <div className="container mx-auto px-6 lg:px-12 z-10 mt-48 md:mt-56">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-         
+
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight mb-4 leading-tight tracking-wide animate-slide-right" style={{ animationDelay: "0.2s" }}>
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-size-200 animate-gradient">
               {bannerImages[currentSlide].title}
@@ -154,11 +155,10 @@ const HeroLanding = () => {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`transition-all ${
-              index === currentSlide
+            className={`transition-all ${index === currentSlide
                 ? "w-12 h-3 bg-white rounded-full"
                 : "w-3 h-3 bg-white/40 hover:bg-white/60 rounded-full"
-            }`}
+              }`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
