@@ -122,9 +122,10 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
     }, [productType, userImage]);
 
     const createFrame = (group: THREE.Group, userImage: string | null) => {
-        const frameGeometry = new THREE.BoxGeometry(3, 4, 0.2);
+        // Slimmer frame
+        const frameGeometry = new THREE.BoxGeometry(3, 4, 0.05);
         const frameMaterial = new THREE.MeshStandardMaterial({
-            color: 0x2c1810,
+            color: 0xffffff,
             roughness: 0.7,
             metalness: 0.3
         });
@@ -133,13 +134,14 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
         frameMesh.receiveShadow = true;
         group.add(frameMesh);
 
-        const innerGeometry = new THREE.BoxGeometry(2.6, 3.6, 0.15);
+        // Slimmer inner backing/matte
+        const innerGeometry = new THREE.BoxGeometry(2.6, 3.6, 0.02);
         const innerMaterial = new THREE.MeshStandardMaterial({
-            color: 0xf5f5dc,
+            color: 0xffffff,
             roughness: 0.6
         });
         const innerMesh = new THREE.Mesh(innerGeometry, innerMaterial);
-        innerMesh.position.z = 0.1;
+        innerMesh.position.z = 0.035;
         group.add(innerMesh);
 
         const photoGeometry = new THREE.PlaneGeometry(2.2, 3.2);
@@ -157,21 +159,21 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
         }
 
         const photoMesh = new THREE.Mesh(photoGeometry, photoMaterial);
-        photoMesh.position.z = 0.16;
+        photoMesh.position.z = 0.046; // Slightly in front of inner mesh
         group.add(photoMesh);
 
         const glassGeometry = new THREE.PlaneGeometry(2.5, 3.5);
         const glassMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xffffff,
             transparent: true,
-            opacity: 0.1,
+            opacity: 0.2,
             roughness: 0.1,
             metalness: 0.1,
             clearcoat: 1.0,
             clearcoatRoughness: 0.1
         });
         const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
-        glassMesh.position.z = 0.2;
+        glassMesh.position.z = 0.06;
         group.add(glassMesh);
     };
 
@@ -186,12 +188,13 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
         coverMesh.castShadow = true;
         group.add(coverMesh);
 
-        const imageGeometry = new THREE.PlaneGeometry(2.4, 2.8);
+        const imageGeometry = new THREE.PlaneGeometry(2.5, 3.5);
         let imageMaterial;
 
         if (userImage) {
             const textureLoader = new THREE.TextureLoader();
             const texture = textureLoader.load(userImage);
+            // texture.center.set(0.5, 0.5);
             imageMaterial = new THREE.MeshStandardMaterial({ map: texture });
         } else {
             imageMaterial = new THREE.MeshStandardMaterial({
@@ -201,7 +204,7 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
         }
 
         const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-        imageMesh.position.set(0, 0.35, 0.026);
+        imageMesh.position.set(0, 0, 0.026);
         group.add(imageMesh);
 
         for (let i = 0; i < 10; i++) {
@@ -244,7 +247,7 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
             photoMaterial = new THREE.MeshStandardMaterial({ map: texture });
         } else {
             photoMaterial = new THREE.MeshStandardMaterial({
-                color: 0xf59e0b,
+                color: 0xe5e7eb,
                 roughness: 0.4
             });
         }
@@ -253,28 +256,63 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
         photoMesh.position.set(0, 0.7, 0.051);
         group.add(photoMesh);
 
-        const monthBarGeometry = new THREE.PlaneGeometry(2.8, 0.3);
-        const monthBarMaterial = new THREE.MeshStandardMaterial({
-            color: 0xd97706,
-            roughness: 0.4
-        });
-        const monthBarMesh = new THREE.Mesh(monthBarGeometry, monthBarMaterial);
-        monthBarMesh.position.set(0, -0.45, 0.051);
-        group.add(monthBarMesh);
+        // Create dynamic calendar texture
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 512, 256);
 
-        const gridGeometry = new THREE.PlaneGeometry(2.8, 1);
+            // Year and Month
+            ctx.fillStyle = '#111827';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('JANUARY 2025', 256, 60);
+
+            // Days
+            ctx.font = 'bold 24px Arial';
+            const startX = 60;
+            const startY = 110;
+            const gapX = 65;
+            const gapY = 35;
+            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+            // Headers
+            ctx.fillStyle = '#9ca3af';
+            days.forEach((d, i) => {
+                ctx.fillText(d, startX + i * gapX, startY);
+            });
+
+            // Dates
+            ctx.fillStyle = '#374151';
+            let day = 1;
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 7; col++) {
+                    if (day <= 31) {
+                        ctx.fillText(day.toString(), startX + col * gapX, startY + 40 + row * gapY);
+                        day++;
+                    }
+                }
+            }
+        }
+        const calendarTexture = new THREE.CanvasTexture(canvas);
+
+        const gridGeometry = new THREE.PlaneGeometry(2.8, 1.4);
         const gridMaterial = new THREE.MeshStandardMaterial({
+            map: calendarTexture,
             color: 0xffffff,
             roughness: 0.6
         });
         const gridMesh = new THREE.Mesh(gridGeometry, gridMaterial);
-        gridMesh.position.set(0, -1.2, 0.051);
+        gridMesh.position.set(0, -1.0, 0.051);
         group.add(gridMesh);
 
         for (let i = 0; i < 12; i++) {
             const ringGeometry = new THREE.TorusGeometry(0.08, 0.02, 16, 32);
             const ringMaterial = new THREE.MeshStandardMaterial({
-                color: 0xd97706,
+                color: 0x9ca3af,
                 metalness: 0.8,
                 roughness: 0.2
             });
@@ -286,26 +324,19 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
     };
 
     const createAlbum = (group: THREE.Group, userImage: string | null) => {
-        const coverGeometry = new THREE.BoxGeometry(3, 3.5, 0.15);
+        // Modern Cover (Dark Grey base)
+        const coverGeometry = new THREE.BoxGeometry(3, 4, 0.15);
         const coverMaterial = new THREE.MeshStandardMaterial({
-            color: 0x7f1d1d,
-            roughness: 0.8,
+            color: 0x1f2937,
+            roughness: 0.5,
             metalness: 0.1
         });
         const coverMesh = new THREE.Mesh(coverGeometry, coverMaterial);
         coverMesh.castShadow = true;
         group.add(coverMesh);
 
-        const borderGeometry = new THREE.BoxGeometry(2.6, 3.1, 0.02);
-        const borderMaterial = new THREE.MeshStandardMaterial({
-            color: 0x991b1b,
-            roughness: 0.7
-        });
-        const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
-        borderMesh.position.z = 0.076;
-        group.add(borderMesh);
-
-        const photoGeometry = new THREE.PlaneGeometry(2, 2.5);
+        // Full Bleed Image
+        const photoGeometry = new THREE.PlaneGeometry(3, 4);
         let photoMaterial;
 
         if (userImage) {
@@ -314,27 +345,18 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
             photoMaterial = new THREE.MeshStandardMaterial({ map: texture });
         } else {
             photoMaterial = new THREE.MeshStandardMaterial({
-                color: 0xd97706,
+                color: 0xe5e7eb,
                 roughness: 0.5
             });
         }
 
         const photoMesh = new THREE.Mesh(photoGeometry, photoMaterial);
-        photoMesh.position.set(0, 0.3, 0.087);
+        photoMesh.position.set(0, 0, 0.076);
         group.add(photoMesh);
 
-        const titleGeometry = new THREE.BoxGeometry(2, 0.4, 0.03);
-        const titleMaterial = new THREE.MeshStandardMaterial({
-            color: 0xf59e0b,
-            roughness: 0.3,
-            metalness: 0.6
-        });
-        const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
-        titleMesh.position.set(0, -1.2, 0.09);
-        group.add(titleMesh);
-
+        // Pages
         for (let i = 0; i < 15; i++) {
-            const pageGeometry = new THREE.BoxGeometry(2.95, 3.45, 0.01);
+            const pageGeometry = new THREE.BoxGeometry(2.9, 3.9, 0.01);
             const pageMaterial = new THREE.MeshStandardMaterial({
                 color: 0xfefce8,
                 roughness: 0.9
@@ -344,10 +366,11 @@ const ThreeDViewer = ({ productType, userImage }: { productType: string, userIma
             group.add(pageMesh);
         }
 
-        const spineGeometry = new THREE.BoxGeometry(0.2, 3.5, 0.2);
+        // Spine
+        const spineGeometry = new THREE.BoxGeometry(0.2, 4, 0.2);
         const spineMaterial = new THREE.MeshStandardMaterial({
-            color: 0x7f1d1d,
-            roughness: 0.8
+            color: 0x1f2937,
+            roughness: 0.5
         });
         const spineMesh = new THREE.Mesh(spineGeometry, spineMaterial);
         spineMesh.position.set(-1.6, 0, -0.075);

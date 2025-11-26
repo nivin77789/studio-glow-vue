@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye, Maximize2, Phone, CheckCircle } from "lucide-react";
+import { Frame, BookOpen, Calendar, Image, Sparkles, X, Upload, Eye, Maximize2, Phone, CheckCircle, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -57,7 +57,7 @@ interface PrintType {
   name: string;
   icon: any;
   description: string;
-  variants?: { name: string; image: string }[];
+  variants?: { name: string; image: string; video?: string }[];
   features?: string[];
 }
 
@@ -69,11 +69,20 @@ const printTypes: PrintType[] = [
     description: "Beautiful custom frames in various styles",
     features: ["Museum-quality materials", "Custom sizing available", "UV protection glass", "Professional mounting"],
     variants: [
-      { name: "Acrylic Frame", image: "/prints/acr.jpeg" },
-      { name: "Modern White Frame", image: "/prints/white_canvas.jpeg" },
-      { name: "Modern Black Canvas", image: "/prints/blk_canvas.jpeg" },
-      { name: "Fabric Frames", image: "/prints/fabric_frame.jpeg" },
-      { name: "Wooden Frames", image: "/prints/wodden_frame.jpeg" }
+      { name: "Acrylic Frame", image: "/prints/acr.jpeg", video: "/prints/acr.mp4" },
+      { name: "Modern White Frame", image: "/prints/white_canvas.jpeg", video: "/prints/white_canvas.mp4" },
+      { name: "Modern Black Canvas", image: "/prints/blk_canvas.jpeg", video: "/prints/blk_canvas.mp4" },
+      { name: "Wooden Frames", image: "/prints/wodden_frame.jpeg", video: "/prints/wodden_frame.mp4" }
+    ]
+  },
+  {
+    id: "canvas",
+    name: "Premium Canvas",
+    icon: Palette,
+    description: "Artistic canvas prints for your home",
+    features: ["High-quality canvas", "Gallery wrap options", "Durable archival inks", "Ready to hang"],
+    variants: [
+      { name: "Fabric Canvas", image: "/prints/fabric_frame.jpeg", video: "/prints/fabric_frame.mp4" }
     ]
   },
   {
@@ -83,8 +92,8 @@ const printTypes: PrintType[] = [
     description: "Elegant photo albums to preserve your memories",
     features: ["Portrait & Landscape options", "Leather bound covers", "Lay-flat binding", "Premium paper quality"],
     variants: [
-      { name: "Portrait Album", image: "/prints/potrate_album.jpeg" },
-      { name: "Landscape Album", image: "/prints/lanscape_album.jpeg" }
+      { name: "Portrait Album", image: "/prints/potrate_album.jpeg", video: "/prints/potrate_album.mp4" },
+      { name: "Landscape Album", image: "/prints/lanscape_album.jpeg", video: "/prints/lanscape_album.mp4" }
     ]
   },
   {
@@ -94,8 +103,8 @@ const printTypes: PrintType[] = [
     description: "Personalized calendars with your memories",
     features: ["12-month layouts", "Custom start date", "High-quality printing", "Spiral or saddle binding"],
     variants: [
-      { name: "Wall Calendar", image: "/prints/wall_calender.jpeg" },
-      { name: "Table Calendar", image: "/prints/table_calender.jpeg" }
+      { name: "Wall Calendar", image: "/prints/wall_calender.jpeg", video: "/prints/wall_calender.mp4" },
+      { name: "Table Calendar", image: "/prints/table_calender.jpeg", video: "/prints/table_calender.mp4" }
     ]
   },
   {
@@ -105,7 +114,7 @@ const printTypes: PrintType[] = [
     description: "Professional magazine-style photo books",
     features: ["Glossy or matte finish", "Editorial layouts", "Custom page count", "Professional binding"],
     variants: [
-      { name: "Modern Photo Magazine", image: "/prints/mag.jpeg" }
+      { name: "Modern Photo Magazine", image: "/prints/mag.jpeg", video: "/prints/mag.mp4" }
     ]
   },
   {
@@ -115,8 +124,8 @@ const printTypes: PrintType[] = [
     description: "Laser-engraved wooden masterpieces",
     features: ["Precision laser engraving", "Premium wood selection", "Custom text & designs", "Durable finish"],
     variants: [
-      { name: "Wooden Wall Portrait", image: "/prints/wooden_engraving.jpeg" },
-      { name: "Wooden Table Engraving Stand", image: "/prints/wooden_table_engraving.jpeg" }
+      { name: "Wooden Wall Portrait", image: "/prints/wooden_engraving.jpeg", video: "/prints/wooden_engraving.mp4" },
+      { name: "Wooden Table Engraving Stand", image: "/prints/wooden_table_engraving.jpeg", video: "/prints/wooden_table_engraving.mp4" }
     ]
   }
 ];
@@ -133,7 +142,9 @@ const Prints = () => {
   const [selectedProduct, setSelectedProduct] = useState("frame");
   const [selected3DProduct, setSelected3DProduct] = useState(null);
   const fileInputRef = useRef(null);
+
   const popupFileInputRef = useRef(null);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const handleOrder = (printType, variant) => {
     const message = variant
@@ -197,11 +208,8 @@ const Prints = () => {
   };
 
   const handle3DView = (variant) => {
-    if (variant.name === "Modern Photo Magazine") {
-      setShowPdfViewer(true);
-      return;
-    }
-    if (variant.name === "Table Calendar") {
+    if (variant.video) {
+      setSelectedVideo(variant.video);
       setShowVideoPopup(true);
       return;
     }
@@ -410,23 +418,25 @@ const Prints = () => {
                         Premium quality {variant.name.toLowerCase()} with professional finishing
                       </p>
 
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
+                        {variant.name === "Modern Photo Magazine" && (
+                          <Button
+                            onClick={() => setShowPdfViewer(true)}
+                            className="flex-1"
+                            size="sm"
+                            variant="secondary"
+                          >
+                            <Image className="w-4 h-4 mr-2" />
+                            Sample
+                          </Button>
+                        )}
                         <Button
                           onClick={() => handle3DView(variant)}
                           className="flex-1"
                           size="sm"
                         >
-                          {variant.name === "Modern Photo Magazine" ? (
-                            <>
-                              <Image className="w-4 h-4 mr-2" />
-                              Show Sample
-                            </>
-                          ) : (
-                            <>
-                              <Maximize2 className="w-4 h-4 mr-2" />
-                              3D View
-                            </>
-                          )}
+                          <Maximize2 className="w-4 h-4 mr-2" />
+                          3D View
                         </Button>
                         <Button
                           onClick={() => handleOrder(selectedPrint.name, variant.name)}
@@ -838,7 +848,7 @@ const Prints = () => {
           <div className="relative w-full aspect-video group">
             <video
               ref={videoRef}
-              src="/prints/table_calender.mp4"
+              src={selectedVideo || ""}
               className="w-full h-full object-contain cursor-grab active:cursor-grabbing"
               autoPlay
               loop
