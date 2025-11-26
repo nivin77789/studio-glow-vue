@@ -222,6 +222,26 @@ const ExperiencePage = () => {
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+                            {/* Modern Coming Soon Overlay */}
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center z-20 transition-all duration-500 group-hover:bg-black/70 group-hover:backdrop-blur-[4px]">
+                              <div className="bg-white/5 border border-white/10 px-6 py-5 rounded-2xl backdrop-blur-xl shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:border-primary/30 group-hover:shadow-primary/20">
+                                <div className="flex flex-col items-center gap-3">
+                                  <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full ring-1 ring-primary/30 shadow-[0_0_15px_rgba(237,148,85,0.3)]">
+                                    <Clock className="w-5 h-5 text-primary animate-pulse" />
+                                  </div>
+                                  <div className="space-y-1 text-center">
+                                    <span className="block text-white font-bold text-lg tracking-[0.2em] uppercase drop-shadow-lg">
+                                      Coming Soon
+                                    </span>
+                                    <span className="block text-white/50 text-[10px] font-medium tracking-widest uppercase">
+                                      Stay Tuned
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                             <div className="absolute bottom-3 left-3 right-3">
                               <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs rounded-full mb-2">
                                 {workshop.category}
@@ -250,8 +270,8 @@ const ExperiencePage = () => {
                                 {workshop.spots} spots left
                               </div>
                             </div>
-                            <Button className="w-full mt-4" size="sm">
-                              Book Now
+                            <Button className="w-full mt-4" size="sm" disabled>
+                              Coming Soon
                             </Button>
                           </CardContent>
                         </Card>
@@ -299,6 +319,26 @@ const ExperiencePage = () => {
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+                            {/* Modern Coming Soon Overlay */}
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center z-20 transition-all duration-500 group-hover:bg-black/70 group-hover:backdrop-blur-[4px]">
+                              <div className="bg-white/5 border border-white/10 px-6 py-5 rounded-2xl backdrop-blur-xl shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:border-primary/30 group-hover:shadow-primary/20">
+                                <div className="flex flex-col items-center gap-3">
+                                  <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full ring-1 ring-primary/30 shadow-[0_0_15px_rgba(237,148,85,0.3)]">
+                                    <Clock className="w-5 h-5 text-primary animate-pulse" />
+                                  </div>
+                                  <div className="space-y-1 text-center">
+                                    <span className="block text-white font-bold text-lg tracking-[0.2em] uppercase drop-shadow-lg">
+                                      Coming Soon
+                                    </span>
+                                    <span className="block text-white/50 text-[10px] font-medium tracking-widest uppercase">
+                                      Stay Tuned
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                             <div className="absolute top-3 right-3">
                               <div className="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm font-bold">
                                 {competition.prize}
@@ -324,8 +364,8 @@ const ExperiencePage = () => {
                                 Prize: {competition.prize}
                               </div>
                             </div>
-                            <Button className="w-full" variant="outline" size="sm">
-                              Submit Entry
+                            <Button className="w-full" variant="outline" size="sm" disabled>
+                              Coming Soon
                             </Button>
                           </CardContent>
                         </Card>

@@ -233,42 +233,42 @@ const Prints = () => {
             </div>
 
             <CardContent className="p-0 relative z-10">
-              <div className="p-8 md:p-12 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 relative overflow-hidden">
+              <div className="p-6 md:p-12 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 relative overflow-hidden">
                 {/* Animated background elements */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse-slow" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 
-                <div className="relative flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="flex items-start gap-6 flex-1">
+                <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 flex-1 text-center md:text-left">
                     {/* Icon with glow effect */}
-                    <div className="inline-flex p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary shadow-lg group-hover:scale-110 transition-transform duration-500 relative">
+                    <div className="inline-flex p-4 md:p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary shadow-lg group-hover:scale-110 transition-transform duration-500 relative shrink-0">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-0 group-hover:opacity-20 rounded-2xl transition-opacity duration-500" />
-                      <Sparkles className="w-10 h-10 relative z-10" />
+                      <Sparkles className="w-8 h-8 md:w-10 md:h-10 relative z-10" />
                     </div>
 
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                      <div className="flex items-center justify-center md:justify-start gap-2 md:gap-3 mb-2 md:mb-3">
+                        <h3 className="text-xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                           Try Our New 3D Preview!
                         </h3>
-                        <Badge variant="secondary" className="animate-bounce">New</Badge>
+                        <Badge variant="secondary" className="animate-bounce text-[10px] md:text-xs px-1.5 py-0.5 md:px-2.5 md:py-0.5">New</Badge>
                       </div>
-                      <p className="text-muted-foreground text-lg leading-relaxed max-w-xl">
+                      <p className="text-muted-foreground text-sm md:text-lg leading-relaxed max-w-xl">
                         Upload your photo and see how it looks in realistic 3D. Rotate, zoom, and explore your memories in stunning detail before ordering.
                       </p>
                     </div>
                   </div>
 
                   {/* CTA Button */}
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                     <button
                       onClick={() => setShow3DPopup(true)}
-                      className="try-now-btn group/btn relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95"
+                      className="try-now-btn group/btn relative overflow-hidden px-6 py-3 md:px-8 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 w-full md:w-auto"
                     >
-                      <span className="relative z-10 flex items-center justify-center gap-3 text-white">
-                        <Eye className="w-6 h-6 group-hover/btn:scale-110 transition-transform duration-300" />
+                      <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3 text-white">
+                        <Eye className="w-5 h-5 md:w-6 md:h-6 group-hover/btn:scale-110 transition-transform duration-300" />
                         Try Now
-                        <Sparkles className="w-5 h-5 group-hover/btn:rotate-12 transition-transform duration-300" />
+                        <Sparkles className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:rotate-12 transition-transform duration-300" />
                       </span>
                     </button>
                   </div>

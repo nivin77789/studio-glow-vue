@@ -177,8 +177,8 @@ const OurTeam = () => {
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-                        <CarouselPrevious className="hidden md:flex -left-12" />
-                        <CarouselNext className="hidden md:flex -right-12" />
+                        <CarouselPrevious className="flex -left-4 md:-left-12" />
+                        <CarouselNext className="flex -right-4 md:-right-12" />
                     </Carousel>
                 </div>
             </div>

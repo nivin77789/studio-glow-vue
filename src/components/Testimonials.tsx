@@ -150,8 +150,8 @@ const Testimonials = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex -left-12 bg-white/10 hover:bg-white/20 border-white/20 text-white" />
-            <CarouselNext className="hidden md:flex -right-12 bg-white/10 hover:bg-white/20 border-white/20 text-white" />
+            <CarouselPrevious className="flex -left-4 md:-left-12 bg-white/10 hover:bg-white/20 border-white/20 text-white" />
+            <CarouselNext className="flex -right-4 md:-right-12 bg-white/10 hover:bg-white/20 border-white/20 text-white" />
           </Carousel>
         </div>
 
