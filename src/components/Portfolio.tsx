@@ -416,8 +416,8 @@ export default function GalleryPage() {
           {modalOpen && modalCategory && (
             <div className="fixed inset-0 z-50 bg-black/70">
               <div className="fixed inset-6 md:inset-12 overflow-hidden">
-                <div className="h-full w-full rounded-2xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden">
-                  <div className="px-6 py-4 flex items-center justify-between border-b sticky top-0 bg-white dark:bg-slate-900 z-20">
+                <div className="h-full w-full rounded-2xl bg-white dark:bg-black/60 dark:backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden border dark:border-white/10">
+                  <div className="px-6 py-4 flex items-center justify-between border-b dark:border-white/10 sticky top-0 bg-white dark:bg-black/60 dark:backdrop-blur-xl z-20">
                     <div>
                       <h3 className="text-xl font-semibold">{modalCategory}</h3>
                       <div className="text-sm text-muted-foreground">{(modalGallery?.images || []).length} photos • {getCombinedVideos(modalCategory).length} videos</div>
