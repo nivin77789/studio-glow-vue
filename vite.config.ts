@@ -15,8 +15,12 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
-          ui: ["@radix-ui/react-slot", "class-variance-authority", "clsx", "tailwind-merge"],
+          ui: ["@radix-ui/react-slot", "class-variance-authority", "clsx", "tailwind-merge", "sonner", "vaul"],
           animations: ["framer-motion"],
+          firebase: ["firebase/app", "firebase/auth", "firebase/firestore", "firebase/storage", "firebase/analytics"],
+          three: ["three"],
+          icons: ["lucide-react", "react-icons"],
+          charts: ["recharts"],
         },
       },
     },
