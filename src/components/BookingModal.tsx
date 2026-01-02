@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogDescription
+    DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Clock, Tag, Calendar, ChevronRight, X, ChevronLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from "firebase/firestore";
+import { Sparkles, Clock, Calendar, ChevronRight, X, ChevronLeft, User, Phone, Mail, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Service {
@@ -30,8 +34,24 @@ interface BookingModalProps {
 const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
     const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedService, setSelectedService] = useState<Service | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        message: ""
+    });
+
     useEffect(() => {
-        if (!isOpen) return;
+        if (!isOpen) {
+            setSelectedService(null);
+            setIsSuccess(false);
+            setFormData({ name: "", email: "", phone: "", date: "", message: "" });
+            return;
+        }
 
         const q = query(collection(db, "services"), orderBy("createdAt", "desc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -46,9 +66,31 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
         return () => unsubscribe();
     }, [isOpen]);
 
-    const handleBook = (serviceName: string) => {
-        window.location.href = `/contact?service=${encodeURIComponent(serviceName)}`;
-        onClose();
+    const handleBookClick = (service: Service) => {
+        setSelectedService(service);
+    };
+
+    const handleFormSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedService) return;
+
+        setIsSubmitting(true);
+        try {
+            await addDoc(collection(db, "bookings"), {
+                ...formData,
+                serviceId: selectedService.id,
+                serviceName: selectedService.name,
+                status: "new",
+                timestamp: serverTimestamp()
+            });
+            setIsSuccess(true);
+            toast.success("Booking completed successfully!");
+        } catch (error) {
+            console.error("Booking error:", error);
+            toast.error("Failed to submit booking. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const DiscountTiers = ({ isDark = false }: { isDark?: boolean }) => (
@@ -77,7 +119,6 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                 <div className="flex flex-col md:flex-row flex-1 h-full w-full overflow-hidden min-h-0">
                     {/* Desktop Left Sidebar: Bundle & Save (Hidden on Mobile) */}
                     <div className="hidden md:flex w-[380px] flex-col relative overflow-hidden bg-zinc-950 border-r border-white/5 shadow-2xl z-30 text-left shrink-0 min-h-0">
-                        {/* Aesthetic Background Overlay */}
                         <div className="absolute inset-0 opacity-40">
                             <img
                                 src="/images/hero1.jpeg"
@@ -230,7 +271,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                         )}
                                                     </div>
                                                     <Button
-                                                        onClick={() => handleBook(service.name)}
+                                                        onClick={() => handleBookClick(service)}
                                                         size="sm"
                                                         className="h-5 md:h-12 rounded-full md:rounded-2xl px-2.5 md:px-10 bg-zinc-900 dark:bg-primary text-white hover:bg-primary dark:hover:bg-primary/90 transition-all font-black text-[6px] md:text-sm shadow-lg group-hover:-translate-y-0.5 active:scale-95"
                                                     >
@@ -244,10 +285,172 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                 </div>
                             )}
                         </div>
-
-                        {/* Mobile Offers Layout Removed as requested */}
                     </div>
                 </div>
+
+                {/* Booking Form Overlay */}
+                <AnimatePresence>
+                    {selectedService && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="absolute inset-0 z-[100] bg-white dark:bg-zinc-950 flex flex-col"
+                        >
+                            <div className="flex items-center justify-between p-4 md:p-8 border-b dark:border-zinc-800">
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setSelectedService(null)}
+                                    className="gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                    <span>Back to Services</span>
+                                </Button>
+                                <h3 className="text-lg md:text-2xl font-black gradient-text text-left">Complete Your Booking</h3>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-4 md:p-10">
+                                {isSuccess ? (
+                                    <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
+                                        <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 animate-bounce-slow">
+                                            <CheckCircle2 className="w-12 h-12" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h4 className="text-2xl md:text-3xl font-black italic">Booking Successful!</h4>
+                                            <p className="text-zinc-500 font-medium max-w-md mx-auto">
+                                                Thank you for choosing Studio Glow. Your booking for <span className="text-primary font-bold">{selectedService.name}</span> has been received. We will contact you soon!
+                                            </p>
+                                        </div>
+                                        <Button
+                                            onClick={onClose}
+                                            className="bg-primary hover:bg-primary/90 text-white px-10 h-14 rounded-2xl font-black uppercase tracking-widest"
+                                        >
+                                            Got it
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <div className="max-w-4xl mx-auto">
+                                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+                                            <div className="lg:col-span-2 space-y-6">
+                                                <div className="p-6 rounded-3xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4 block">Selected Service</span>
+                                                    <h5 className="text-xl font-black mb-2 text-left">{selectedService.name}</h5>
+                                                    <div className="flex flex-col gap-2">
+                                                        {selectedService.price && (
+                                                            <div className="text-2xl font-black text-primary text-left">₹{selectedService.price}</div>
+                                                        )}
+                                                        {selectedService.duration && (
+                                                            <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                                                                <Clock className="w-3 h-3" />
+                                                                {selectedService.duration}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                                            <CheckCircle2 className="w-5 h-5 text-primary" />
+                                                        </div>
+                                                        <div className="text-left">
+                                                            <h6 className="font-bold text-sm">Priority Support</h6>
+                                                            <p className="text-xs text-zinc-500">Fast response guaranteed for all bookings.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <form onSubmit={handleFormSubmit} className="lg:col-span-3 space-y-6">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div className="space-y-2 text-left">
+                                                        <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-zinc-500">Full Name *</Label>
+                                                        <div className="relative">
+                                                            <User className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+                                                            <Input
+                                                                id="name"
+                                                                required
+                                                                placeholder="John Doe"
+                                                                className="pl-10 h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+                                                                value={formData.name}
+                                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-2 text-left">
+                                                        <Label htmlFor="phone" className="text-xs font-black uppercase tracking-widest text-zinc-500">Phone Number *</Label>
+                                                        <div className="relative">
+                                                            <Phone className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+                                                            <Input
+                                                                id="phone"
+                                                                required
+                                                                type="tel"
+                                                                placeholder="+91 00000 00000"
+                                                                className="pl-10 h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+                                                                value={formData.phone}
+                                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div className="space-y-2 text-left">
+                                                        <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-zinc-500">Email Address *</Label>
+                                                        <div className="relative">
+                                                            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+                                                            <Input
+                                                                id="email"
+                                                                required
+                                                                type="email"
+                                                                placeholder="john@example.com"
+                                                                className="pl-10 h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+                                                                value={formData.email}
+                                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-2 text-left">
+                                                        <Label htmlFor="date" className="text-xs font-black uppercase tracking-widest text-zinc-500">Event Date *</Label>
+                                                        <div className="relative">
+                                                            <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+                                                            <Input
+                                                                id="date"
+                                                                required
+                                                                type="date"
+                                                                className="pl-10 h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+                                                                value={formData.date}
+                                                                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-2 text-left">
+                                                    <Label htmlFor="message" className="text-xs font-black uppercase tracking-widest text-zinc-500">Message / Address (Optional)</Label>
+                                                    <Textarea
+                                                        id="message"
+                                                        placeholder="Provide details about your event location or special requests..."
+                                                        className="min-h-[120px] rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+                                                        value={formData.message}
+                                                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                                    />
+                                                </div>
+
+                                                <Button
+                                                    type="submit"
+                                                    disabled={isSubmitting}
+                                                    className="w-full h-14 bg-zinc-900 dark:bg-primary text-white hover:bg-primary dark:hover:bg-primary/90 transition-all font-black text-sm uppercase tracking-[0.2em] rounded-2xl shadow-xl active:scale-95 disabled:opacity-50"
+                                                >
+                                                    {isSubmitting ? "Submitting..." : "Confirm Booking"}
+                                                </Button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </DialogContent>
         </Dialog>
     );

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   Plus, Edit, Trash2, CheckCircle, MapPin, Phone, Mail, ExternalLink,
   User, Building2, Users, Palette, Music, Mic2, Sparkles, GraduationCap,
-  Inbox, Star, Film, Search, Bell, Camera
+  Inbox, Star, Film, Search, Bell, Camera, Clock, Calendar
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminTestimonials from "@/components/AdminTestimonials";
@@ -27,6 +27,19 @@ interface ContactSubmission {
   message: string;
   timestamp: any;
   status: string;
+}
+
+interface Booking {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  date: string;
+  message?: string;
+  serviceId: string;
+  serviceName: string;
+  status: string;
+  timestamp: any;
 }
 
 interface NewsletterSubscriber {
@@ -102,27 +115,39 @@ const serviceIcons: { [key: string]: any } = {
 };
 
 const collaboratorCategories = [
-  "Wedding Halls",
-  "Party Halls",
-  "Interior Designers",
-  "Makeup Artists",
+  "Makeover Artists",
   "Orchestra",
-  "DJ Services",
+  "DJ",
+  "Dhol",
+  "Resorts and Conventions",
+  "MC's",
+  "Magicians",
+  "Entertainers",
+  "Bands",
+  "Catering",
+  "Decor",
+  "Stage Lighting and Sounds",
+  "LED",
+  "VJ"
 ];
 
 const galleryCategories = [
   "Wedding",
+  "Pre wedding",
   "Engagement",
-  "Maternity",
-  "House Warming",
-  "Birthday",
-  "Stories",
-  "NamingCeremony",
-  "Concert",
-  "Haldi",
   "Reception",
+  "Haldi",
+  "Mehandi",
+  "Sangeeth",
+  "Get togethers",
+  "Birthdays",
+  "Naming ceremonies",
+  "Corporote shoots",
+  "Product Shoots",
+  "Industrial Photography and Films",
+  "Baby shower",
+  "Maternity",
   "Annaprashna",
-  "BabyShoot",
 ];
 
 const AdminDashboard = () => {
@@ -139,6 +164,7 @@ const AdminDashboard = () => {
   const [ratingsList, setRatingsList] = useState<any[]>([]);
   const [youtubeVideos, setYoutubeVideos] = useState<any[]>([]);
   const [servicesList, setServicesList] = useState<Service[]>([]);
+  const [bookingsList, setBookingsList] = useState<Booking[]>([]);
 
   // UI States
   const [newVideoCategory, setNewVideoCategory] = useState("");
@@ -216,8 +242,18 @@ const AdminDashboard = () => {
       setYoutubeVideos(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
-    const unsubServices = onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), (snap) => {
-      setServicesList(snap.docs.map(d => ({ id: d.id, ...d.data() } as Service)));
+    const unsubServices = onSnapshot(collection(db, "services"), (snap) => {
+      const services = snap.docs.map(d => ({ id: d.id, ...d.data() } as Service));
+      // Sort manually to handle cases where createdAt might be missing
+      setServicesList(services.sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        return timeB - timeA;
+      }));
+    });
+
+    const unsubBookings = onSnapshot(query(collection(db, "bookings"), orderBy("timestamp", "desc")), (snap) => {
+      setBookingsList(snap.docs.map(d => ({ id: d.id, ...d.data() } as Booking)));
     });
 
     return () => {
@@ -229,6 +265,7 @@ const AdminDashboard = () => {
       unsubRatings();
       unsubVideos();
       unsubServices();
+      unsubBookings();
     };
   }, [isAuthenticated]);
 
@@ -372,7 +409,10 @@ const AdminDashboard = () => {
     ratings: ratingsList.length,
     videos: youtubeVideos.length,
     services: servicesList.length,
+    bookings: bookingsList.filter(b => b.status === "new").length,
   };
+
+  const allCollaboratorCategories = collaboratorCategories;
 
   return (
     <SidebarProvider>
@@ -799,262 +839,352 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             )}
+            {/* Service Bookings View */}
+            {activeTab === "service-bookings" && (
+              <div className="grid gap-4">
+                {bookingsList.map((booking) => (
+                  <Card key={booking.id} className={`transition-all hover:shadow-md ${booking.status === "new" ? "border-l-4 border-l-primary bg-primary/5 shadow-lg" : ""}`}>
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
+                        <div className="space-y-4 flex-1">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <h3 className="font-black text-xl tracking-tight">{booking.name}</h3>
+                            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
+                              {booking.serviceName}
+                            </span>
+                            {booking.status === "new" && (
+                              <span className="px-3 py-1 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-widest animate-pulse">
+                                New Booking
+                              </span>
+                            )}
+                          </div>
 
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-1 text-left">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Contact Details</p>
+                              <div className="flex flex-col gap-1.5">
+                                <a href={`mailto:${booking.email}`} className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
+                                  <Mail className="w-4 h-4" /> {booking.email}
+                                </a>
+                                <a href={`tel:${booking.phone}`} className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
+                                  <Phone className="w-4 h-4" /> {booking.phone}
+                                </a>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1 text-left">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Event Schedule</p>
+                              <div className="flex items-center gap-2 text-sm font-bold">
+                                <Calendar className="w-4 h-4 text-primary" />
+                                {new Date(booking.date).toLocaleDateString('en-IN', { dateStyle: 'long' })}
+                              </div>
+                            </div>
+
+                            <div className="space-y-1 text-right">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Received On</p>
+                              <p className="text-sm font-medium">{formatDate(booking.timestamp)}</p>
+                            </div>
+                          </div>
+
+                          {booking.message && (
+                            <div className="bg-muted/30 p-4 rounded-2xl border border-dashed text-left">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Message / Address</p>
+                              <p className="text-sm italic leading-relaxed">"{booking.message}"</p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex sm:flex-col gap-2 shrink-0">
+                          {booking.status === "new" ? (
+                            <Button
+                              size="sm"
+                              className="bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all font-bold px-6"
+                              onClick={() => handleUpdateStatus("bookings", booking.id, "replied", "Booking marked as replied")}
+                            >
+                              <CheckCircle className="w-4 h-4 mr-2" /> Mark Replied
+                            </Button>
+                          ) : (
+                            <span className="text-[10px] font-black uppercase tracking-widest text-green-500 flex items-center gap-1.5 px-4 py-2 bg-green-500/10 rounded-xl self-end">
+                              <CheckCircle className="w-3 h-3" /> Replied
+                            </span>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="px-6 transition-all"
+                            onClick={() => handleDelete("bookings", booking.id, "Booking deleted permanently")}
+                          >
+                            <Trash2 className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Delete</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                {bookingsList.length === 0 && (
+                  <div className="text-center py-20 bg-muted/20 rounded-3xl border-2 border-dashed">
+                    <Calendar className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+                    <h3 className="text-xl font-bold">No Bookings Yet</h3>
+                    <p className="text-sm text-muted-foreground">Active service bookings will appear here.</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </div>
 
-        {/* Collaborator Form Modal */}
-        {showCollaboratorForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
-              <CardHeader>
-                <CardTitle>{editingCollaborator ? "Edit" : "Add"} Collaborator</CardTitle>
-                <CardDescription>
-                  {editingCollaborator ? "Update" : "Add"} collaborator information
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleCollaboratorSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Category *</Label>
-                      <select
-                        id="category"
-                        required
-                        value={collaboratorForm.category}
-                        onChange={(e) => handleCollaboratorFormChange("category", e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg bg-background"
-                      >
-                        <option value="">Select category</option>
-                        {collaboratorCategories.map((cat) => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
+          {/* Collaborator Form Modal */}
+          {showCollaboratorForm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+              <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+                <CardHeader>
+                  <CardTitle>{editingCollaborator ? "Edit" : "Add"} Collaborator</CardTitle>
+                  <CardDescription>
+                    {editingCollaborator ? "Update" : "Add"} collaborator information
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleCollaboratorSubmit} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="category">Category *</Label>
+                        <select
+                          id="category"
+                          required
+                          value={collaboratorForm.category}
+                          onChange={(e) => handleCollaboratorFormChange("category", e.target.value)}
+                          className="w-full px-3 py-2 border rounded-lg bg-background"
+                        >
+                          <option value="">Select category</option>
+                          {allCollaboratorCategories.map((cat) => (
+                            <option key={cat} value={cat}>{cat}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name *</Label>
+                        <Input
+                          id="name"
+                          required
+                          value={collaboratorForm.name}
+                          onChange={(e) => handleCollaboratorFormChange("name", e.target.value)}
+                        />
+                      </div>
                     </div>
+
                     <div className="space-y-2">
-                      <Label htmlFor="name">Name *</Label>
-                      <Input
-                        id="name"
+                      <Label htmlFor="description">Description *</Label>
+                      <Textarea
+                        id="description"
                         required
-                        value={collaboratorForm.name}
-                        onChange={(e) => handleCollaboratorFormChange("name", e.target.value)}
+                        value={collaboratorForm.description}
+                        onChange={(e) => handleCollaboratorFormChange("description", e.target.value)}
                       />
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description *</Label>
-                    <Textarea
-                      id="description"
-                      required
-                      value={collaboratorForm.description}
-                      onChange={(e) => handleCollaboratorFormChange("description", e.target.value)}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="imageUrl">Image URL *</Label>
-                    <Input
-                      id="imageUrl"
-                      required
-                      type="url"
-                      value={collaboratorForm.imageUrl}
-                      onChange={(e) => handleCollaboratorFormChange("imageUrl", e.target.value)}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="location">Location *</Label>
+                      <Label htmlFor="imageUrl">Image URL *</Label>
                       <Input
-                        id="location"
+                        id="imageUrl"
                         required
-                        value={collaboratorForm.location}
-                        onChange={(e) => handleCollaboratorFormChange("location", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="address">Full Address *</Label>
-                      <Input
-                        id="address"
-                        required
-                        value={collaboratorForm.address}
-                        onChange={(e) => handleCollaboratorFormChange("address", e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="contactNumber">Contact Number *</Label>
-                      <Input
-                        id="contactNumber"
-                        required
-                        type="tel"
-                        value={collaboratorForm.contactNumber}
-                        onChange={(e) => handleCollaboratorFormChange("contactNumber", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="whatsappNumber">WhatsApp Number *</Label>
-                      <Input
-                        id="whatsappNumber"
-                        required
-                        type="tel"
-                        value={collaboratorForm.whatsappNumber}
-                        onChange={(e) => handleCollaboratorFormChange("whatsappNumber", e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email *</Label>
-                      <Input
-                        id="email"
-                        required
-                        type="email"
-                        value={collaboratorForm.email}
-                        onChange={(e) => handleCollaboratorFormChange("email", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="website">Website (Optional)</Label>
-                      <Input
-                        id="website"
                         type="url"
-                        value={collaboratorForm.website}
-                        onChange={(e) => handleCollaboratorFormChange("website", e.target.value)}
+                        value={collaboratorForm.imageUrl}
+                        onChange={(e) => handleCollaboratorFormChange("imageUrl", e.target.value)}
                       />
                     </div>
-                  </div>
 
-                  <div className="flex gap-3 justify-end pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setShowCollaboratorForm(false);
-                        setEditingCollaborator(null);
-                        setCollaboratorForm({
-                          category: "",
-                          name: "",
-                          description: "",
-                          imageUrl: "",
-                          address: "",
-                          location: "",
-                          whatsappNumber: "",
-                          contactNumber: "",
-                          email: "",
-                          website: ""
-                        });
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={isSubmittingCollaborator}>
-                      {isSubmittingCollaborator ? "Saving..." : editingCollaborator ? "Update Collaborator" : "Add Collaborator"}
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-        {/* Service Form Modal */}
-        {showServiceForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
-              <CardHeader>
-                <CardTitle>{editingService ? "Edit" : "Add"} Service</CardTitle>
-                <CardDescription>
-                  {editingService ? "Update" : "Add"} service information for booking
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleServiceSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="service-name">Service Name *</Label>
-                    <Input
-                      id="service-name"
-                      required
-                      value={serviceForm.name}
-                      onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
-                      placeholder="e.g. Wedding Photography Pack"
-                    />
-                  </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="location">Location *</Label>
+                        <Input
+                          id="location"
+                          required
+                          value={collaboratorForm.location}
+                          onChange={(e) => handleCollaboratorFormChange("location", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="address">Full Address *</Label>
+                        <Input
+                          id="address"
+                          required
+                          value={collaboratorForm.address}
+                          onChange={(e) => handleCollaboratorFormChange("address", e.target.value)}
+                        />
+                      </div>
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="service-description">Description *</Label>
-                    <Textarea
-                      id="service-description"
-                      required
-                      value={serviceForm.description}
-                      onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
-                      placeholder="Describe what's included in this service"
-                    />
-                  </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="contactNumber">Contact Number *</Label>
+                        <Input
+                          id="contactNumber"
+                          required
+                          type="tel"
+                          value={collaboratorForm.contactNumber}
+                          onChange={(e) => handleCollaboratorFormChange("contactNumber", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="whatsappNumber">WhatsApp Number *</Label>
+                        <Input
+                          id="whatsappNumber"
+                          required
+                          type="tel"
+                          value={collaboratorForm.whatsappNumber}
+                          onChange={(e) => handleCollaboratorFormChange("whatsappNumber", e.target.value)}
+                        />
+                      </div>
+                    </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          required
+                          type="email"
+                          value={collaboratorForm.email}
+                          onChange={(e) => handleCollaboratorFormChange("email", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="website">Website (Optional)</Label>
+                        <Input
+                          id="website"
+                          type="url"
+                          value={collaboratorForm.website}
+                          onChange={(e) => handleCollaboratorFormChange("website", e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 justify-end pt-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          setShowCollaboratorForm(false);
+                          setEditingCollaborator(null);
+                          setCollaboratorForm({
+                            category: "",
+                            name: "",
+                            description: "",
+                            imageUrl: "",
+                            address: "",
+                            location: "",
+                            whatsappNumber: "",
+                            contactNumber: "",
+                            email: "",
+                            website: ""
+                          });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" disabled={isSubmittingCollaborator}>
+                        {isSubmittingCollaborator ? "Saving..." : editingCollaborator ? "Update Collaborator" : "Add Collaborator"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          {/* Service Form Modal */}
+          {showServiceForm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+              <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+                <CardHeader>
+                  <CardTitle>{editingService ? "Edit" : "Add"} Service</CardTitle>
+                  <CardDescription>
+                    {editingService ? "Update" : "Add"} service information for booking
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleServiceSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="service-price">Price (in ₹, e.g. 5000)</Label>
+                      <Label htmlFor="service-name">Service Name *</Label>
                       <Input
-                        id="service-price"
-                        value={serviceForm.price}
-                        onChange={(e) => setServiceForm({ ...serviceForm, price: e.target.value })}
-                        placeholder="5000"
+                        id="service-name"
+                        required
+                        value={serviceForm.name}
+                        onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
+                        placeholder="e.g. Wedding Photography Pack"
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <Label htmlFor="service-duration">Duration (e.g. 4 hours, Full day)</Label>
-                      <Input
-                        id="service-duration"
-                        value={serviceForm.duration}
-                        onChange={(e) => setServiceForm({ ...serviceForm, duration: e.target.value })}
+                      <Label htmlFor="service-description">Description *</Label>
+                      <Textarea
+                        id="service-description"
+                        required
+                        value={serviceForm.description}
+                        onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
+                        placeholder="Describe what's included in this service"
                       />
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="service-imageUrl">Image URL (Optional)</Label>
-                    <Input
-                      id="service-imageUrl"
-                      type="url"
-                      value={serviceForm.imageUrl}
-                      onChange={(e) => setServiceForm({ ...serviceForm, imageUrl: e.target.value })}
-                    />
-                  </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="service-price">Price (in ₹, e.g. 5000)</Label>
+                        <Input
+                          id="service-price"
+                          value={serviceForm.price}
+                          onChange={(e) => setServiceForm({ ...serviceForm, price: e.target.value })}
+                          placeholder="5000"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="service-duration">Duration (e.g. 4 hours, Full day)</Label>
+                        <Input
+                          id="service-duration"
+                          value={serviceForm.duration}
+                          onChange={(e) => setServiceForm({ ...serviceForm, duration: e.target.value })}
+                        />
+                      </div>
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="service-category">Category (Optional)</Label>
-                    <Input
-                      id="service-category"
-                      value={serviceForm.category}
-                      onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
-                      placeholder="e.g. Wedding, Event, Portraits"
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="service-imageUrl">Image URL (Optional)</Label>
+                      <Input
+                        id="service-imageUrl"
+                        type="url"
+                        value={serviceForm.imageUrl}
+                        onChange={(e) => setServiceForm({ ...serviceForm, imageUrl: e.target.value })}
+                      />
+                    </div>
 
-                  <div className="flex gap-3 justify-end pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setShowServiceForm(false);
-                        setEditingService(null);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={isSubmittingService}>
-                      {isSubmittingService ? "Saving..." : editingService ? "Update Service" : "Add Service"}
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+                    <div className="space-y-2">
+                      <Label htmlFor="service-category">Category (Optional)</Label>
+                      <Input
+                        id="service-category"
+                        value={serviceForm.category}
+                        onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
+                        placeholder="e.g. Wedding, Event, Portraits"
+                      />
+                    </div>
+
+                    <div className="flex gap-3 justify-end pt-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          setShowServiceForm(false);
+                          setEditingService(null);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" disabled={isSubmittingService}>
+                        {isSubmittingService ? "Saving..." : editingService ? "Update Service" : "Add Service"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

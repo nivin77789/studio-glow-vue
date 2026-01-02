@@ -24,6 +24,7 @@ import {
     LayoutDashboard,
     Settings,
     Sparkles,
+    Calendar,
 } from "lucide-react";
 
 export function AdminSidebar({
@@ -44,6 +45,7 @@ export function AdminSidebar({
         ratings: number;
         videos: number;
         services: number;
+        bookings: number;
     };
 }) {
     const menuItems = [
@@ -57,24 +59,31 @@ export function AdminSidebar({
                     count: counts.collaborators,
                 },
                 {
-                    title: "Collaborations",
-                    icon: Building2,
-                    id: "collaborations",
-                    count: counts.collaborations,
-                    alert: counts.collaborations > 0,
-                },
-                {
                     title: "Enrollments",
                     icon: GraduationCap,
                     id: "enrollments",
                     count: counts.enrollments,
                     alert: counts.enrollments > 0,
                 },
+                {
+                    title: "Service Bookings",
+                    icon: Calendar,
+                    id: "service-bookings",
+                    count: counts.bookings,
+                    alert: counts.bookings > 0,
+                },
             ],
         },
         {
             title: "Communication",
             items: [
+                {
+                    title: "Collaborations",
+                    icon: Building2,
+                    id: "collaborations",
+                    count: counts.collaborations,
+                    alert: counts.collaborations > 0,
+                },
                 {
                     title: "Contacts",
                     icon: Inbox,

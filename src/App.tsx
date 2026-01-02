@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
 import { BookingProvider } from "@/hooks/useBooking";
+import { SmoothScroll } from "@/components/SmoothScroll";
+
 const FAQChatbot = lazy(() => import("@/components/FAQChatbot"));
 const RatingWidget = lazy(() => import("@/components/RatingWidget"));
 
@@ -36,6 +38,7 @@ const GlobalWidgets = () => {
 
   return (
     <Suspense fallback={null}>
+      <SmoothScroll />
       <FAQChatbot />
       <RatingWidget />
     </Suspense>
