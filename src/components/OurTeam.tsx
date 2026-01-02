@@ -95,7 +95,7 @@ const teamMembers = [
         name: "Mukul",
         role: "Creative Head",
         experience: "12+ Years Experience",
-        image: "/images/Team Photos WebP/Team Photos_Mark.webp",
+        image: "/images/Team Photos WebP/Team Photos_Mukul.webp",
         bio: "Leading our creative vision with innovative ideas that push the boundaries of visual excellence.",
         social: {
             instagram: "#",
