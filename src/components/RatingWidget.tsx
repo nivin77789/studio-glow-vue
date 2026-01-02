@@ -38,7 +38,7 @@ export default function RatingWidget() {
   return (
     <div>
       {/* Floating button - positioned above chatbot on mobile/tablet */}
-      <div className="fixed bottom-6 left-4 md:bottom-6 md:left-6 z-50">
+      <div className="fixed bottom-6 left-4 md:bottom-6 md:left-6 z-[9999]">
         <div className="relative">
           <button
             aria-label="Rate our service"
@@ -56,7 +56,7 @@ export default function RatingWidget() {
       </div>
 
       {open && (
-        <div className="fixed bottom-20 left-4 z-50 w-[320px] max-w-full bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
+        <div className="fixed bottom-20 left-4 z-[9999] w-[320px] max-w-full bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
             <div className="font-medium">Rate Our Service</div>
             <div className="flex items-center gap-2">

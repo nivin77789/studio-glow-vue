@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Camera, Aperture, Sparkles, Video, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBooking } from "@/hooks/useBooking";
 
 const bannerImages = [
   {
@@ -21,6 +22,7 @@ const bannerImages = [
 ];
 
 const HeroLanding = () => {
+  const { openBooking } = useBooking();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -67,6 +69,7 @@ const HeroLanding = () => {
               alt={image.title}
               className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
               {...(index === 0 ? { fetchPriority: "high" } : {})}
             />
             {/* Dark overlay for better text readability */}
@@ -134,9 +137,10 @@ const HeroLanding = () => {
           <div className="flex flex-wrap gap-4 justify-center animate-slide-right" style={{ animationDelay: "0.6s" }}>
             <Button
               size="lg"
+              onClick={openBooking}
               className="px-8 py-6 text-lg font-light bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
-              Book a Shoot
+              Book Online
             </Button>
             <Button
               size="lg"
@@ -156,8 +160,8 @@ const HeroLanding = () => {
             key={index}
             onClick={() => goToSlide(index)}
             className={`transition-all ${index === currentSlide
-                ? "w-12 h-3 bg-white rounded-full"
-                : "w-3 h-3 bg-white/40 hover:bg-white/60 rounded-full"
+              ? "w-12 h-3 bg-white rounded-full"
+              : "w-3 h-3 bg-white/40 hover:bg-white/60 rounded-full"
               }`}
             aria-label={`Go to slide ${index + 1}`}
           />

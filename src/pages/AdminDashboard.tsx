@@ -62,6 +62,17 @@ interface CollaborationRequest {
   status: string;
 }
 
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  price?: string;
+  imageUrl?: string;
+  category?: string;
+  duration?: string;
+  createdAt: any;
+}
+
 interface Collaborator {
   id: string;
   category: string;
@@ -127,6 +138,7 @@ const AdminDashboard = () => {
   const [collaboratorsList, setCollaboratorsList] = useState<Collaborator[]>([]);
   const [ratingsList, setRatingsList] = useState<any[]>([]);
   const [youtubeVideos, setYoutubeVideos] = useState<any[]>([]);
+  const [servicesList, setServicesList] = useState<Service[]>([]);
 
   // UI States
   const [newVideoCategory, setNewVideoCategory] = useState("");
@@ -147,6 +159,19 @@ const AdminDashboard = () => {
     contactNumber: "",
     email: "",
     website: ""
+  });
+
+  // Service Management States
+  const [showServiceForm, setShowServiceForm] = useState(false);
+  const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isSubmittingService, setIsSubmittingService] = useState(false);
+  const [serviceForm, setServiceForm] = useState({
+    name: "",
+    description: "",
+    price: "",
+    imageUrl: "",
+    category: "",
+    duration: ""
   });
 
   // Auth Check
@@ -191,6 +216,10 @@ const AdminDashboard = () => {
       setYoutubeVideos(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
+    const unsubServices = onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), (snap) => {
+      setServicesList(snap.docs.map(d => ({ id: d.id, ...d.data() } as Service)));
+    });
+
     return () => {
       unsubContacts();
       unsubNewsletter();
@@ -199,6 +228,7 @@ const AdminDashboard = () => {
       unsubCollaborators();
       unsubRatings();
       unsubVideos();
+      unsubServices();
     };
   }, [isAuthenticated]);
 
@@ -272,6 +302,45 @@ const AdminDashboard = () => {
     setShowCollaboratorForm(true);
   };
 
+  const handleServiceSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingService(true);
+    try {
+      if (editingService) {
+        await updateDoc(doc(db, "services", editingService.id), serviceForm);
+        toast.success("Service updated");
+      } else {
+        await addDoc(collection(db, "services"), {
+          ...serviceForm,
+          createdAt: serverTimestamp()
+        });
+        toast.success("Service added");
+      }
+      setShowServiceForm(false);
+      setEditingService(null);
+      setServiceForm({
+        name: "", description: "", price: "", imageUrl: "", category: "", duration: ""
+      });
+    } catch (error) {
+      toast.error("Failed to save service");
+    } finally {
+      setIsSubmittingService(false);
+    }
+  };
+
+  const handleEditService = (service: Service) => {
+    setEditingService(service);
+    setServiceForm({
+      name: service.name,
+      description: service.description,
+      price: service.price || "",
+      imageUrl: service.imageUrl || "",
+      category: service.category || "",
+      duration: service.duration || ""
+    });
+    setShowServiceForm(true);
+  };
+
   const handleDeleteCollaborator = async (id: string) => {
     try {
       await deleteDoc(doc(db, "collaborators", id));
@@ -302,6 +371,7 @@ const AdminDashboard = () => {
     subscribers: newsletterSubscribers.length,
     ratings: ratingsList.length,
     videos: youtubeVideos.length,
+    services: servicesList.length,
   };
 
   return (
@@ -655,6 +725,81 @@ const AdminDashboard = () => {
               </Card>
             )}
 
+            {/* Services Management View */}
+            {activeTab === "services" && (
+              <Card className="border-none shadow-lg bg-white/80 dark:bg-black/40 backdrop-blur-md">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Services Management</CardTitle>
+                    <CardDescription>Manage the list of services shown in the booking popup</CardDescription>
+                  </div>
+                  <Button onClick={() => {
+                    setEditingService(null);
+                    setServiceForm({
+                      name: "", description: "", price: "", imageUrl: "", category: "", duration: ""
+                    });
+                    setShowServiceForm(true);
+                  }} className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add New Service
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {servicesList.map((service) => (
+                      <div key={service.id} className="group relative overflow-hidden rounded-2xl border bg-card/50 backdrop-blur-sm p-4 md:p-5 transition-all hover:shadow-2xl hover:border-primary/50 dark:hover:border-primary/30 animate-scale-in">
+                        {/* Admin Action Overlay on Hover */}
+                        <div className="absolute top-3 right-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                          <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full shadow-lg" onClick={() => handleEditService(service)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="destructive" className="h-8 w-8 rounded-full shadow-lg" onClick={() => handleDelete("services", service.id, "Service deleted")}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6">
+                          <div className="h-24 w-24 sm:h-20 sm:w-20 rounded-xl overflow-hidden bg-muted flex-shrink-0 shadow-inner">
+                            {service.imageUrl ? (
+                              <img src={service.imageUrl} alt={service.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                            ) : (
+                              <div className="h-full w-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                                <Sparkles className="w-8 h-8 text-primary" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0 text-center sm:text-left">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                              <h4 className="font-bold text-lg truncate group-hover:text-primary transition-colors">{service.name}</h4>
+                              {service.category && (
+                                <span className="inline-flex self-center sm:self-auto items-center px-2 py-0.5 rounded-full bg-accent/10 text-accent-foreground text-[10px] font-bold uppercase tracking-wider">
+                                  {service.category}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-4 line-clamp-2 md:line-clamp-3">{service.description}</p>
+                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                              {service.price && (
+                                <div className="flex items-center gap-1 text-sm font-black text-primary">
+                                  ₹{service.price}
+                                </div>
+                              )}
+                              {service.duration && (
+                                <div className="flex items-center gap-1 text-xs font-semibold text-muted-foreground bg-muted/50 px-2 py-1 rounded-lg">
+                                  <Clock className="w-3 h-3" />
+                                  {service.duration}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
           </div>
         </div>
 
@@ -809,6 +954,100 @@ const AdminDashboard = () => {
                     </Button>
                     <Button type="submit" disabled={isSubmittingCollaborator}>
                       {isSubmittingCollaborator ? "Saving..." : editingCollaborator ? "Update Collaborator" : "Add Collaborator"}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        {/* Service Form Modal */}
+        {showServiceForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+              <CardHeader>
+                <CardTitle>{editingService ? "Edit" : "Add"} Service</CardTitle>
+                <CardDescription>
+                  {editingService ? "Update" : "Add"} service information for booking
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleServiceSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="service-name">Service Name *</Label>
+                    <Input
+                      id="service-name"
+                      required
+                      value={serviceForm.name}
+                      onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
+                      placeholder="e.g. Wedding Photography Pack"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="service-description">Description *</Label>
+                    <Textarea
+                      id="service-description"
+                      required
+                      value={serviceForm.description}
+                      onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
+                      placeholder="Describe what's included in this service"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="service-price">Price (in ₹, e.g. 5000)</Label>
+                      <Input
+                        id="service-price"
+                        value={serviceForm.price}
+                        onChange={(e) => setServiceForm({ ...serviceForm, price: e.target.value })}
+                        placeholder="5000"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="service-duration">Duration (e.g. 4 hours, Full day)</Label>
+                      <Input
+                        id="service-duration"
+                        value={serviceForm.duration}
+                        onChange={(e) => setServiceForm({ ...serviceForm, duration: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="service-imageUrl">Image URL (Optional)</Label>
+                    <Input
+                      id="service-imageUrl"
+                      type="url"
+                      value={serviceForm.imageUrl}
+                      onChange={(e) => setServiceForm({ ...serviceForm, imageUrl: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="service-category">Category (Optional)</Label>
+                    <Input
+                      id="service-category"
+                      value={serviceForm.category}
+                      onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
+                      placeholder="e.g. Wedding, Event, Portraits"
+                    />
+                  </div>
+
+                  <div className="flex gap-3 justify-end pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowServiceForm(false);
+                        setEditingService(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={isSubmittingService}>
+                      {isSubmittingService ? "Saving..." : editingService ? "Update Service" : "Add Service"}
                     </Button>
                   </div>
                 </form>

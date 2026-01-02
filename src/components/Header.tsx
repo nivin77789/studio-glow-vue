@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Sparkles, Camera } from "lucide-react";
+import { Moon, Sun, Sparkles, Camera, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useBooking } from "@/hooks/useBooking";
 
 const Header = () => {
+  const { openBooking } = useBooking();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem("darkMode");
@@ -75,16 +77,16 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo and Studio Name */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-1.5 md:gap-2 group">
             <img
               src="/logo.png"
               alt="Trixietales"
-              className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
+              className="h-8 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
             />
-            <span className="ml-2 text-2xl font-semibold gradient-text relative inline-block">
+            <span className="ml-1 md:ml-2 text-lg md:text-2xl font-semibold gradient-text relative inline-block">
               Trixietales
-              <Camera className="orbit-camera text-primary" />
-              <Camera className="orbit-camera text-accent" style={{ animationDelay: '2s' }} />
+              <Camera className="orbit-camera text-primary hidden md:block" />
+              <Camera className="orbit-camera text-accent hidden md:block" style={{ animationDelay: '2s' }} />
             </span>
           </Link>
 
@@ -109,6 +111,13 @@ const Header = () => {
               </Link>
             ))}
             <Button
+              onClick={openBooking}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Book Online</span>
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
@@ -123,7 +132,15 @@ const Header = () => {
           </nav>
 
           {/* Mobile Theme Toggle */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            <Button
+              onClick={openBooking}
+              size="sm"
+              className="bg-primary hover:bg-primary/90 text-white rounded-full px-3 shadow-lg shadow-primary/20 transition-all text-[10px] h-7 flex items-center gap-1"
+            >
+              <Calendar className="w-3 h-3" />
+              <span>Book</span>
+            </Button>
             <Button
               variant="ghost"
               size="icon"

@@ -1,10 +1,10 @@
-import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
+import { BookingProvider } from "@/hooks/useBooking";
 const FAQChatbot = lazy(() => import("@/components/FAQChatbot"));
 const RatingWidget = lazy(() => import("@/components/RatingWidget"));
 
@@ -45,26 +45,27 @@ const GlobalWidgets = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
+      <Sonner position="top-center" richColors />
       <BrowserRouter>
-        <GlobalWidgets />
-        <ScrollToTop />
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/portfolio" element={<PortfolioPage />} />
-            <Route path="/experience" element={<ExperiencePage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/collaborations" element={<CollaborationsPage />} />
-            <Route path="/prints" element={<PrintsPage />} />
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <BookingProvider>
+          <GlobalWidgets />
+          <ScrollToTop />
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/courses" element={<CoursesPage />} />
+              <Route path="/portfolio" element={<PortfolioPage />} />
+              <Route path="/experience" element={<ExperiencePage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/collaborations" element={<CollaborationsPage />} />
+              <Route path="/prints" element={<PrintsPage />} />
+              <Route path="/admin" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BookingProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

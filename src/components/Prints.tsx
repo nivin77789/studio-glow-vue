@@ -355,20 +355,20 @@ const Prints = () => {
         </div>
 
         {/* CTA Section */}
-        <div className={`mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <Card className="border-0 shadow-lg inline-block">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold mb-4">Custom Print Solutions</h3>
-              <p className="text-muted-foreground mb-6 max-w-md">
+        <div className={`mt-10 md:mt-16 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <Card className="border-0 shadow-lg inline-block w-full md:w-auto overflow-hidden">
+            <CardContent className="p-6 md:p-8">
+              <h3 className="text-lg md:text-2xl font-bold mb-3 md:mb-4">Custom Print Solutions</h3>
+              <p className="text-[13px] md:text-base text-muted-foreground mb-5 md:mb-6 max-w-md mx-auto">
                 Can't find what you're looking for? We offer custom printing solutions tailored to your needs.
               </p>
               <Button
                 size="lg"
-                className="group"
+                className="group w-full sm:w-auto py-4 md:py-6 h-auto text-[13px] md:text-base"
                 onClick={() => handleOrder("Custom Print Solutions", null)}
               >
                 Contact Us for Custom Orders
-                <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
+                <Sparkles className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:rotate-12 transition-transform" />
               </Button>
             </CardContent>
           </Card>

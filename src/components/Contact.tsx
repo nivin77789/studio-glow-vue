@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
 
 const Contact = () => {
-  const { toast } = useToast();
+  const location = useLocation();
   const { ref, isVisible } = useScrollReveal();
   const [formData, setFormData] = useState({
     name: "",
@@ -18,6 +19,17 @@ const Contact = () => {
     phone: "",
     message: "",
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const service = params.get("service");
+    if (service) {
+      setFormData(prev => ({
+        ...prev,
+        message: `I'm interested in booking the ${service} service. Please provide more details.`
+      }));
+    }
+  }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,16 +44,13 @@ const Contact = () => {
         status: "unread"
       });
 
-      toast({
-        title: "Message Sent!",
+      toast.success("Message Sent!", {
         description: "We'll get back to you as soon as possible.",
       });
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to send message. Please try again.",
-        variant: "destructive"
       });
       console.error("Error submitting form:", error);
     }

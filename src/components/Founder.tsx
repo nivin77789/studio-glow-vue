@@ -77,7 +77,6 @@ const Founder = () => {
     setTranslate({ x: 0, y: 0 });
   };
 
-
   return (
     <section ref={ref} className="py-24 relative overflow-hidden">
       {/* Photography-themed background */}
@@ -112,9 +111,6 @@ const Founder = () => {
           </p>
         </div>
 
-        {/* What Sets Us Apart - Centered Between Columns */}
-
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
           {/* Left Column - Image Section */}
           <div className={`relative transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
@@ -126,39 +122,22 @@ const Founder = () => {
                   alt="Markhandeya - Founder"
                   ref={imgRef}
                   onClick={openZoom}
-                  className="aspect-[3/4] w-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-700 cursor-zoom-in"
+                  className="aspect-[3/4] w-full object-cover object-top rounded-3xl group-hover:scale-105 transition-transform duration-700 cursor-zoom-in"
+                  style={{
+                    maskImage: 'radial-gradient(circle at 50% 40%, black 70%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(circle at 50% 40%, black 70%, transparent 100%)'
+                  }}
                 />
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
-
-                {/* Decorative corner accents */}
-                <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary rounded-tl-3xl" />
-                <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-accent rounded-br-3xl" />
+                {/* Subtler overlays for better merging */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-40 pointer-events-none" />
+                <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent opacity-20 pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent opacity-20 pointer-events-none" />
+                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent opacity-10 pointer-events-none" />
               </div>
 
-              {/* Social Media Links - Below Image */}
-              <div className="flex justify-center gap-4 mt-8">
-                {socialLinks.map((social, index) => {
-                  const Icon = social.icon;
-                  return (
-                    <a
-                      key={social.name}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/social relative animate-float"
-                      style={{ animationDelay: `${index * 0.2}s` }}
-                    >
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 backdrop-blur-xl flex items-center justify-center hover-lift transition-all duration-500 group-hover/social:scale-110 shadow-2xl group-hover/social:shadow-primary/60 border-2 border-white/30 group-hover/social:border-white/60 group-hover/social:from-primary/50 group-hover/social:to-accent/50">
-                        <Icon className="w-7 h-7 text-white/80 group-hover/social:text-white transition-all duration-300 group-hover/social:rotate-12 drop-shadow-lg" />
-                      </div>
-                      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gradient-to-r from-primary to-accent text-white text-xs font-medium rounded-lg opacity-0 group-hover/social:opacity-100 transition-all duration-300 whitespace-nowrap shadow-xl">
-                        {social.name}
-                      </span>
-                    </a>
-                  );
-                })}
-              </div>
+              {/* Decorative corner accents */}
+              <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary rounded-tl-3xl pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-accent rounded-br-3xl pointer-events-none" />
 
               {/* Floating achievement badges */}
               {achievements.map((achievement, index) => {
@@ -166,22 +145,46 @@ const Founder = () => {
                 return (
                   <div
                     key={achievement.label}
-                    className="absolute glass rounded-2xl p-4 shadow-xl hover-lift animate-float backdrop-blur-md border border-white/20"
+                    className="absolute glass rounded-lg md:rounded-2xl p-1.5 md:p-4 shadow-xl hover-lift animate-float backdrop-blur-md border border-white/20 z-20"
                     style={{
                       top: `${15 + index * 28}%`,
-                      right: index % 2 === 0 ? '-2rem' : 'auto',
-                      left: index % 2 !== 0 ? '-2rem' : 'auto',
+                      right: index % 2 === 0 ? (window.innerWidth < 768 ? '0.25rem' : '-2rem') : 'auto',
+                      left: index % 2 !== 0 ? (window.innerWidth < 768 ? '0.25rem' : '-2rem') : 'auto',
                       animationDelay: `${index * 0.5}s`,
                       animationDuration: '6s'
                     }}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${achievement.color} flex items-center justify-center shadow-lg`}>
-                        <Icon className="w-6 h-6 text-white" />
+                    <div className="flex items-center gap-1.5 md:gap-3">
+                      <div className={`w-6 h-6 md:w-12 md:h-12 rounded-md md:rounded-xl bg-gradient-to-br ${achievement.color} flex items-center justify-center shadow-lg`}>
+                        <Icon className="w-3 h-3 md:w-6 md:h-6 text-white" />
                       </div>
-                      <span className="font-bold text-sm whitespace-nowrap">{achievement.label}</span>
+                      <span className="font-bold text-[8px] md:text-sm whitespace-nowrap">{achievement.label}</span>
                     </div>
                   </div>
+                );
+              })}
+            </div>
+
+            {/* Social Media Links - Below Image */}
+            <div className="flex justify-center gap-4 mt-8">
+              {socialLinks.map((social, index) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/social relative animate-float"
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 backdrop-blur-xl flex items-center justify-center hover-lift transition-all duration-500 group-hover/social:scale-110 shadow-2xl group-hover/social:shadow-primary/60 border-2 border-white/30 group-hover/social:border-white/60 group-hover/social:from-primary/50 group-hover/social:to-accent/50">
+                      <Icon className="w-7 h-7 text-white/80 group-hover/social:text-white transition-all duration-300 group-hover/social:rotate-12 drop-shadow-lg" />
+                    </div>
+                    <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gradient-to-r from-primary to-accent text-white text-xs font-medium rounded-lg opacity-0 group-hover/social:opacity-100 transition-all duration-300 whitespace-nowrap shadow-xl">
+                      {social.name}
+                    </span>
+                  </a>
                 );
               })}
             </div>
@@ -227,8 +230,6 @@ const Founder = () => {
                 them at lightning speed, so you can share your joy instantly."
               </p>
             </div>
-
-
           </div>
         </div>
 

@@ -442,7 +442,7 @@ export default function GalleryPage() {
                         {(modalGallery?.images || []).map((img, idx) => (
                           <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
                             <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
-                              <img src={img} loading="lazy" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
+                              <img src={img} loading="lazy" decoding="async" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
                             </button>
                           </div>
                         ))}
@@ -455,7 +455,7 @@ export default function GalleryPage() {
                           <div key={idx} className="relative rounded-lg overflow-hidden bg-black text-white shadow-sm">
                             {isYouTubeUrl(videoUrl) ? (
                               <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }} className="block w-full h-full">
-                                <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" className="w-full h-56 object-cover" />
+                                <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" decoding="async" className="w-full h-56 object-cover" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                   <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
                                     <Play className="w-8 h-8 text-primary" />
@@ -593,7 +593,7 @@ export default function GalleryPage() {
               <div className="md:col-span-2 rounded-xl overflow-hidden shadow-lg">
                 {currentGallery.images[0] ? (
                   <button onClick={() => openLightbox("image", 0)} className="block w-full h-full">
-                    <img src={currentGallery.images[0]} className="w-full h-96 object-cover rounded-xl" />
+                    <img src={currentGallery.images[0]} decoding="async" className="w-full h-96 object-cover rounded-xl" />
                   </button>
                 ) : (
                   <div className="w-full h-96 bg-gray-100 dark:bg-slate-800 rounded-xl" />
@@ -602,7 +602,7 @@ export default function GalleryPage() {
               <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
                 {currentGallery.images.slice(1, 5).map((img, idx) => (
                   <button key={idx} onClick={() => openLightbox("image", idx + 1)} className="rounded-lg overflow-hidden group shadow-sm">
-                    <img src={img} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                    <img src={img} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>
@@ -613,7 +613,7 @@ export default function GalleryPage() {
               {currentGallery.images.map((img, idx) => (
                 <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm">
                   <button onClick={() => openLightbox("image", idx)} className="block w-full h-full">
-                    <img src={img} alt={`${selectedCategory} ${idx + 1}`} className="w-full object-cover rounded-lg" loading="lazy" />
+                    <img src={img} alt={`${selectedCategory} ${idx + 1}`} className="w-full object-cover rounded-lg" loading="lazy" decoding="async" />
                   </button>
                 </div>
               ))}

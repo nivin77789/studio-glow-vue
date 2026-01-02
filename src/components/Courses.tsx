@@ -375,7 +375,7 @@ const Courses = () => {
                             </div>
 
                             {/* Title */}
-                            <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-all duration-300 group-hover:translate-x-1">
+                            <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover:text-primary transition-all duration-300 group-hover:translate-x-1">
                               {course.title}
                             </h3>
                           </div>
@@ -383,7 +383,7 @@ const Courses = () => {
 
                         {/* Content section */}
                         <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-primary/5 group-hover:to-primary/10 transition-all duration-500">
-                          <p className="text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                          <p className="text-[13px] md:text-base text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
                             {course.description}
                           </p>
 
@@ -398,8 +398,8 @@ const Courses = () => {
                                   opacity: 0
                                 }}
                               >
-                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-primary to-accent flex-shrink-0 group-hover/item:scale-150 transition-transform duration-300" />
-                                <span className="group-hover/item:text-foreground transition-colors duration-300">
+                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gradient-to-r from-primary to-accent flex-shrink-0 group-hover/item:scale-150 transition-transform duration-300" />
+                                <span className="group-hover/item:text-foreground transition-colors duration-300 text-[11px] md:text-sm">
                                   {feature}
                                 </span>
                               </li>

@@ -6,7 +6,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Building2, Mic2, Music, Palette, Sparkles, Users, Phone, Mail, MapPin, X, Camera, ExternalLink, MessageCircle } from "lucide-react";
+import {
+  Building2, Mic2, Music, Palette, Sparkles, Users, Phone, Mail,
+  MapPin, X, Camera, ExternalLink, MessageCircle, Utensils,
+  PartyPopper, Zap, Volume2, Tv, Video, Star, Heart, Drum
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 // Firebase imports
 import { db } from "@/lib/firebase";
@@ -36,29 +40,8 @@ interface Collaborator {
 
 const collaborations = [
   {
-    icon: Building2,
-    title: "Wedding Halls",
-    description: "Elegant venues perfect for your dream wedding celebration",
-    features: ["Indoor & Outdoor spaces", "Catering services", "Decoration support", "Parking facilities"],
-    contact: "+91 98765 43210"
-  },
-  {
-    icon: Users,
-    title: "Party Halls",
-    description: "Versatile spaces for birthdays, anniversaries, and celebrations",
-    features: ["Flexible layouts", "Audio system", "LED lighting", "AC facilities"],
-    contact: "+91 98765 43211"
-  },
-  {
     icon: Palette,
-    title: "Interior Designers",
-    description: "Transform your space with creative interior design solutions",
-    features: ["Residential design", "Commercial spaces", "3D visualization", "Budget planning"],
-    contact: "+91 98765 43212"
-  },
-  {
-    icon: Sparkles,
-    title: "Makeup Artists",
+    title: "Makeover Artists",
     description: "Professional makeup services for weddings and special events",
     features: ["Bridal makeup", "HD makeup", "Hairstyling", "Saree draping"],
     contact: "+91 98765 43213"
@@ -72,24 +55,105 @@ const collaborations = [
   },
   {
     icon: Mic2,
-    title: "DJ Services",
+    title: "DJ",
     description: "Professional DJs to keep your party energetic and memorable",
     features: ["Latest music", "Light effects", "Professional equipment", "Custom mixes"],
     contact: "+91 98765 43215"
   },
+  {
+    icon: Music,
+    title: "Dhol",
+    description: "Traditional dhol players for energetic celebrations",
+    features: ["Traditional beats", "Group performers", "Wedding entries", "Festive events"],
+    contact: "+91 98765 43216"
+  },
+  {
+    icon: Building2,
+    title: "Resorts and Conventions",
+    description: "Elegant venues perfect for your dream wedding celebration",
+    features: ["Indoor & Outdoor spaces", "Catering services", "Luxury stay", "Parking facilities"],
+    contact: "+91 98765 43210"
+  },
+  {
+    icon: Mic2,
+    title: "MC's",
+    description: "Charismatic hosts to guide and entertain during your event",
+    features: ["Event hosting", "Crowd engagement", "Bilingual MCs", "Program coordination"],
+    contact: "+91 98765 43217"
+  },
+  {
+    icon: Zap,
+    title: "Magicians",
+    description: "Enchanting magic shows for guests of all ages",
+    features: ["Stage magic", "Close-up magic", "Interactive shows", "Event entertainment"],
+    contact: "+91 98765 43218"
+  },
+  {
+    icon: PartyPopper,
+    title: "Entertainers",
+    description: "Diverse acts to keep your guests thrilled throughout",
+    features: ["Variety shows", "Performers", "Fun activities", "Guest interaction"],
+    contact: "+91 98765 43219"
+  },
+  {
+    icon: Music,
+    title: "Bands",
+    description: "Live bands covering various genres for your big day",
+    features: ["Live vocals", "Genre versatility", "Professional sound", "Stage presence"],
+    contact: "+91 98765 43220"
+  },
+  {
+    icon: Utensils,
+    title: "Catering",
+    description: "Delicious culinary experiences for every palate",
+    features: ["Multi-cuisine", "Live counters", "Service staff", "Menu customization"],
+    contact: "+91 98765 43221"
+  },
+  {
+    icon: Palette,
+    title: "Decor",
+    description: "Stunning floral and theme decorations for venues",
+    features: ["Theme decor", "Floral design", "Stage setup", "Entrance decor"],
+    contact: "+91 98765 43222"
+  },
+  {
+    icon: Volume2,
+    title: "Stage Lighting and Sounds",
+    description: "Professional audio and light systems for premium events",
+    features: ["Surround sound", "Dynamic lighting", "Technical support", "Event setup"],
+    contact: "+91 98765 43223"
+  },
+  {
+    icon: Tv,
+    title: "LED",
+    description: "High-quality LED walls for visual storytelling",
+    features: ["LED screens", "Visual effects", "Content playback", "Custom sizes"],
+    contact: "+91 98765 43224"
+  },
+  {
+    icon: Video,
+    title: "VJ",
+    description: "Visual artists to create immersive digital atmospheres",
+    features: ["Live visuals", "Video mixing", "Projection mapping", "Creative visuals"],
+    contact: "+91 98765 43225"
+  }
 ];
 
 const serviceTypes = [
-  "Wedding Halls",
-  "Party Halls",
-  "Interior Designers",
-  "Makeup Artists",
+  "Makeover Artists",
   "Orchestra",
-  "DJ Services",
-  "Photography",
-  "Videography",
+  "DJ",
+  "Dhol",
+  "Resorts and Conventions",
+  "MC's",
+  "Magicians",
+  "Entertainers",
+  "Bands",
   "Catering",
-  "Decoration",
+  "Decor",
+  "Stage Lighting and Sounds",
+  "LED",
+  "VJ",
   "Other"
 ];
 
@@ -101,7 +165,6 @@ const Collaborations = () => {
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isLoadingCollaborators, setIsLoadingCollaborators] = useState(false);
-  const { toast } = useToast();
 
   const [partnerForm, setPartnerForm] = useState({
     serviceName: "",
@@ -128,10 +191,8 @@ const Collaborations = () => {
         setCollaborators(collabData);
       } catch (error) {
         console.error("Error fetching collaborators:", error);
-        toast({
-          title: "Error Loading Data",
+        toast.error("Error Loading Data", {
           description: "Failed to load collaborators. Please try again.",
-          variant: "destructive",
         });
       } finally {
         setIsLoadingCollaborators(false);
@@ -139,15 +200,14 @@ const Collaborations = () => {
     };
 
     fetchCollaborators();
-  }, [selectedCategory, toast]);
+  }, [selectedCategory]);
 
   const handleBookNow = (collab: typeof collaborations[0]) => {
     const message = `Hi! I'm interested in booking your ${collab.title} service. Please provide more details.`;
     const whatsappUrl = `https://wa.me/${collab.contact.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
-    toast({
-      title: "Redirecting to WhatsApp",
+    toast.info("Redirecting to WhatsApp", {
       description: `Connecting you with ${collab.title}...`,
     });
   };
@@ -170,8 +230,7 @@ const Collaborations = () => {
         status: "pending"
       });
 
-      toast({
-        title: "Application Submitted!",
+      toast.success("Application Submitted!", {
         description: "We'll get back to you soon. Thank you for your interest!",
       });
 
@@ -187,10 +246,8 @@ const Collaborations = () => {
 
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast({
-        title: "Submission Failed",
+      toast.error("Submission Failed", {
         description: "Please try again later.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -220,45 +277,46 @@ const Collaborations = () => {
                 {collaborations.map((collab, index) => (
                   <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3">
                     <Card
-                      className={`group hover-lift border-0 shadow-lg overflow-hidden transition-all duration-500 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                      className={`group hover-lift border-0 shadow-lg overflow-hidden transition-all duration-500 h-[450px] md:h-[500px] flex flex-col ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                         }`}
                       style={{
                         animationDelay: `${index * 0.1}s`,
                         transitionDelay: `${index * 0.05}s`
                       }}
                     >
-                      <CardContent className="p-0">
+                      <CardContent className="p-0 h-full flex flex-col">
                         {/* Icon Header */}
-                        <div className="p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden rounded-t-xl">
+                        <div className="p-6 md:p-8 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden rounded-t-xl shrink-0">
                           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
                           <div className="relative">
-                            <div className="mb-4 inline-flex p-4 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110">
-                              <collab.icon className="w-8 h-8" />
+                            <div className="mb-4 inline-flex p-3 md:p-4 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110">
+                              <collab.icon className="w-6 h-6 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                            <h3 className="text-xl md:text-2xl font-bold mb-1 group-hover:text-primary transition-colors line-clamp-1">
                               {collab.title}
                             </h3>
                           </div>
                         </div>
 
                         {/* Content */}
-                        <div className="p-6">
-                          <p className="text-muted-foreground mb-4">{collab.description}</p>
+                        <div className="p-5 md:p-6 flex flex-col flex-1 overflow-hidden">
+                          <p className="text-sm md:text-base text-muted-foreground mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed">
+                            {collab.description}
+                          </p>
 
-                          <ul className="space-y-2 mb-6">
+                          <ul className="space-y-1.5 md:space-y-2 mb-6 flex-1 overflow-hidden">
                             {collab.features.map((feature, idx) => (
-                              <li key={idx} className="flex items-center gap-2 text-sm">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                                {feature}
+                              <li key={idx} className="flex items-center gap-2 text-[11px] md:text-sm">
+                                <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary flex-shrink-0" />
+                                <span className="truncate">{feature}</span>
                               </li>
                             ))}
                           </ul>
 
                           <Button
-                            className="w-full"
+                            className="w-full mt-auto"
                             onClick={() => {
                               setSelectedCategory(collab.title);
-                              setSelectedCollab(null);
                             }}
                           >
                             View Collaborators
@@ -394,7 +452,7 @@ const Collaborations = () => {
                               <Button
                                 className="flex-1"
                                 onClick={() => {
-                                  const message = `Hi! I found you through Trixietales. I'm interested in your ${selectedCategory} services.`;
+                                  const message = `Hi! I found you through Studio Glow. I'm interested in your ${selectedCategory} services.`;
                                   const whatsappUrl = `https://wa.me/${collaborator.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
                                   window.open(whatsappUrl, '_blank');
                                 }}

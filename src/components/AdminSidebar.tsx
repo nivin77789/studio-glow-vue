@@ -23,6 +23,7 @@ import {
     LogOut,
     LayoutDashboard,
     Settings,
+    Sparkles,
 } from "lucide-react";
 
 export function AdminSidebar({
@@ -42,6 +43,7 @@ export function AdminSidebar({
         subscribers: number;
         ratings: number;
         videos: number;
+        services: number;
     };
 }) {
     const menuItems = [
@@ -108,6 +110,12 @@ export function AdminSidebar({
                     icon: MessageSquare,
                     id: "testimonials",
                 },
+                {
+                    title: "Manage Services",
+                    icon: Sparkles,
+                    id: "services",
+                    count: counts.services,
+                },
             ],
         },
     ];
@@ -146,8 +154,8 @@ export function AdminSidebar({
                                             <span>{item.title}</span>
                                             {item.count !== undefined && (
                                                 <span className={`ml-auto text-xs font-medium px-2 py-0.5 rounded-full ${item.alert
-                                                        ? "bg-destructive text-destructive-foreground animate-pulse"
-                                                        : "bg-sidebar-accent text-sidebar-accent-foreground"
+                                                    ? "bg-destructive text-destructive-foreground animate-pulse"
+                                                    : "bg-sidebar-accent text-sidebar-accent-foreground"
                                                     }`}>
                                                     {item.count}
                                                 </span>

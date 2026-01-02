@@ -27,9 +27,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
-            <a href="#home" className="flex items-center gap-2 mb-4 group">
-              <img src="/logo.png" alt="Trixietales Logo" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
-              <span className="text-2xl font-bold gradient-text">Trixietales</span>
+            <a href="#home" className="flex items-center gap-1.5 md:gap-2 mb-4 group">
+              <img src="/logo.png" alt="Trixietales Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain group-hover:scale-110 transition-transform" />
+              <span className="text-xl md:text-2xl font-bold gradient-text">Trixietales</span>
             </a>
             <p className="text-muted-foreground mb-6 max-w-sm">
               Professional photography and videography services capturing your most precious moments with creativity and elegance.

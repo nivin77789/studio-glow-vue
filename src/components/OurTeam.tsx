@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-// Temporary team data
+// Studio Glow Team Data - Optimized with local images
 const teamMembers = [
     {
-        name: "Alex Morgan",
-        role: "Lead Photographer",
-        experience: "12+ Years Experience",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&q=80",
-        bio: "Specializing in wedding and portrait photography with a keen eye for candid moments.",
+        name: "Surya",
+        role: "Senior Photographer",
+        experience: "10+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Surya.webp",
+        bio: "Dedicated to capturing every smile and sunset with creative brilliance and expert technique.",
         social: {
             instagram: "#",
             twitter: "#",
@@ -26,47 +26,91 @@ const teamMembers = [
         }
     },
     {
-        name: "Sarah Chen",
-        role: "Creative Director",
-        experience: "8+ Years Experience",
-        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&q=80",
-        bio: "Bringing artistic vision to life through innovative concepts and visual storytelling.",
-        social: {
-            instagram: "#",
-            linkedin: "#"
-        }
-    },
-    {
-        name: "Marcus Johnson",
+        name: "Abhilash",
         role: "Cinematographer",
-        experience: "10+ Years Experience",
-        image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&q=80",
-        bio: "Expert in capturing cinematic wedding films and documentary-style storytelling.",
-        social: {
-            instagram: "#",
-            twitter: "#"
-        }
-    },
-    {
-        name: "Emily Davis",
-        role: "Senior Editor",
-        experience: "6+ Years Experience",
-        image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&q=80",
-        bio: "Master of post-production, ensuring every image and video meets our high standards.",
+        experience: "8+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Abhilash.webp",
+        bio: "Master of visual motion, turning every frame into a cinematic masterpiece that tells your story.",
         social: {
             instagram: "#",
             linkedin: "#"
         }
     },
     {
-        name: "David Wilson",
-        role: "Drone Operator",
-        experience: "5+ Years Experience",
-        image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&q=80",
-        bio: "Licensed drone pilot capturing breathtaking aerial perspectives for your special events.",
+        name: "Ranjith",
+        role: "Candid Photographer",
+        experience: "10+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Ranjith.webp",
+        bio: "Specialist in documenting natural, unposed moments that capture the true essence of your emotions.",
         social: {
             instagram: "#",
             twitter: "#"
+        }
+    },
+    {
+        name: "Praveen",
+        role: "Senior Photographer",
+        experience: "5+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Praveen.webp",
+        bio: "Expert in high-end photography, blending timeless style with modern precision for stunning visuals.",
+        social: {
+            instagram: "#",
+            linkedin: "#"
+        }
+    },
+    {
+        name: "Manoj",
+        role: "Chief Editor",
+        experience: "11+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Manoj.webp",
+        bio: "Crafting the final vision with expert editing skills, ensuring every detail glows with perfection.",
+        social: {
+            instagram: "#",
+            twitter: "#"
+        }
+    },
+    {
+        name: "Kiran",
+        role: "Cinematographer",
+        experience: "6+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Kiran.webp",
+        bio: "Passionate about visual storytelling through the lens of a high-end cinematic experience.",
+        social: {
+            instagram: "#",
+            linkedin: "#"
+        }
+    },
+    {
+        name: "Gowtham",
+        role: "Video Editor",
+        experience: "5+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Gowtham.webp",
+        bio: "Transforming raw footage into compelling stories with a sharp eye for rhythm and detail.",
+        social: {
+            instagram: "#",
+            twitter: "#"
+        }
+    },
+    {
+        name: "Mukul",
+        role: "Creative Head",
+        experience: "12+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Mark.webp",
+        bio: "Leading our creative vision with innovative ideas that push the boundaries of visual excellence.",
+        social: {
+            instagram: "#",
+            linkedin: "#"
+        }
+    },
+    {
+        name: "Bhavani",
+        role: "Post Production Manager",
+        experience: "10+ Years Experience",
+        image: "/images/Team Photos WebP/Team Photos_Bhavani.webp",
+        bio: "Managing the flow of perfection from lens to screen, ensuring every project exceeds expectations.",
+        social: {
+            instagram: "#",
+            linkedin: "#"
         }
     }
 ];
@@ -131,33 +175,15 @@ const OurTeam = () => {
                                                     <img
                                                         src={member.image}
                                                         alt={member.name}
-                                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
 
-                                                    {/* Overlay Content */}
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 transition-opacity duration-300">
-                                                        <div className="flex flex-col items-center gap-3 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                                            {/* Social Icons */}
-                                                            <div className="flex gap-3 justify-center">
-                                                                {member.social.instagram && (
-                                                                    <a href={member.social.instagram} className="p-2 bg-pink-600/80 text-white hover:bg-pink-600 rounded-full transition-all duration-300 backdrop-blur-sm" title="Instagram">
-                                                                        <Instagram className="w-4 h-4" />
-                                                                    </a>
-                                                                )}
-                                                                {member.social.twitter && (
-                                                                    <a href={member.social.twitter} className="p-2 bg-white/20 text-white hover:bg-white hover:text-black rounded-full transition-all duration-300 backdrop-blur-sm">
-                                                                        <Twitter className="w-4 h-4" />
-                                                                    </a>
-                                                                )}
-                                                                {member.social.linkedin && (
-                                                                    <a href={member.social.linkedin} className="p-2 bg-white/20 text-white hover:bg-white hover:text-black rounded-full transition-all duration-300 backdrop-blur-sm">
-                                                                        <Linkedin className="w-4 h-4" />
-                                                                    </a>
-                                                                )}
-                                                            </div>
-
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                                                        <div className="flex flex-col items-center gap-3">
                                                             {/* Experience Badge */}
-                                                            <Badge variant="secondary" className="bg-white/20 text-white backdrop-blur-md border-0">
+                                                            <Badge variant="secondary" className="bg-white/20 text-white backdrop-blur-md border-0 text-[10px] py-1 px-3">
                                                                 {member.experience}
                                                             </Badge>
                                                         </div>

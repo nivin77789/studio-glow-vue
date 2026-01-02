@@ -63,14 +63,14 @@ const Index = () => {
         }} />
 
         {/* Floating particles with varied animations - reduced on mobile/tablet */}
-        {[...Array(35)].map((_, i) => (
+        {[...Array(20)].map((_, i) => (
           <div
             key={`particle-${i}`}
-            className={`absolute rounded-full ${i < 15 ? '' : 'hidden md:block'} ${i % 3 === 0 ? 'animate-floatSlow' : i % 3 === 1 ? 'animate-floatMedium' : 'animate-floatFast'}`}
+            className={`absolute rounded-full ${i < 8 ? '' : 'hidden md:block'} ${i % 3 === 0 ? 'animate-floatSlow' : i % 3 === 1 ? 'animate-floatMedium' : 'animate-floatFast'}`}
             style={{
-              width: `${2 + (i % 4)}px`,
-              height: `${2 + (i % 4)}px`,
-              background: i % 2 === 0 ? 'rgba(var(--primary), 0.3)' : 'rgba(var(--accent), 0.3)',
+              width: `${2 + (i % 3)}px`,
+              height: `${2 + (i % 3)}px`,
+              background: i % 2 === 0 ? 'rgba(var(--primary), 0.25)' : 'rgba(var(--accent), 0.25)',
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
@@ -79,17 +79,17 @@ const Index = () => {
         ))}
 
         {/* Moving camera focus squares with rotation - reduced on mobile/tablet */}
-        {[...Array(7)].map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <div
             key={`focus-${i}`}
-            className={`${i < 3 ? '' : 'hidden md:block'} absolute border-2 border-primary/25 dark:border-primary/35 animate-rotateFloat`}
+            className={`${i < 2 ? '' : 'hidden md:block'} absolute border-2 border-primary/20 dark:border-primary/30 animate-rotateFloat`}
             style={{
-              width: `${60 + i * 10}px`,
-              height: `${60 + i * 10}px`,
-              left: `${15 + i * 12}%`,
-              top: `${5 + (i % 4) * 25}%`,
-              animationDelay: `${i * 1.2}s`,
-              animationDuration: `${10 + i * 2}s`,
+              width: `${50 + i * 15}px`,
+              height: `${50 + i * 15}px`,
+              left: `${15 + i * 15}%`,
+              top: `${10 + (i % 3) * 30}%`,
+              animationDelay: `${i * 1.5}s`,
+              animationDuration: `${12 + i * 3}s`,
             }}
           />
         ))}
@@ -288,7 +288,7 @@ const Index = () => {
       <Header />
       <HeroCarousel />
       <Founder />
-      <Suspense fallback={<div className="h-20" />}>
+      <Suspense fallback={<div className="min-h-screen animate-pulse bg-muted/20" />}>
         <Courses />
         <Portfolio />
         <Collaborations />
