@@ -201,22 +201,28 @@ const HeroLanding = () => {
         }
         .animate-float-rotate {
           animation: float-rotate 12s ease-in-out infinite;
+          will-change: transform;
         }
         .animate-float {
           animation: float 8s ease-in-out infinite;
+          will-change: transform;
         }
         .animate-focus {
           animation: focus 4s ease-in-out infinite;
+          will-change: transform, opacity;
         }
         .animate-float-icon {
           animation: float-icon 6s ease-in-out infinite;
+          will-change: transform;
         }
         .animate-fade-in {
           animation: fade-in 1s ease-out;
+          will-change: opacity;
         }
         .animate-slide-right {
           animation: slide-right 0.8s ease-out;
           animation-fill-mode: both;
+          will-change: transform, opacity;
         }
         .animate-gradient {
           background-size: 200% 200%;
