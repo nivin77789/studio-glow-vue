@@ -34,9 +34,10 @@ interface BookingModalProps {
 const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
     const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedService, setSelectedService] = useState<Service | null>(null);
+    const [selectedServices, setSelectedServices] = useState<Service[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -47,8 +48,9 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
 
     useEffect(() => {
         if (!isOpen) {
-            setSelectedService(null);
+            setSelectedServices([]);
             setIsSuccess(false);
+            setShowForm(false);
             setFormData({ name: "", email: "", phone: "", date: "", message: "" });
             return;
         }
@@ -66,20 +68,30 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
         return () => unsubscribe();
     }, [isOpen]);
 
-    const handleBookClick = (service: Service) => {
-        setSelectedService(service);
+    const toggleService = (service: Service) => {
+        setSelectedServices(prev => {
+            const exists = prev.find(s => s.id === service.id);
+            if (exists) {
+                return prev.filter(s => s.id !== service.id);
+            }
+            return [...prev, service];
+        });
     };
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!selectedService) return;
+        if (selectedServices.length === 0) return;
 
         setIsSubmitting(true);
         try {
             await addDoc(collection(db, "bookings"), {
                 ...formData,
-                serviceId: selectedService.id,
-                serviceName: selectedService.name,
+                services: selectedServices.map(s => ({
+                    id: s.id,
+                    name: s.name,
+                    price: s.price
+                })),
+                totalPrice: calculateTotal(),
                 status: "new",
                 timestamp: serverTimestamp()
             });
@@ -91,6 +103,13 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const calculateTotal = () => {
+        return selectedServices.reduce((acc, s) => {
+            const price = parseFloat(s.price?.replace(/[^\d.]/g, '') || "0");
+            return acc + price;
+        }, 0);
     };
 
     const DiscountTiers = ({ isDark = false }: { isDark?: boolean }) => (
@@ -115,8 +134,11 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-6xl p-0 overflow-hidden bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl h-[100dvh] md:h-[85vh] gap-0 flex flex-col">
-                <div className="flex flex-col md:flex-row flex-1 h-full w-full overflow-hidden min-h-0">
+            <DialogContent
+                className="max-w-6xl p-0 overflow-hidden bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl h-[100dvh] md:h-[85vh] gap-0 flex flex-col"
+                data-lenis-prevent
+            >
+                <div className="flex flex-col md:flex-row flex-1 w-full overflow-hidden min-h-0">
                     {/* Desktop Left Sidebar: Bundle & Save (Hidden on Mobile) */}
                     <div className="hidden md:flex w-[380px] flex-col relative overflow-hidden bg-zinc-950 border-r border-white/5 shadow-2xl z-30 text-left shrink-0 min-h-0">
                         <div className="absolute inset-0 opacity-40">
@@ -131,7 +153,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                         <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/80 to-zinc-950 z-10" />
 
                         <div className="relative z-20 flex-1 flex flex-col p-10 min-h-0">
-                            <div className="flex-1 overflow-y-auto scrollbar-none pr-2 min-h-0">
+                            <div className="flex-1 overflow-y-auto scrollbar-none pr-2 min-h-0" data-lenis-prevent>
                                 <div className="inline-flex px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/30 mb-6">
                                     Limited Time Offer
                                 </div>
@@ -162,7 +184,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                     </div>
 
                     {/* Right Side: Services List */}
-                    <div className="flex-1 flex flex-col h-full bg-transparent min-h-0 overflow-hidden">
+                    <div className="flex-1 flex flex-col bg-transparent min-h-0 overflow-hidden">
                         <DialogHeader className="px-4 py-3 md:p-8 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm z-20 text-left shrink-0">
                             <div className="flex items-center gap-3">
                                 <Button
@@ -185,7 +207,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                             </div>
                         </DialogHeader>
 
-                        <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-20 min-h-0 relative z-10 w-full touch-pan-y">
+                        <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-20 relative z-10 w-full overscroll-contain" data-lenis-prevent>
                             {loading ? (
                                 <div className="flex items-center justify-center h-full">
                                     <div className="flex flex-col items-center gap-4">
@@ -271,12 +293,19 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                         )}
                                                     </div>
                                                     <Button
-                                                        onClick={() => handleBookClick(service)}
+                                                        onClick={() => toggleService(service)}
                                                         size="sm"
-                                                        className="h-5 md:h-12 rounded-full md:rounded-2xl px-2.5 md:px-10 bg-zinc-900 dark:bg-primary text-white hover:bg-primary dark:hover:bg-primary/90 transition-all font-black text-[6px] md:text-sm shadow-lg group-hover:-translate-y-0.5 active:scale-95"
+                                                        className={`h-5 md:h-12 rounded-full md:rounded-2xl px-2.5 md:px-10 transition-all font-black text-[6px] md:text-sm shadow-lg group-hover:-translate-y-0.5 active:scale-95 ${selectedServices.find(s => s.id === service.id)
+                                                                ? "bg-primary text-white"
+                                                                : "bg-zinc-900 dark:bg-zinc-800 text-white hover:bg-primary"
+                                                            }`}
                                                     >
-                                                        Book Online
-                                                        <ChevronRight className="w-1.5 h-1.5 md:w-4 md:h-4 ml-1 md:ml-2 transition-transform group-hover:translate-x-0.5" />
+                                                        {selectedServices.find(s => s.id === service.id) ? "Selected" : "Add Service"}
+                                                        {selectedServices.find(s => s.id === service.id) ? (
+                                                            <CheckCircle2 className="w-1.5 h-1.5 md:w-4 md:h-4 ml-1 md:ml-2" />
+                                                        ) : (
+                                                            <ChevronRight className="w-1.5 h-1.5 md:w-4 md:h-4 ml-1 md:ml-2 transition-transform group-hover:translate-x-0.5" />
+                                                        )}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -285,31 +314,70 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                 </div>
                             )}
                         </div>
+
+                        {/* Floating Action Bar */}
+                        <AnimatePresence>
+                            {selectedServices.length > 0 && !showForm && (
+                                <motion.div
+                                    initial={{ y: 100 }}
+                                    animate={{ y: 0 }}
+                                    exit={{ y: 100 }}
+                                    className="absolute bottom-6 left-6 right-6 z-50 p-4 md:p-6 bg-zinc-950 text-white rounded-[2rem] shadow-2xl flex items-center justify-between border border-white/10 backdrop-blur-xl"
+                                >
+                                    <div className="flex items-center gap-4 md:gap-8">
+                                        <div className="hidden md:flex -space-x-4">
+                                            {selectedServices.slice(0, 3).map((s, i) => (
+                                                <div key={s.id} className="w-12 h-12 rounded-full border-2 border-zinc-950 overflow-hidden bg-zinc-800">
+                                                    <img src={s.imageUrl} className="w-full h-full object-cover" />
+                                                </div>
+                                            ))}
+                                            {selectedServices.length > 3 && (
+                                                <div className="w-12 h-12 rounded-full border-2 border-zinc-950 bg-zinc-800 flex items-center justify-center text-xs font-bold">
+                                                    +{selectedServices.length - 3}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="text-xl md:text-2xl font-black">{selectedServices.length} {selectedServices.length === 1 ? 'Service' : 'Services'}</p>
+                                            <p className="text-primary text-[10px] md:text-sm font-black uppercase tracking-widest">Total: ₹{calculateTotal().toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                    <Button
+                                        onClick={() => setShowForm(true)}
+                                        className="h-10 md:h-14 px-6 md:px-12 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/20"
+                                    >
+                                        Complete Booking
+                                        <ChevronRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
 
                 {/* Booking Form Overlay */}
                 <AnimatePresence>
-                    {selectedService && (
+                    {showForm && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="absolute inset-0 z-[100] bg-white dark:bg-zinc-950 flex flex-col"
+                            data-lenis-prevent
                         >
                             <div className="flex items-center justify-between p-4 md:p-8 border-b dark:border-zinc-800">
                                 <Button
                                     variant="ghost"
-                                    onClick={() => setSelectedService(null)}
+                                    onClick={() => setShowForm(false)}
                                     className="gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                                 >
                                     <ChevronLeft className="w-4 h-4" />
-                                    <span>Back to Services</span>
+                                    <span>Back to Selection</span>
                                 </Button>
                                 <h3 className="text-lg md:text-2xl font-black gradient-text text-left">Complete Your Booking</h3>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-4 md:p-10">
+                            <div className="flex-1 overflow-y-auto p-4 md:p-10" data-lenis-prevent>
                                 {isSuccess ? (
                                     <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
                                         <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 animate-bounce-slow">
@@ -318,7 +386,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                         <div className="space-y-2">
                                             <h4 className="text-2xl md:text-3xl font-black italic">Booking Successful!</h4>
                                             <p className="text-zinc-500 font-medium max-w-md mx-auto">
-                                                Thank you for choosing Studio Glow. Your booking for <span className="text-primary font-bold">{selectedService.name}</span> has been received. We will contact you soon!
+                                                Thank you for choosing Studio Glow. Your booking for <span className="text-primary font-bold">{selectedServices.length} {selectedServices.length === 1 ? 'service' : 'services'}</span> has been received. We will contact you soon!
                                             </p>
                                         </div>
                                         <Button
@@ -333,18 +401,18 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
                                             <div className="lg:col-span-2 space-y-6">
                                                 <div className="p-6 rounded-3xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4 block">Selected Service</span>
-                                                    <h5 className="text-xl font-black mb-2 text-left">{selectedService.name}</h5>
-                                                    <div className="flex flex-col gap-2">
-                                                        {selectedService.price && (
-                                                            <div className="text-2xl font-black text-primary text-left">₹{selectedService.price}</div>
-                                                        )}
-                                                        {selectedService.duration && (
-                                                            <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                                                                <Clock className="w-3 h-3" />
-                                                                {selectedService.duration}
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4 block">Selection Summary</span>
+                                                    <div className="space-y-4 mb-6">
+                                                        {selectedServices.map(s => (
+                                                            <div key={s.id} className="flex items-center justify-between">
+                                                                <span className="text-sm font-bold truncate max-w-[150px]">{s.name}</span>
+                                                                <span className="text-sm font-black text-primary">₹{s.price?.replace(/[^\d.]/g, '')}</span>
                                                             </div>
-                                                        )}
+                                                        ))}
+                                                    </div>
+                                                    <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center">
+                                                        <span className="text-xs font-black uppercase tracking-widest">Total Amount</span>
+                                                        <span className="text-2xl font-black text-primary">₹{calculateTotal().toLocaleString()}</span>
                                                     </div>
                                                 </div>
                                                 <div className="space-y-4">

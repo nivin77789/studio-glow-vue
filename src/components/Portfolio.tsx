@@ -241,7 +241,7 @@ export default function GalleryPage() {
   // Service Selection View
   if (!selectedCategory) {
     return (
-      <section className="py-24 relative overflow-hidden">
+      <section id="portfolio" className="py-24 relative overflow-hidden">
 
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16 animate-fade-in">
@@ -416,7 +416,7 @@ export default function GalleryPage() {
 
   // Gallery View with Slidable Carousels
   return (
-    <section className="py-12 relative overflow-hidden">
+    <section id="portfolio" className="py-12 relative overflow-hidden">
       {/* background removed for cleaner look */}
 
       <div className="container mx-auto px-4 max-w-7xl">

@@ -36,8 +36,14 @@ interface Booking {
   phone: string;
   date: string;
   message?: string;
-  serviceId: string;
-  serviceName: string;
+  serviceId?: string;
+  serviceName?: string;
+  services?: Array<{
+    id: string;
+    name: string;
+    price?: string;
+  }>;
+  totalPrice?: number;
   status: string;
   timestamp: any;
 }
@@ -849,9 +855,19 @@ const AdminDashboard = () => {
                         <div className="space-y-4 flex-1">
                           <div className="flex flex-wrap items-center gap-3">
                             <h3 className="font-black text-xl tracking-tight">{booking.name}</h3>
-                            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
-                              {booking.serviceName}
-                            </span>
+                            {booking.services ? (
+                              <div className="flex flex-wrap gap-2">
+                                {booking.services.map((s, i) => (
+                                  <span key={i} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
+                                    {s.name}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : (
+                              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
+                                {booking.serviceName}
+                              </span>
+                            )}
                             {booking.status === "new" && (
                               <span className="px-3 py-1 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-widest animate-pulse">
                                 New Booking
@@ -879,6 +895,13 @@ const AdminDashboard = () => {
                                 {new Date(booking.date).toLocaleDateString('en-IN', { dateStyle: 'long' })}
                               </div>
                             </div>
+
+                            {booking.totalPrice && (
+                              <div className="space-y-1 text-left">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Value</p>
+                                <p className="text-xl font-black text-primary">₹{booking.totalPrice.toLocaleString()}</p>
+                              </div>
+                            )}
 
                             <div className="space-y-1 text-right">
                               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Received On</p>

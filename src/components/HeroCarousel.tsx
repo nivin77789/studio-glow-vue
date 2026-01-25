@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Camera, Aperture, Sparkles, Video, Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import { Camera, Aperture, Sparkles, Video, Heart, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/hooks/useBooking";
 
@@ -120,35 +120,29 @@ const HeroLanding = () => {
         <ChevronRight className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
       </button>
 
-      {/* Main content - Centered */}
-      <div className="container mx-auto px-6 lg:px-12 z-10 mt-48 md:mt-56">
-        <div className="max-w-4xl mx-auto text-center animate-fade-in">
-
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight mb-4 leading-tight tracking-wide animate-slide-right" style={{ animationDelay: "0.2s" }}>
-            <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-size-200 animate-gradient">
-              {bannerImages[currentSlide].title}
-            </span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-gray-200 mb-8 font-extralight tracking-wide animate-slide-right" style={{ animationDelay: "0.4s" }}>
-            {bannerImages[currentSlide].subtitle}
-          </p>
-
-          <div className="flex flex-wrap gap-4 justify-center animate-slide-right" style={{ animationDelay: "0.6s" }}>
-            <Button
-              size="lg"
-              onClick={openBooking}
-              className="px-8 py-6 text-lg font-light bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              Book Online
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="px-8 py-6 text-lg font-light border-2 border-white/50 text-white bg-white/10 backdrop-blur-md transition-all transform hover:scale-105"
-            >
-              View Portfolio
-            </Button>
+      {/* Main content - Moved towards the bottom */}
+      <div className="absolute bottom-24 left-0 right-0 z-20">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="max-w-4xl mx-auto text-center animate-fade-in">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+              <Button
+                size="lg"
+                onClick={openBooking}
+                className="w-full sm:w-auto px-8 py-6 md:px-10 md:py-8 text-lg md:text-xl font-medium bg-gradient-to-r from-primary via-accent to-primary bg-size-200 animate-gradient text-white rounded-full shadow-[0_0_20px_rgba(237,148,85,0.3)] hover:shadow-[0_0_30px_rgba(237,148,85,0.5)] transition-all transform hover:scale-105 active:scale-95 border-0"
+              >
+                <Calendar className="w-5 h-5 mr-3" />
+                Book Your Session
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full sm:w-auto px-8 py-6 md:px-10 md:py-8 text-lg md:text-xl font-medium border-2 border-white/30 text-white bg-white/5 backdrop-blur-xl rounded-full hover:bg-white/10 transition-all transform hover:scale-105 active:scale-95 shadow-2xl"
+              >
+                <Aperture className="w-5 h-5 mr-3" />
+                Explore Portfolio
+              </Button>
+            </div>
           </div>
         </div>
       </div>
