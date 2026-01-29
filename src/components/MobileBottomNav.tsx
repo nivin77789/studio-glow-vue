@@ -82,7 +82,6 @@ const MobileBottomNav = () => {
           );
 
           const commonProps = {
-            key: item.name,
             className: cn(
               "absolute flex items-center justify-center w-10 h-10 rounded-full shadow-lg transition-all duration-500",
               "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm",
@@ -101,6 +100,7 @@ const MobileBottomNav = () => {
           if ('onClick' in item) {
             return (
               <button
+                key={item.name}
                 {...commonProps}
                 onClick={() => {
                   item.onClick();
@@ -114,6 +114,7 @@ const MobileBottomNav = () => {
 
           return (
             <Link
+              key={item.name}
               {...commonProps}
               to={item.href || "/"}
               onClick={() => setIsOpen(false)}

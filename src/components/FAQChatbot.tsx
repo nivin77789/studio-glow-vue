@@ -156,7 +156,10 @@ export default function FAQChatbot() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-[9999] w-[90vw] md:w-[360px] max-w-[360px] bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
+        <div
+          className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-[9999] w-[90vw] md:w-[360px] max-w-[360px] bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl pointer-events-auto"
+          data-lenis-prevent
+        >
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <MessageSquare className="w-5 h-5 text-primary" />
@@ -177,7 +180,10 @@ export default function FAQChatbot() {
             </div>
           </div>
 
-          <div className="p-4 h-64 overflow-y-auto bg-gradient-to-b from-white to-transparent dark:from-slate-900">
+          <div
+            className="p-4 h-64 overflow-y-auto bg-gradient-to-b from-white to-transparent dark:from-slate-900 overscroll-contain"
+            data-lenis-prevent
+          >
             {messages.length === 0 && (
               <div className="text-sm text-muted-foreground">Ask me anything about bookings, pricing, or the photography process.</div>
             )}
@@ -194,7 +200,10 @@ export default function FAQChatbot() {
 
           <div className="px-3 py-3 border-t border-gray-100 dark:border-slate-800 flex items-center gap-2">
             <div className="flex-1 relative">
+              <label htmlFor="faq-input" className="sr-only">Ask a question</label>
               <input
+                id="faq-input"
+                name="faq-query"
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}

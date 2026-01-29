@@ -82,7 +82,7 @@ const Header = () => {
               src="/logo.png"
               alt="Trixietales"
               className="h-8 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
-              fetchPriority="high"
+              {...{ fetchpriority: "high" }}
             />
             <span className="ml-1 md:ml-2 text-lg md:text-2xl font-semibold gradient-text relative inline-block">
               Trixietales

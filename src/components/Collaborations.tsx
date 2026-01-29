@@ -366,9 +366,9 @@ const Collaborations = () => {
 
       {/* Collaborators List Modal */}
       {selectedCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <Card className="max-w-5xl w-full max-h-[90vh] overflow-y-auto animate-scale-in rounded-xl border-0 shadow-2xl">
-            <CardContent className="p-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in pointer-events-auto" data-lenis-prevent>
+          <Card className="max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-scale-in rounded-xl border-0 shadow-2xl">
+            <CardContent className="p-0 flex flex-col h-full">
               {/* Header */}
               <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl sticky top-0 z-10">
                 <button
@@ -385,7 +385,11 @@ const Collaborations = () => {
               </div>
 
               {/* Collaborators Grid */}
-              <div className="p-8">
+              <div
+                className="p-8 flex-1 overflow-y-auto overscroll-contain"
+                data-lenis-prevent
+                style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+              >
                 {isLoadingCollaborators ? (
                   <div className="flex flex-col items-center justify-center py-16">
                     <div className="relative w-20 h-20 mb-6">
@@ -492,9 +496,9 @@ const Collaborations = () => {
 
       {/* Partner Form Modal */}
       {showPartnerForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <Card className="max-w-md w-full animate-scale-in overflow-hidden rounded-xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
-            <CardContent className="p-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in pointer-events-auto" data-lenis-prevent>
+          <Card className="max-w-md w-full animate-scale-in overflow-hidden rounded-xl max-h-[92vh] flex flex-col border-0 shadow-2xl">
+            <CardContent className="p-0 flex flex-col h-full">
               {/* Header */}
               <div className="p-8 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden rounded-t-xl">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -514,7 +518,11 @@ const Collaborations = () => {
               </div>
 
               {/* Form */}
-              <div className="p-8 space-y-6">
+              <div
+                className="p-8 space-y-6 flex-1 overflow-y-auto overscroll-contain"
+                data-lenis-prevent
+                style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+              >
                 <div className="space-y-4">
                   {/* Service Type */}
                   <div className="space-y-2">

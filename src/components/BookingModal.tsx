@@ -296,8 +296,8 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                         onClick={() => toggleService(service)}
                                                         size="sm"
                                                         className={`h-5 md:h-12 rounded-full md:rounded-2xl px-2.5 md:px-10 transition-all font-black text-[6px] md:text-sm shadow-lg group-hover:-translate-y-0.5 active:scale-95 ${selectedServices.find(s => s.id === service.id)
-                                                                ? "bg-primary text-white"
-                                                                : "bg-zinc-900 dark:bg-zinc-800 text-white hover:bg-primary"
+                                                            ? "bg-primary text-white"
+                                                            : "bg-zinc-900 dark:bg-zinc-800 text-white hover:bg-primary"
                                                             }`}
                                                     >
                                                         {selectedServices.find(s => s.id === service.id) ? "Selected" : "Add Service"}
@@ -436,6 +436,8 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                             <User className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
                                                             <Input
                                                                 id="name"
+                                                                name="name"
+                                                                autoComplete="name"
                                                                 required
                                                                 placeholder="John Doe"
                                                                 className="pl-10 h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
@@ -450,6 +452,8 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                             <Phone className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
                                                             <Input
                                                                 id="phone"
+                                                                name="phone"
+                                                                autoComplete="tel"
                                                                 required
                                                                 type="tel"
                                                                 placeholder="+91 00000 00000"
@@ -468,6 +472,8 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                             <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
                                                             <Input
                                                                 id="email"
+                                                                name="email"
+                                                                autoComplete="email"
                                                                 required
                                                                 type="email"
                                                                 placeholder="john@example.com"
@@ -497,6 +503,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                                                     <Label htmlFor="message" className="text-xs font-black uppercase tracking-widest text-zinc-500">Message / Address (Optional)</Label>
                                                     <Textarea
                                                         id="message"
+                                                        name="message"
                                                         placeholder="Provide details about your event location or special requests..."
                                                         className="min-h-[120px] rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
                                                         value={formData.message}

@@ -142,8 +142,7 @@ const galleryCategories = [
   "Pre wedding",
   "Engagement",
   "Reception",
-  "Haldi",
-  "Mehandi",
+  "Haldi / Mehandi",
   "Sangeeth",
   "Get togethers",
   "Birthdays",
@@ -152,8 +151,9 @@ const galleryCategories = [
   "Product Shoots",
   "Industrial Photography and Films",
   "Baby shower",
-  "Maternity",
   "Annaprashna",
+  "Babyshoot",
+  "Half-Saree Ceremony",
 ];
 
 const AdminDashboard = () => {

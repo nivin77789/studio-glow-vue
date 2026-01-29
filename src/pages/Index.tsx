@@ -15,89 +15,50 @@ const Faq = lazy(() => import("@/components/faq"));
 const OurTeam = lazy(() => import("@/components/OurTeam"));
 
 const Index = () => {
-  const [shutter, setShutter] = useState(false);
-
-  const triggerShutter = () => {
-    setShutter(true);
-    setTimeout(() => setShutter(false), 800);
-  };
-
   return (
-    <div
-      className="min-h-screen relative"
-      onClick={triggerShutter}
-    >
+    <div className="min-h-screen relative">
       {/* Enhanced Photography-inspired background with animations */}
-      <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
+      <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-background via-background to-background/95 pointer-events-none origin-center will-change-transform transform-gpu">
         {/* Floating Logo Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center">
           <img
             src="/logo.png"
             alt="Background Logo"
-            className="w-[80vw] md:w-[40vw] opacity-10 animate-floatSlow object-contain blur-sm"
+            className="w-[80vw] md:w-[40vw] opacity-10 animate-floatSlow object-contain blur-sm transform-gpu will-change-transform"
           />
         </div>
 
-        {/* Grid overlays removed for a cleaner main background */}
-
         {/* Large gradient orbs with more movement */}
-        <div className="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-gradient-to-br from-primary/15 to-accent/15 dark:from-primary/20 dark:to-accent/20 rounded-full blur-3xl animate-floatLarge" />
-        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-accent/12 to-primary/12 dark:from-accent/18 dark:to-primary/18 rounded-full blur-3xl animate-floatLarge" style={{ animationDelay: '2s', animationDuration: '15s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/15 dark:to-accent/15 rounded-full blur-3xl animate-breathe" />
+        <div className="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-gradient-to-br from-primary/15 to-accent/15 dark:from-primary/20 dark:to-accent/20 rounded-full blur-3xl animate-floatLarge transform-gpu will-change-transform" />
+        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-accent/12 to-primary/12 dark:from-accent/18 dark:to-primary/18 rounded-full blur-3xl animate-floatLarge transform-gpu will-change-transform" style={{ animationDelay: '2s', animationDuration: '15s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/15 dark:to-accent/15 rounded-full blur-3xl animate-breathe transform-gpu will-change-transform" />
 
         {/* Medium orbs with rotation - reduced on mobile/tablet */}
-        <div className="absolute top-20 right-20 w-48 h-48 bg-primary/10 dark:bg-primary/15 rounded-full blur-2xl animate-orbit" style={{ animationDuration: '20s' }} />
-        <div className="hidden md:block absolute bottom-40 left-40 w-40 h-40 bg-accent/10 dark:bg-accent/15 rounded-full blur-xl animate-orbit" style={{ animationDelay: '2s', animationDuration: '18s' }} />
-        <div className="hidden md:block absolute top-1/2 right-10 w-44 h-44 bg-primary/8 dark:bg-primary/12 rounded-full blur-2xl animate-floatLarge" style={{ animationDelay: '4s' }} />
-        <div className="absolute bottom-10 left-1/3 w-36 h-36 bg-accent/8 dark:bg-accent/12 rounded-full blur-2xl animate-orbit" style={{ animationDelay: '1s', animationDuration: '22s' }} />
+        <div className="absolute top-20 right-20 w-48 h-48 bg-primary/10 dark:bg-primary/15 rounded-full blur-2xl animate-orbit transform-gpu will-change-transform" style={{ animationDuration: '20s' }} />
+        <div className="hidden md:block absolute bottom-40 left-40 w-40 h-40 bg-accent/10 dark:bg-accent/15 rounded-full blur-xl animate-orbit transform-gpu will-change-transform" style={{ animationDelay: '2s', animationDuration: '18s' }} />
 
-        {/* Pulsing rings with scale animation - reduced on mobile/tablet */}
-        <div className="absolute top-1/3 right-1/3 w-72 h-72 border-2 border-primary/15 dark:border-primary/25 rounded-full animate-pulseRing" style={{ animationDuration: '4s' }} />
-        <div className="hidden md:block absolute bottom-1/3 left-1/3 w-56 h-56 border border-accent/15 dark:border-accent/25 rounded-full animate-pulseRing" style={{ animationDuration: '5s', animationDelay: '1.5s' }} />
-        <div className="hidden md:block absolute top-1/2 left-1/4 w-64 h-64 border-2 border-primary/10 dark:border-primary/20 rounded-full animate-pulseRing" style={{ animationDuration: '6s', animationDelay: '3s' }} />
+        {/* Pulsing rings with scale animation */}
+        <div className="absolute top-1/3 right-1/3 w-72 h-72 border-2 border-primary/15 dark:border-primary/25 rounded-full animate-pulseRing transform-gpu will-change-transform" style={{ animationDuration: '4s' }} />
 
-        {/* Film grain overlay */}
-        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03] mix-blend-overlay bg-repeat animate-grain" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
-          backgroundSize: '200px 200px'
-        }} />
-
-        {/* Floating particles with varied animations - reduced on mobile/tablet */}
-        {[...Array(20)].map((_, i) => (
+        {/* Floating particles - Optimized for performance */}
+        {[...Array(12)].map((_, i) => (
           <div
             key={`particle-${i}`}
-            className={`absolute rounded-full ${i < 8 ? '' : 'hidden md:block'} ${i % 3 === 0 ? 'animate-floatSlow' : i % 3 === 1 ? 'animate-floatMedium' : 'animate-floatFast'}`}
+            className={`absolute rounded-full transform-gpu will-change-transform ${i < 6 ? '' : 'hidden md:block'} ${i % 3 === 0 ? 'animate-floatSlow' : i % 3 === 1 ? 'animate-floatMedium' : 'animate-floatFast'}`}
             style={{
               width: `${2 + (i % 3)}px`,
               height: `${2 + (i % 3)}px`,
-              background: i % 2 === 0 ? 'rgba(var(--primary), 0.25)' : 'rgba(var(--accent), 0.25)',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
+              background: i % 2 === 0 ? 'rgba(237, 148, 85, 0.25)' : 'rgba(217, 70, 239, 0.25)',
+              left: `${(i * 15) % 100}%`,
+              top: `${(i * 23) % 100}%`,
+              animationDelay: `${i * 0.5}s`,
             }}
           />
         ))}
 
-        {/* Moving camera focus squares with rotation - reduced on mobile/tablet */}
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={`focus-${i}`}
-            className={`${i < 2 ? '' : 'hidden md:block'} absolute border-2 border-primary/20 dark:border-primary/30 animate-rotateFloat`}
-            style={{
-              width: `${50 + i * 15}px`,
-              height: `${50 + i * 15}px`,
-              left: `${15 + i * 15}%`,
-              top: `${10 + (i % 3) * 30}%`,
-              animationDelay: `${i * 1.5}s`,
-              animationDuration: `${12 + i * 3}s`,
-            }}
-          />
-        ))}
+        {/* Corner lens flares */}
+        <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-radial from-primary/10 via-transparent to-transparent transform-gpu" />
 
-        {/* Scanlines removed to avoid stripe effect */}
-
-        {/* Corner lens flares with pulse - reduced on mobile/tablet */}
-        <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-radial from-primary/10 via-transparent to-transparent dark:from-primary/15 blur-2xl animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="hidden md:block absolute bottom-0 right-0 w-80 h-80 bg-gradient-radial from-accent/10 via-transparent to-transparent dark:from-accent/15 blur-2xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
         <div className="hidden md:block absolute top-1/2 left-0 w-72 h-72 bg-gradient-radial from-primary/8 via-transparent to-transparent dark:from-primary/12 blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
 
@@ -289,14 +250,30 @@ const Index = () => {
       <HeroCarousel />
       <Founder />
       <Suspense fallback={<div className="min-h-screen animate-pulse bg-muted/20" />}>
-        <Courses />
-        <Portfolio />
-        <Collaborations />
-        <Prints />
-        <Testimonials />
-        <OurTeam />
-        <Faq />
-        <Contact />
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '1000px' }}>
+          <Courses />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '1200px' }}>
+          <Portfolio />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '800px' }}>
+          <Collaborations />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '800px' }}>
+          <Prints />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '600px' }}>
+          <Testimonials />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '800px' }}>
+          <OurTeam />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '400px' }}>
+          <Faq />
+        </div>
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: '600px' }}>
+          <Contact />
+        </div>
         <Footer />
       </Suspense>
       <MobileBottomNav />

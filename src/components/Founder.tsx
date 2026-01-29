@@ -143,7 +143,7 @@ const Founder = () => {
                 return (
                   <div
                     key={achievement.label}
-                    className="absolute glass rounded-lg md:rounded-2xl p-1.5 md:p-4 shadow-xl hover-lift animate-float backdrop-blur-md border border-white/20 z-20"
+                    className="absolute glass rounded-lg md:rounded-2xl p-1.5 md:p-4 shadow-xl hover-lift animate-float backdrop-blur-md border border-white/20 z-20 transform-gpu"
                     style={{
                       top: `${15 + index * 28}%`,
                       right: index % 2 === 0 ? (window.innerWidth < 768 ? '0.25rem' : '-2rem') : 'auto',
@@ -261,11 +261,12 @@ const Founder = () => {
 
       {zoomOpen && (
         <div
-          className="fixed inset-0 z-[20000] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-[20000] flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-auto"
           onWheel={handleWheelZoom}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          data-lenis-prevent
         >
           <div className="absolute top-6 right-6 flex items-center gap-2">
             <button onClick={zoomOut} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">

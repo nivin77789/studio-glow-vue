@@ -67,10 +67,10 @@ const HeroLanding = () => {
             <img
               src={image.url}
               alt={image.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transform-gpu"
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"
-              {...(index === 0 ? { fetchPriority: "high" } : {})}
+              {...(index === 0 ? { fetchpriority: "high" } : {})}
             />
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/50" />
@@ -88,18 +88,18 @@ const HeroLanding = () => {
         <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDuration: "7s" }} />
 
         {/* Focus rings */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[200px] h-[200px] border border-white/10 rounded-full animate-focus" />
-          <div className="w-[300px] h-[300px] border border-white/5 rounded-full animate-focus" style={{ animationDelay: "0.5s" }} />
+        <div className="absolute inset-0 flex items-center justify-center transform-gpu">
+          <div className="w-[200px] h-[200px] border border-white/10 rounded-full animate-focus transform-gpu" />
+          <div className="w-[300px] h-[300px] border border-white/5 rounded-full animate-focus transform-gpu" style={{ animationDelay: "0.5s" }} />
         </div>
       </div>
 
       {/* Floating animated icons */}
-      <div className="absolute top-1/4 right-10 hidden lg:block animate-float-icon">
+      <div className="absolute top-1/4 right-10 hidden lg:block animate-float-icon transform-gpu">
         <Camera className="w-12 h-12 text-primary/60" />
       </div>
 
-      <div className="absolute bottom-1/3 right-1/4 hidden lg:block animate-float-icon" style={{ animationDelay: "1.5s" }}>
+      <div className="absolute bottom-1/3 right-1/4 hidden lg:block animate-float-icon transform-gpu" style={{ animationDelay: "1.5s" }}>
         <Heart className="w-12 h-12 text-accent/60" />
       </div>
 

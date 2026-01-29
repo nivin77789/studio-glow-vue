@@ -251,8 +251,26 @@ const courses = [
   },
 ];
 
+const ArrowRight = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M5 12h14" />
+    <path d="m12 5 7 7-7 7" />
+  </svg>
+);
+
 const Courses = () => {
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const [showEnrollForm, setShowEnrollForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -268,7 +286,7 @@ const Courses = () => {
     setShowEnrollForm(true);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -276,7 +294,7 @@ const Courses = () => {
     }));
   };
 
-  const handleSubmitEnrollment = async (e) => {
+  const handleSubmitEnrollment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -337,66 +355,45 @@ const Courses = () => {
                         opacity: 0
                       }}
                     >
-                      {/* Shimmer effect overlay */}
                       <div className="shimmer-overlay" />
-
-                      {/* Gradient border effect */}
                       <div className="gradient-border" />
-
                       <CardContent className="p-0 flex flex-col h-full relative z-10">
-                        {/* Header section with icon and badges */}
                         <div className="p-6 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 relative overflow-hidden">
-                          {/* Animated background circles */}
                           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700 ease-out" />
                           <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 rounded-full translate-y-1/2 -translate-x-1/2 group-hover:scale-150 transition-transform duration-700 ease-out" />
 
                           <div className="relative">
-                            {/* Icon with hover effect */}
                             <div className="mb-4 inline-flex p-4 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary group-hover:from-primary group-hover:to-accent group-hover:text-primary-foreground transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
                               <course.icon className="w-8 h-8 transition-transform duration-500 group-hover:scale-110" />
                             </div>
 
-                            {/* Badges */}
                             <div className="flex gap-2 mb-3 flex-wrap">
-                              <Badge
-                                variant="secondary"
-                                className="backdrop-blur-sm bg-background/60 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-105"
-                              >
+                              <Badge variant="secondary" className="backdrop-blur-sm bg-background/60 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-105">
                                 <Clock className="w-3 h-3 mr-1" />
                                 {course.duration}
                               </Badge>
-                              <Badge
-                                variant="outline"
-                                className="backdrop-blur-sm group-hover:border-primary/50 transition-all duration-300 group-hover:scale-105"
-                              >
+                              <Badge variant="outline" className="backdrop-blur-sm group-hover:border-primary/50 transition-all duration-300 group-hover:scale-105">
                                 <Award className="w-3 h-3 mr-1" />
                                 {course.level}
                               </Badge>
                             </div>
 
-                            {/* Title */}
                             <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover:text-primary transition-all duration-300 group-hover:translate-x-1">
                               {course.title}
                             </h3>
                           </div>
                         </div>
 
-                        {/* Content section */}
                         <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-primary/5 group-hover:to-primary/10 transition-all duration-500">
                           <p className="text-[13px] md:text-base text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
                             {course.description}
                           </p>
 
-                          {/* Features list with staggered animation */}
                           <ul className="space-y-2 mb-6 flex-grow">
                             {course.features.map((feature, idx) => (
                               <li
                                 key={idx}
                                 className="flex items-center gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-300"
-                                style={{
-                                  animation: `slideInLeft 0.4s ease-out forwards ${0.1 + idx * 0.1}s`,
-                                  opacity: 0
-                                }}
                               >
                                 <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gradient-to-r from-primary to-accent flex-shrink-0 group-hover/item:scale-150 transition-transform duration-300" />
                                 <span className="group-hover/item:text-foreground transition-colors duration-300 text-[11px] md:text-sm">
@@ -406,12 +403,11 @@ const Courses = () => {
                             ))}
                           </ul>
 
-                          {/* CTA Button */}
                           <button
                             className="gradient-btn w-full group/btn relative overflow-hidden transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                             onClick={() => setSelectedCourse(course)}
                           >
-                            <span className="relative z-10 flex items-center justify-center font-semibold">
+                            <span className="relative z-10 flex items-center justify-center font-semibold text-black">
                               Read More
                               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-2 duration-300" />
                             </span>
@@ -429,256 +425,50 @@ const Courses = () => {
         </div>
 
         <style>{`
-          /* Card Animations */
           @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
           }
-          
-          @keyframes slideInLeft {
-            from {
-              opacity: 0;
-              transform: translateX(-20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-          
           @keyframes shimmer {
-            0% {
-              transform: translateX(-100%) translateY(-100%) rotate(45deg);
-            }
-            100% {
-              transform: translateX(100%) translateY(100%) rotate(45deg);
-            }
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
           }
-          
           @keyframes gradientRotate {
-            0% {
-              transform: rotate(0deg);
-            }
-            100% {
-              transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
           }
-          
-          /* Course Card Styles */
-          .course-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 1rem;
-            position: relative;
-          }
-          
-          .course-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 
-                        0 0 0 1px rgba(var(--primary), 0.1);
-          }
-          
-          /* Shimmer Overlay Effect */
-          .shimmer-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-              90deg,
-              transparent 0%,
-              rgba(255, 255, 255, 0.1) 50%,
-              transparent 100%
-            );
-            transform: translateX(-100%) translateY(-100%) rotate(45deg);
-            pointer-events: none;
-            z-index: 20;
-          }
-          
-          .course-card:hover .shimmer-overlay {
-            animation: shimmer 1.5s ease-in-out;
-          }
-          
-          /* Gradient Border Effect */
-          .gradient-border {
-            position: absolute;
-            inset: -2px;
-            border-radius: 1rem;
-            padding: 2px;
-            background: linear-gradient(
-              135deg,
-              hsl(var(--primary)) 0%,
-              hsl(var(--accent)) 50%,
-              hsl(var(--primary)) 100%
-            );
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-            z-index: 0;
-          }
-          
-          .course-card:hover .gradient-border {
-            opacity: 0.6;
-            animation: gradientRotate 3s linear infinite;
-          }
-          
-          @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-          .animate-spin-slow {
-            animation: spin-slow 30s linear infinite;
-          }
-          
-          /* Enhanced Gradient Button */
-          .gradient-btn {
-            position: relative;
-            padding: 0.875rem 1.75rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            color: hsl(0, 0%, 10%);
-            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          }
-          
-          .dark .gradient-btn {
-            color: hsl(0, 0%, 10%);
-          }
-          
-          .gradient-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 0.75rem;
-            background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-          }
-          
-          .gradient-btn:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2),
-                        0 0 20px hsla(var(--primary), 0.3);
-          }
-          
-          .gradient-btn:hover::before {
-            opacity: 1;
-          }
-          
-          .gradient-btn::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 0.75rem;
-            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
-            background-size: 200% 200%;
-            z-index: -1;
-            animation: gradientShift 3s ease infinite;
-            opacity: 0;
-          }
-          
-          .gradient-btn:hover::after {
-            opacity: 0.5;
-          }
-          
-          @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-          
-          /* Secondary Gradient Button */
-          .gradient-btn-secondary {
-            position: relative;
-            padding: 0.875rem 1.75rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            color: hsl(var(--foreground));
-            background: transparent;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background-clip: padding-box;
-          }
-          
-          .gradient-btn-secondary::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 0.75rem;
-            padding: 2px;
-            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            z-index: -1;
-          }
-          
-          .gradient-btn-secondary:hover {
-            background: linear-gradient(135deg, hsl(var(--primary))/0.1 0%, hsl(var(--accent))/0.1 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          }
-          
-          /* Pulse Button */
-          .pulse-btn {
-            position: relative;
-            padding: 0.875rem 1.75rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            color: white;
-            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
-            border: none;
-            cursor: pointer;
-            animation: pulse 2s ease-in-out infinite;
-            transition: transform 0.2s ease;
-          }
-          
-          .pulse-btn:hover {
-            transform: scale(1.05);
-          }
-          
-          @keyframes pulse {
-            0%, 100% { 
-              box-shadow: 0 0 0 0 hsla(var(--primary), 0.7),
-                          0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-            50% { 
-              box-shadow: 0 0 0 15px hsla(var(--primary), 0),
-                          0 8px 24px rgba(0, 0, 0, 0.2);
-            }
-          }
+          .course-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 1rem; position: relative; }
+          .course-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
+          .shimmer-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%); transform: translateX(-100%) translateY(-100%) rotate(45deg); pointer-events: none; z-index: 20; }
+          .course-card:hover .shimmer-overlay { animation: shimmer 1.5s ease-in-out; }
+          .gradient-border { position: absolute; inset: -2px; border-radius: 1rem; padding: 2px; background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--primary)) 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.4s ease; pointer-events: none; z-index: 0; }
+          .course-card:hover .gradient-border { opacity: 0.6; animation: gradientRotate 3s linear infinite; }
+          .gradient-btn { position: relative; padding: 0.875rem 1.75rem; border-radius: 0.75rem; font-weight: 600; background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%); border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+          .gradient-btn-secondary { position: relative; padding: 0.875rem 1.75rem; border-radius: 0.75rem; font-weight: 600; color: hsl(var(--foreground)); background: transparent; border: 2px solid transparent; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+          .gradient-btn-secondary::before { content: ''; position: absolute; inset: -2px; border-radius: 0.75rem; padding: 2px; background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; z-index: -1; }
+          .gradient-btn-secondary:hover { background: linear-gradient(135deg, hsl(var(--primary))/0.1 0%, hsl(var(--accent))/0.1 100%); transform: translateY(-2px); }
+          .pulse-btn { position: relative; padding: 0.875rem 1.75rem; border-radius: 0.75rem; font-weight: 600; color: white; background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%); border: none; cursor: pointer; animation: pulse 2s ease-in-out infinite; }
+          @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 hsla(var(--primary), 0.7); } 50% { box-shadow: 0 0 0 15px hsla(var(--primary), 0); } }
         `}</style>
       </section>
 
       {/* Course Details Modal */}
       {selectedCourse && !showEnrollForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-background rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden animate-scale-in">
-            <div className="sticky top-0 bg-gradient-to-r from-primary to-accent p-6 flex items-center justify-between z-10">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in pointer-events-auto" data-lenis-prevent>
+          <div className="bg-background rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-scale-in border border-border">
+            <div className="sticky top-0 bg-background/95 backdrop-blur-md border-b border-border p-6 flex items-center justify-between z-10">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <selectedCourse.icon className="w-8 h-8 text-white" />
+                <div className="p-3 bg-primary/10 rounded-xl text-primary">
+                  <selectedCourse.icon className="w-8 h-8" />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold text-white">{selectedCourse.title}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{selectedCourse.title}</h2>
                   <div className="flex gap-2 mt-2">
-                    <Badge variant="secondary" className="bg-white/20 text-white border-0">
+                    <Badge variant="secondary" className="bg-muted text-muted-foreground border-0">
                       <Clock className="w-3 h-3 mr-1" />
                       {selectedCourse.duration}
                     </Badge>
-                    <Badge variant="secondary" className="bg-white/20 text-white border-0">
+                    <Badge variant="secondary" className="bg-muted text-muted-foreground border-0">
                       <Award className="w-3 h-3 mr-1" />
                       {selectedCourse.level}
                     </Badge>
@@ -689,15 +479,19 @@ const Courses = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => setSelectedCourse(null)}
-                className="text-white hover:bg-white/20"
+                className="rounded-full hover:bg-muted"
               >
                 <X className="w-6 h-6" />
               </Button>
             </div>
 
-            <div className="overflow-y-auto max-h-[calc(90vh-200px)] p-8 space-y-8">
-              <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <div
+              className="flex-1 overflow-y-auto p-6 md:p-8 space-y-8 overscroll-contain"
+              data-lenis-prevent
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+            >
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
                   <BookOpen className="w-6 h-6 text-primary" />
                   Course Overview
                 </h3>
@@ -706,13 +500,13 @@ const Courses = () => {
                 </p>
               </div>
 
-              <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
                   <CheckCircle className="w-6 h-6 text-primary" />
                   Key Topics Covered
                 </h3>
                 <div className="space-y-4">
-                  {selectedCourse.detailedInfo.topics.map((topic, idx) => (
+                  {selectedCourse.detailedInfo.topics.map((topic: any, idx: number) => (
                     <div key={idx} className="p-4 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
                       <h4 className="font-semibold mb-1">{topic.title}</h4>
                       <p className="text-sm text-muted-foreground">{topic.desc}</p>
@@ -721,10 +515,10 @@ const Courses = () => {
                 </div>
               </div>
 
-              <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                <h3 className="text-2xl font-bold mb-4">Course Structure</h3>
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold">Course Structure</h3>
                 <ul className="space-y-3">
-                  {selectedCourse.detailedInfo.structure.map((item, idx) => (
+                  {selectedCourse.detailedInfo.structure.map((item: string, idx: number) => (
                     <li key={idx} className="flex items-start gap-3">
                       <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-xs font-bold text-primary">{idx + 1}</span>
@@ -735,10 +529,10 @@ const Courses = () => {
                 </ul>
               </div>
 
-              <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                <h3 className="text-2xl font-bold mb-4">Benefits</h3>
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold">Benefits</h3>
                 <div className="grid md:grid-cols-2 gap-3">
-                  {selectedCourse.detailedInfo.benefits.map((benefit, idx) => (
+                  {selectedCourse.detailedInfo.benefits.map((benefit: string, idx: number) => (
                     <div key={idx} className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                       <span className="text-sm text-muted-foreground">{benefit}</span>
@@ -747,10 +541,10 @@ const Courses = () => {
                 </div>
               </div>
 
-              <div className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
-                <h3 className="text-2xl font-bold mb-4">Career Opportunities</h3>
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold">Career Opportunities</h3>
                 <div className="space-y-3">
-                  {selectedCourse.detailedInfo.careers.map((career, idx) => (
+                  {selectedCourse.detailedInfo.careers.map((career: string, idx: number) => (
                     <div key={idx} className="p-4 rounded-lg border border-primary/20 hover:border-primary/40 transition-colors">
                       <p className="text-muted-foreground">{career}</p>
                     </div>
@@ -779,8 +573,8 @@ const Courses = () => {
 
       {/* Enrollment Form Modal */}
       {selectedCourse && showEnrollForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden animate-scale-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in pointer-events-auto" data-lenis-prevent>
+          <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-scale-in border border-border">
             <div className="bg-gradient-to-r from-primary to-accent p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -804,136 +598,124 @@ const Courses = () => {
               </Button>
             </div>
 
-            {submitSuccess ? (
-              <div className="p-8 text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-10 h-10 text-green-600" />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">Enrollment Successful!</h3>
-                <p className="text-muted-foreground">
-                  Thank you for enrolling. We'll contact you soon with more details.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmitEnrollment} className="p-8 space-y-6">
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <User className="w-4 h-4 text-primary" />
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <Mail className="w-4 h-4 text-primary" />
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <Phone className="w-4 h-4 text-primary" />
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="+91 1234567890"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <MessageSquare className="w-4 h-4 text-primary" />
-                    About You
-                  </label>
-                  <textarea
-                    name="about"
-                    value={formData.about}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                    placeholder="Tell us about your background and why you're interested in this course..."
-                  />
-                </div>
-
-                <div className="bg-primary/5 p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">
-                    <strong>Course:</strong> {selectedCourse.title}<br />
-                    <strong>Duration:</strong> {selectedCourse.duration}<br />
-                    <strong>Level:</strong> {selectedCourse.level}
+            <div
+              className="flex-1 overflow-y-auto min-h-0 overscroll-contain"
+              data-lenis-prevent
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+            >
+              {submitSuccess ? (
+                <div className="p-8 text-center text-black dark:text-white">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-10 h-10 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">Enrollment Successful!</h3>
+                  <p className="text-muted-foreground">
+                    Thank you for enrolling. We'll contact you soon with more details.
                   </p>
                 </div>
+              ) : (
+                <form onSubmit={handleSubmitEnrollment} className="p-8 space-y-6">
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium">
+                      <User className="w-4 h-4 text-primary" />
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
 
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    className="gradient-btn-secondary flex-1"
-                    onClick={() => {
-                      setShowEnrollForm(false);
-                      setFormData({ name: "", email: "", phone: "", about: "" });
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="gradient-btn flex-1"
-                    disabled={isSubmitting}
-                  >
-                    <span className="relative z-10">
-                      {isSubmitting ? "Submitting..." : "Submit Enrollment"}
-                    </span>
-                  </button>
-                </div>
-              </form>
-            )}
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium">
+                      <Mail className="w-4 h-4 text-primary" />
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium">
+                      <Phone className="w-4 h-4 text-primary" />
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="+91 1234567890"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium">
+                      <MessageSquare className="w-4 h-4 text-primary" />
+                      About You
+                    </label>
+                    <textarea
+                      name="about"
+                      value={formData.about}
+                      onChange={handleInputChange}
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                      placeholder="Tell us about your background and why you're interested in this course..."
+                    />
+                  </div>
+
+                  <div className="bg-primary/5 p-4 rounded-lg">
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Course:</strong> {selectedCourse.title}<br />
+                      <strong>Duration:</strong> {selectedCourse.duration}<br />
+                      <strong>Level:</strong> {selectedCourse.level}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      className="gradient-btn-secondary flex-1"
+                      onClick={() => {
+                        setShowEnrollForm(false);
+                        setFormData({ name: "", email: "", phone: "", about: "" });
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="gradient-btn flex-1"
+                      disabled={isSubmitting}
+                    >
+                      <span className="relative z-10 text-black">
+                        {isSubmitting ? "Submitting..." : "Submit Enrollment"}
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}
     </>
   );
 };
-
-const ArrowRight = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M5 12h14" />
-    <path d="m12 5 7 7-7 7" />
-  </svg>
-);
 
 export default Courses;

@@ -55,6 +55,8 @@ const AdminLogin = () => {
                 <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="username"
+                  name="username"
+                  autoComplete="username"
                   type="text"
                   placeholder="Enter username"
                   value={username}
@@ -70,6 +72,8 @@ const AdminLogin = () => {
                 <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="password"
+                  name="password"
+                  autoComplete="current-password"
                   type="password"
                   placeholder="Enter password"
                   value={password}

@@ -93,8 +93,10 @@ const Contact = () => {
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Name</label>
+                  <label htmlFor="contact-name" className="block text-sm font-medium mb-2">Name</label>
                   <Input
+                    id="contact-name"
+                    name="name"
                     placeholder="Your name"
                     value={formData.name}
                     onChange={(e) =>
@@ -104,8 +106,10 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <label htmlFor="contact-email" className="block text-sm font-medium mb-2">Email</label>
                   <Input
+                    id="contact-email"
+                    name="email"
                     type="email"
                     placeholder="your@email.com"
                     value={formData.email}
@@ -116,8 +120,10 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Phone Number</label>
+                  <label htmlFor="contact-phone" className="block text-sm font-medium mb-2">Phone Number</label>
                   <Input
+                    id="contact-phone"
+                    name="phone"
                     type="tel"
                     placeholder="Your phone number"
                     value={formData.phone}
@@ -128,8 +134,10 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Message</label>
+                  <label htmlFor="contact-message" className="block text-sm font-medium mb-2">Message</label>
                   <Textarea
+                    id="contact-message"
+                    name="message"
                     placeholder="Tell us about your project..."
                     rows={5}
                     value={formData.message}

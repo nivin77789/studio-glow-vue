@@ -9,7 +9,7 @@ const Footer = () => {
   const [email, setEmail] = useState("");
 
   const footerLinks = {
-    Services: ["Wedding", "Engagement", "Maternity", "Birthday", "Concerts"],
+    Services: ["Wedding", "Engagement", "Birthday", "Concerts"],
     Company: ["About Us", "Our Team", "Careers", "Blog", "Press"],
     Support: ["Contact", "FAQ", "Pricing", "Terms", "Privacy"],
   };
@@ -59,7 +59,10 @@ const Footer = () => {
                   }
                 }}
               >
+                <label htmlFor="newsletter-email" className="sr-only">Email Address</label>
                 <input
+                  id="newsletter-email"
+                  name="email"
                   type="email"
                   placeholder="Enter your email"
                   value={email}

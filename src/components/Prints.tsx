@@ -621,7 +621,7 @@ const Prints = () => {
 
       {/* New 3D Preview Popup Modal */}
       <Dialog open={show3DPopup} onOpenChange={setShow3DPopup}>
-        <DialogContent className="max-w-6xl max-h-[95vh] rounded-2xl p-0 overflow-hidden border-0 shadow-2xl">
+        <DialogContent className="max-w-6xl max-h-[95vh] rounded-2xl p-0 overflow-hidden border-0 shadow-2xl flex flex-col pointer-events-auto" data-lenis-prevent>
           {/* Header with gradient */}
           <div className="relative bg-gradient-to-br from-primary via-accent to-primary bg-[length:200%_200%] animate-gradient-shift p-8 text-white overflow-hidden">
             {/* Animated background elements */}
@@ -658,7 +658,11 @@ const Prints = () => {
           </div>
 
           {/* Content */}
-          <div className="p-8 max-h-[calc(95vh-200px)] overflow-y-auto">
+          <div
+            className="p-8 flex-1 overflow-y-auto overscroll-contain"
+            data-lenis-prevent
+            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+          >
             <div className="grid lg:grid-cols-12 gap-6">
               {/* Left Column: 3D Viewer (Takes up 7/12 columns) */}
               <div className="lg:col-span-8 flex flex-col gap-4">
@@ -772,7 +776,10 @@ const Prints = () => {
                         </div>
                       </div>
 
-                      <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                      <div
+                        className="space-y-2 max-h-[300px] overflow-y-auto pr-2 overscroll-contain"
+                        data-lenis-prevent
+                      >
                         {[
                           { value: 'frame', label: 'Photo Frame', icon: Frame, desc: 'Classic framed print' },
                           { value: 'magazine', label: 'Magazine', icon: BookOpen, desc: 'Magazine-style book' },
@@ -844,7 +851,7 @@ const Prints = () => {
 
       {/* Video Popup Dialog */}
       <Dialog open={showVideoPopup} onOpenChange={setShowVideoPopup}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 rounded-xl">
+        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 rounded-xl" data-lenis-prevent>
           <div className="relative w-full aspect-video group">
             <video
               ref={videoRef}

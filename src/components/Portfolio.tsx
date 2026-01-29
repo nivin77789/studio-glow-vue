@@ -36,31 +36,174 @@ import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 // Gallery data with images and videos
 const galleryData = {
   Wedding: {
-    images: Array.from({ length: 50 }, (_, i) => `/images/wed/Wedding/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Wedding/ANZ03064_Conv.webp",
+      "/images/protfolio images/Wedding/ANZ03129_Conv.webp",
+      "/images/protfolio images/Wedding/ANZ03160_Conv.webp",
+      "/images/protfolio images/Wedding/ANZ03309_Conv.webp",
+      "/images/protfolio images/Wedding/ANZ03375_Conv.webp",
+      "/images/protfolio images/Wedding/ANZ03477_Conv.webp",
+      "/images/protfolio images/Wedding/ANZ03706_Conv.webp",
+      "/images/protfolio images/Wedding/DHA04732_Conv.webp",
+      "/images/protfolio images/Wedding/DSC01317_Conv.webp",
+      "/images/protfolio images/Wedding/DSC01503_Conv.webp",
+      "/images/protfolio images/Wedding/DSC04407_Conv.webp",
+      "/images/protfolio images/Wedding/DSC04429_Conv.webp",
+      "/images/protfolio images/Wedding/DSC04435_Conv.webp",
+      "/images/protfolio images/Wedding/DSC04438_Conv.webp",
+      "/images/protfolio images/Wedding/DSC04775_Conv.webp",
+      "/images/protfolio images/Wedding/DSC04965_Conv.webp",
+      "/images/protfolio images/Wedding/DSC08959_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09356_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09460_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09495_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09507_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09518_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09578_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09612_Conv.webp",
+      "/images/protfolio images/Wedding/DSC09785_Conv.webp",
+      "/images/protfolio images/Wedding/IMG_4865_Conv.webp",
+      "/images/protfolio images/Wedding/IMG_4871_TIF_Conv.webp",
+      "/images/protfolio images/Wedding/IMG_4872_Conv.webp",
+      "/images/protfolio images/Wedding/IMG_8185_TIF_Conv.webp",
+      "/images/protfolio images/Wedding/MR0_7852_Conv.webp",
+      "/images/protfolio images/Wedding/SCZ09116_Conv.webp",
+      "/images/protfolio images/Wedding/SCZ09405_Conv.webp",
+      "/images/protfolio images/Wedding/SCZ09491_Conv.webp",
+      "/images/protfolio images/Wedding/SCZ09605_Conv.webp",
+      "/images/protfolio images/Wedding/SCZ09617_Conv.webp",
+      "/images/protfolio images/Wedding/SCZ09677_Conv.webp",
+      "/images/protfolio images/Wedding/_DSC1797_Conv.webp",
+      "/images/protfolio images/Wedding/_DSC1861_Conv.webp",
+      "/images/protfolio images/Wedding/_DSC2438_Conv.webp",
+    ],
     videos: [],
   },
   "Pre wedding": {
-    images: Array.from({ length: 18 }, (_, i) => `/images/wed/Pre-Wedding/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Pre-Wedding/DSC00047_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00075_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00225_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00244_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00286_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00540_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00556_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00732_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00744_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00873_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00881_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC00886_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC01051_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC09603_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/DSC09730_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/SCZ01904-_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/SCZ02230_Conv.webp",
+      "/images/protfolio images/Pre-Wedding/SCZ06248_Conv.webp",
+    ],
     videos: [],
   },
   Engagement: {
-    images: Array.from({ length: 18 }, (_, i) => `/images/wed/Pre-Wedding/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Engagement/DHA00005_Conv.webp",
+      "/images/protfolio images/Engagement/DHA09271_Conv.webp",
+      "/images/protfolio images/Engagement/DHA09470_Conv.webp",
+      "/images/protfolio images/Engagement/DHA09564_Conv.webp",
+      "/images/protfolio images/Engagement/DHA09633_Conv.webp",
+      "/images/protfolio images/Engagement/DHA09826_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00115_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00196_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00246_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00262_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00359_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00560_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00564_Conv.webp",
+      "/images/protfolio images/Engagement/DSC00752_Conv.webp",
+      "/images/protfolio images/Engagement/DSC01633_Conv.webp",
+      "/images/protfolio images/Engagement/DSC01647_Conv.webp",
+      "/images/protfolio images/Engagement/DSC01673_Conv.webp",
+      "/images/protfolio images/Engagement/DSC01945_Conv.webp",
+      "/images/protfolio images/Engagement/DSC01954_Conv.webp",
+      "/images/protfolio images/Engagement/DSC01973_Conv.webp",
+      "/images/protfolio images/Engagement/DSC02007_Conv.webp",
+      "/images/protfolio images/Engagement/DSC02052_Conv.webp",
+      "/images/protfolio images/Engagement/DSC02261_Conv.webp",
+      "/images/protfolio images/Engagement/DSC09619_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ00183_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ00192_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ00215_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ01794_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ01868_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02048_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02256_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02339_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02488_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02513_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02542_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02704_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02875_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02885_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ02989_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ03035_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ03047_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ09574_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ09592_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ09609_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ09658_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ09772_Conv.webp",
+      "/images/protfolio images/Engagement/SCZ09816_Conv.webp",
+    ],
     videos: [],
   },
   Reception: {
-    images: Array.from({ length: 18 }, (_, i) => `/images/wed/Pre-Wedding/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Reception/ANZ02171_Conv.webp",
+      "/images/protfolio images/Reception/DHA03087_Conv.webp",
+      "/images/protfolio images/Reception/DHA03112_Conv.webp",
+      "/images/protfolio images/Reception/DHA03200_Conv.webp",
+      "/images/protfolio images/Reception/DHA03282_Conv.webp",
+      "/images/protfolio images/Reception/DHA03345_Conv.webp",
+      "/images/protfolio images/Reception/DHA04504_Conv.webp",
+      "/images/protfolio images/Reception/DSC08488_Conv.webp",
+      "/images/protfolio images/Reception/DSC08495_Conv.webp",
+      "/images/protfolio images/Reception/DSC08702_Conv.webp",
+      "/images/protfolio images/Reception/SCZ09378 (2)_Conv.webp",
+      "/images/protfolio images/Reception/SCZ09408_Conv.webp",
+      "/images/protfolio images/Reception/SCZ09890_Conv.webp",
+      "/images/protfolio images/Reception/_DSC0958_Conv.webp",
+      "/images/protfolio images/Reception/_DSC0973_Conv.webp",
+      "/images/protfolio images/Reception/_DSC1071_Conv.webp",
+      "/images/protfolio images/Reception/_DSC1753_Conv.webp",
+    ],
     videos: [],
   },
-  Haldi: {
-    images: Array.from({ length: 13 }, (_, i) => `/images/wed/Haldi/${i + 1}.jpeg`),
-    videos: [],
-  },
-  Mehandi: {
-    images: [],
+  "Haldi / Mehandi": {
+    images: [
+      "/images/protfolio images/Haldi & Mehendi/DSC00678_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC00753_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC00766_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC00791_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC00966_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC01357_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC01440_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC01472_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC04070_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC04136_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC04175_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC04186_Conv.webp",
+      "/images/protfolio images/Haldi & Mehendi/DSC04249_Conv.webp",
+    ],
     videos: [],
   },
   Sangeeth: {
-    images: Array.from({ length: 6 }, (_, i) => `/images/wed/Sangeeth/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Sangeeth/DSC00129_Conv.webp",
+      "/images/protfolio images/Sangeeth/DSC00758_Conv.webp",
+      "/images/protfolio images/Sangeeth/DSC00759_Conv.webp",
+      "/images/protfolio images/Sangeeth/DSC08681_Conv.webp",
+      "/images/protfolio images/Sangeeth/DSC08779_Conv.webp",
+      "/images/protfolio images/Sangeeth/DSC09597_Conv.webp",
+      "/images/protfolio images/Sangeeth/DSC09977_Conv.webp",
+    ],
     videos: [],
   },
   "Get togethers": {
@@ -68,11 +211,88 @@ const galleryData = {
     videos: [],
   },
   Birthdays: {
-    images: Array.from({ length: 26 }, (_, i) => `/images/birthday/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Birthday/5DVG3015_Conv.webp",
+      "/images/protfolio images/Birthday/5DVG3109_Conv.webp",
+      "/images/protfolio images/Birthday/DSC01925_Conv.webp",
+      "/images/protfolio images/Birthday/DSC03537_Conv.webp",
+      "/images/protfolio images/Birthday/DSC03544_Conv.webp",
+      "/images/protfolio images/Birthday/DSC03567_Conv.webp",
+      "/images/protfolio images/Birthday/DSC03599_Conv.webp",
+      "/images/protfolio images/Birthday/DSC03664_Conv.webp",
+      "/images/protfolio images/Birthday/DSC03954_Conv.webp",
+      "/images/protfolio images/Birthday/DSC04021_Conv.webp",
+      "/images/protfolio images/Birthday/DSC04874_Conv.webp",
+      "/images/protfolio images/Birthday/DSC05049_Conv.webp",
+      "/images/protfolio images/Birthday/DSC05116_Conv.webp",
+      "/images/protfolio images/Birthday/DSC05145_Conv.webp",
+      "/images/protfolio images/Birthday/DSC06151_Conv.webp",
+      "/images/protfolio images/Birthday/DSC06261_Conv.webp",
+      "/images/protfolio images/Birthday/DSC06307_Conv.webp",
+      "/images/protfolio images/Birthday/DSC06357_Conv.webp",
+      "/images/protfolio images/Birthday/DSC06975_Conv.webp",
+      "/images/protfolio images/Birthday/DSC06990_Conv.webp",
+      "/images/protfolio images/Birthday/DSC07052_Conv.webp",
+      "/images/protfolio images/Birthday/DSC07056_Conv.webp",
+      "/images/protfolio images/Birthday/DSC07151_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_5412_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_5420_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_5460_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_5719_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_7018_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_7036_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_8308_Conv.webp",
+      "/images/protfolio images/Birthday/DSC_8884_Conv.webp",
+      "/images/protfolio images/Birthday/MS_00255_Conv.webp",
+      "/images/protfolio images/Birthday/MS_00262_Conv.webp",
+      "/images/protfolio images/Birthday/MS_00266_Conv.webp",
+      "/images/protfolio images/Birthday/RKP03764_Conv.webp",
+      "/images/protfolio images/Birthday/RKP03844_Conv.webp",
+      "/images/protfolio images/Birthday/RKP03947_Conv.webp",
+      "/images/protfolio images/Birthday/ROY00192_Conv.webp",
+      "/images/protfolio images/Birthday/ROY00244_Conv.webp",
+      "/images/protfolio images/Birthday/ROY00311_Conv.webp",
+      "/images/protfolio images/Birthday/ROY00514_Conv.webp",
+      "/images/protfolio images/Birthday/SCZ03573_Conv.webp",
+      "/images/protfolio images/Birthday/SCZ03672_Conv.webp",
+      "/images/protfolio images/Birthday/SCZ03720_Conv.webp",
+      "/images/protfolio images/Birthday/SCZ05895_Conv.webp",
+      "/images/protfolio images/Birthday/SCZ06265_Conv.webp",
+    ],
     videos: [],
   },
   "Naming ceremonies": {
-    images: Array.from({ length: 6 }, (_, i) => `/images/wed/namecer/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Naming Ceremony/DSC03027_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC03083_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC03187_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC03476_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC03906_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC03939_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC03950_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC04063_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC04226_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC04334_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC04364_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC04435_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC04449_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC05222_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC06032_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC06379_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/DSC_8143_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_0159_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_0164_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_0271_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_0553_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_0832_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_0968_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_1062_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/MR0_9757_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/SCZ05193_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/SCZ07570_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/SCZ07631_Conv.webp",
+      "/images/protfolio images/Naming Ceremony/SCZ09706_Conv.webp",
+    ],
     videos: [],
   },
   "Corporote shoots": {
@@ -80,7 +300,50 @@ const galleryData = {
     videos: [],
   },
   "Product Shoots": {
-    images: [],
+    images: [
+      "/images/protfolio images/Product Shoot/DSC00002_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00007_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00014_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00029_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00037_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00040_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00068_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00088_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00099_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00139_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00173_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC00218_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09827_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09829_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09834_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09866_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09878_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09934_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09961_Conv.webp",
+      "/images/protfolio images/Product Shoot/DSC09995_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0012_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0013_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0014_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0015_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0016_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0017_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0018_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0019_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0021_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0022_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0023_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0024_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0025_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0026_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0027_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0028_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0029_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0030_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0031_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0032_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0033_Conv.webp",
+      "/images/protfolio images/Product Shoot/IMGWA0034_Conv.webp",
+    ],
     videos: [],
   },
   "Industrial Photography and Films": {
@@ -88,15 +351,100 @@ const galleryData = {
     videos: [],
   },
   "Baby shower": {
-    images: Array.from({ length: 6 }, (_, i) => `/images/babyshower/${i + 1}.jpeg`),
-    videos: [],
-  },
-  Maternity: {
-    images: Array.from({ length: 6 }, (_, i) => `/images/babyshower/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Babyshower/AKS09941_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00048_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00087_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00131_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00215_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00229_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00961_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC00998_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC01171_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC01282_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC01545_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC01608_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC04039_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC04040_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC04054_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC06205_Conv.webp",
+      "/images/protfolio images/Babyshower/DSC06282_Conv.webp",
+      "/images/protfolio images/Babyshower/SCZ04580_Conv.webp",
+      "/images/protfolio images/Babyshower/SCZ04612_Conv.webp",
+      "/images/protfolio images/Babyshower/SCZ04790_Conv.webp",
+      "/images/protfolio images/Babyshower/SKP_0532_Conv.webp",
+      "/images/protfolio images/Babyshower/SKP_0598_Conv.webp",
+      "/images/protfolio images/Babyshower/SKP_0908_Conv.webp",
+    ],
     videos: [],
   },
   Annaprashna: {
-    images: Array.from({ length: 18 }, (_, i) => `/images/Annaprashna/${i + 1}.jpeg`),
+    images: [
+      "/images/protfolio images/Annaprashana/DSC00017_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC00019_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC00048_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC00052_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC08845_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC08848_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC08963_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09052_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09073_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09098_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09145_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09181_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09731_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09782_Conv.webp",
+      "/images/protfolio images/Annaprashana/DSC09974_Conv.webp",
+      "/images/protfolio images/Annaprashana/MR_00085_Conv.webp",
+      "/images/protfolio images/Annaprashana/MR_00112_Conv.webp",
+      "/images/protfolio images/Annaprashana/MR_00183_Conv.webp",
+    ],
+    videos: [],
+  },
+  Babyshoot: {
+    images: [
+      "/images/protfolio images/Babyshoot/SCZ00985_Conv.webp",
+      "/images/protfolio images/Babyshoot/SCZ01051_Conv.webp",
+      "/images/protfolio images/Babyshoot/SCZ01210_Conv.webp",
+      "/images/protfolio images/Babyshoot/SCZ01225_Conv.webp",
+      "/images/protfolio images/Babyshoot/SCZ01373_Conv.webp",
+      "/images/protfolio images/Babyshoot/SCZ01435_Conv.webp",
+    ],
+    videos: [],
+  },
+  "Half-Saree Ceremony": {
+    images: [
+      "/images/protfolio images/Half-Saree Ceremony/DSC02001_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC02027_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC06798_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07126_2_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07126_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07174_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07274_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07290_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07342_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07385_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/DSC07405_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4860_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4861_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4862_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4866_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4867_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4868_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4869_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4876_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4877_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4878_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/IMG_4881_TIF_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ05726_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ05758_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ05837_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ06260_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ06266_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ06368_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ06391_Conv.webp",
+      "/images/protfolio images/Half-Saree Ceremony/SCZ06580_Conv.webp",
+    ],
     videos: [],
   },
 };
@@ -106,8 +454,7 @@ const services = [
   { icon: Camera, title: "Pre wedding", category: "Pre wedding", video: "/gif/engagement.mp4" },
   { icon: Sparkles, title: "Engagement", category: "Engagement", video: "/gif/engagement.mp4" },
   { icon: Music, title: "Reception", category: "Reception", video: "/gif/reception.mp4" },
-  { icon: PartyPopper, title: "Haldi", category: "Haldi", video: "/gif/haldi.mp4" },
-  { icon: Palette, title: "Mehandi", category: "Mehandi", video: "/gif/haldi.mp4" },
+  { icon: PartyPopper, title: "Haldi / Mehandi", category: "Haldi / Mehandi", video: "/gif/haldi.mp4" },
   { icon: Music, title: "Sangeeth", category: "Sangeeth", video: "/gif/concert.mp4" },
   { icon: Users, title: "Get togethers", category: "Get togethers", video: "/gif/stories.mp4" },
   { icon: Cake, title: "Birthdays", category: "Birthdays", video: "/gif/birthday.mp4" },
@@ -116,8 +463,9 @@ const services = [
   { icon: Package, title: "Product Shoots", category: "Product Shoots", video: "/gif/concert.mp4" },
   { icon: Building2, title: "Industrial Photography", category: "Industrial Photography and Films", video: "/gif/concert.mp4" },
   { icon: Baby, title: "Baby shower", category: "Baby shower", video: "/gif/maternity.mp4" },
-  { icon: Baby, title: "Maternity", category: "Maternity", video: "/gif/maternity.mp4" },
   { icon: Baby, title: "Annaprashna", category: "Annaprashna", video: "/gif/anna.mp4" },
+  { icon: Camera, title: "Babyshoot", category: "Babyshoot", video: "/gif/maternity.mp4" },
+  { icon: Sparkles, title: "Half-Saree Ceremony", category: "Half-Saree Ceremony", video: "/gif/reception.mp4" },
 ];
 
 export default function GalleryPage() {
@@ -308,64 +656,72 @@ export default function GalleryPage() {
 
           {/* Category modal opened from the service cards */}
           {modalOpen && modalCategory && (
-            <div className="fixed inset-0 z-50 bg-black/70">
-              <div className="fixed inset-6 md:inset-12 overflow-hidden">
-                <div className="h-full w-full rounded-2xl bg-white dark:bg-black/60 dark:backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden border dark:border-white/10">
-                  <div className="px-6 py-4 flex items-center justify-between border-b dark:border-white/10 sticky top-0 bg-white dark:bg-black/60 dark:backdrop-blur-xl z-20">
-                    <div>
-                      <h3 className="text-xl font-semibold">{modalCategory}</h3>
-                      <div className="text-sm text-muted-foreground">{(modalGallery?.images || []).length} photos • {getCombinedVideos(modalCategory).length} videos</div>
+            <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-2 md:p-10 pointer-events-auto" data-lenis-prevent>
+              <div className="w-full max-w-7xl h-full max-h-[92vh] rounded-2xl bg-background border border-border shadow-2xl flex flex-col overflow-hidden animate-scale-in">
+                <div className="px-6 py-4 flex items-center justify-between border-b border-border sticky top-0 bg-background/95 backdrop-blur-md z-20">
+                  <div>
+                    <h3 className="text-xl font-semibold tracking-tight">{modalCategory}</h3>
+                    <div className="text-sm text-muted-foreground">{(modalGallery?.images || []).length} photos • {getCombinedVideos(modalCategory).length} videos</div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="hidden md:flex items-center gap-1 bg-muted/50 p-1 rounded-lg">
+                      <button onClick={() => setActiveTab('images')} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'images' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Images</button>
+                      <button onClick={() => setActiveTab('videos')} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'videos' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Videos</button>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="hidden md:flex items-center gap-2">
-                        <button onClick={() => setActiveTab('images')} className={`px-3 py-1 rounded ${activeTab === 'images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
-                        <button onClick={() => setActiveTab('videos')} className={`px-3 py-1 rounded ${activeTab === 'videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
-                      </div>
-                      <button onClick={() => setModalOpen(false)} className="px-3 py-2 rounded-md text-sm border">Close</button>
-                    </div>
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="p-2 rounded-full hover:bg-muted transition-colors"
+                      aria-label="Close modal"
+                    >
+                      <X className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  className="flex-1 overflow-y-auto p-4 md:p-8 overscroll-contain"
+                  data-lenis-prevent
+                  style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+                >
+                  <div className="md:hidden flex gap-2 mb-6 p-1 bg-muted/50 rounded-lg">
+                    <button onClick={() => setActiveTab('images')} className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'images' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'}`}>Images</button>
+                    <button onClick={() => setActiveTab('videos')} className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'videos' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'}`}>Videos</button>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                    <div className="md:hidden flex gap-2">
-                      <button onClick={() => setActiveTab('images')} className={`flex-1 px-3 py-2 rounded ${activeTab === 'images' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Images</button>
-                      <button onClick={() => setActiveTab('videos')} className={`flex-1 px-3 py-2 rounded ${activeTab === 'videos' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-slate-800'}`}>Videos</button>
+                  {activeTab === 'images' && (
+                    <div className="masonry columns-2 sm:columns-3 md:columns-4 gap-4">
+                      {(modalGallery?.images || []).map((img, idx) => (
+                        <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
+                          <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
+                            <img src={img} loading="lazy" decoding="async" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
+                  )}
 
-                    {activeTab === 'images' && (
-                      <div className="masonry columns-2 sm:columns-3 md:columns-4 gap-4">
-                        {(modalGallery?.images || []).map((img, idx) => (
-                          <div key={idx} className="mb-4 break-inside-avoid rounded-lg overflow-hidden shadow-sm group bg-gray-50 dark:bg-slate-800">
-                            <button onClick={() => { setModalLightboxItem('image'); setModalLightboxIndex(idx); }} className="block w-full h-full group">
-                              <img src={img} loading="lazy" decoding="async" className="w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {activeTab === 'videos' && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {getCombinedVideos(modalCategory).map((videoUrl, idx) => (
-                          <div key={idx} className="relative rounded-lg overflow-hidden bg-black text-white shadow-sm">
-                            {isYouTubeUrl(videoUrl) ? (
-                              <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }} className="block w-full h-full">
-                                <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" decoding="async" className="w-full h-56 object-cover" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
-                                    <Play className="w-8 h-8 text-primary" />
-                                  </div>
+                  {activeTab === 'videos' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {getCombinedVideos(modalCategory).map((videoUrl, idx) => (
+                        <div key={idx} className="relative rounded-lg overflow-hidden bg-black text-white shadow-sm">
+                          {isYouTubeUrl(videoUrl) ? (
+                            <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }} className="block w-full h-full">
+                              <img src={getYouTubeThumbnail(videoUrl)} loading="lazy" decoding="async" className="w-full h-56 object-cover" />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
+                                  <Play className="w-8 h-8 text-primary" />
                                 </div>
-                              </button>
-                            ) : (
-                              <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }}>
-                                <video src={videoUrl} className="w-full h-56 object-cover" preload="metadata" />
-                              </button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                              </div>
+                            </button>
+                          ) : (
+                            <button onClick={() => { setModalLightboxItem('video'); setModalLightboxIndex(idx); }}>
+                              <video src={videoUrl} className="w-full h-56 object-cover" preload="metadata" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -410,7 +766,7 @@ export default function GalleryPage() {
           )}
 
         </div>
-      </section>
+      </section >
     );
   }
 
@@ -574,8 +930,9 @@ export default function GalleryPage() {
       {/* Lightbox Modal */}
       {lightboxItem && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-lg p-4 animate-fade-in"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 backdrop-blur-lg p-4 animate-fade-in pointer-events-auto"
           onClick={closeLightbox}
+          data-lenis-prevent
         >
           <div
             className="relative w-full max-w-6xl animate-scale-in"

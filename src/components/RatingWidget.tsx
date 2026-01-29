@@ -56,7 +56,10 @@ export default function RatingWidget() {
       </div>
 
       {open && (
-        <div className="fixed bottom-20 left-4 z-[9999] w-[320px] max-w-full bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl">
+        <div
+          className="fixed bottom-20 left-4 z-[9999] w-[320px] max-w-full bg-white dark:bg-black/75 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-800/60 backdrop-blur-xl pointer-events-auto"
+          data-lenis-prevent
+        >
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
             <div className="font-medium">Rate Our Service</div>
             <div className="flex items-center gap-2">
@@ -75,8 +78,11 @@ export default function RatingWidget() {
             ) : (
               <>
                 <div className="mb-3">
-                  <label className="text-sm text-muted-foreground block mb-1">Your name</label>
+                  <label htmlFor="rating-name" className="text-sm text-muted-foreground block mb-1">Your name</label>
                   <input
+                    id="rating-name"
+                    name="customerName"
+                    autoComplete="name"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     className="w-full rounded-md border border-gray-200 dark:border-slate-700 px-3 py-2 text-sm bg-transparent"
@@ -100,7 +106,10 @@ export default function RatingWidget() {
                   ))}
                 </div>
 
+                <label htmlFor="rating-comment" className="sr-only">Feedback (optional)</label>
                 <textarea
+                  id="rating-comment"
+                  name="comment"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   className="w-full rounded-md border border-gray-200 dark:border-slate-700 px-3 py-2 text-sm bg-transparent resize-none"
